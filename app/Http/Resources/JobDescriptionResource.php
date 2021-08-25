@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Department;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class JobDescriptionResource extends JsonResource
@@ -14,6 +15,14 @@ class JobDescriptionResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'collar_type' => $this->collar_type,
+            'department_id' => $this->department_id,
+            'department_name' => $this->department->name,
+        ];
+
+        /*return parent::toArray($request);*/
     }
 }

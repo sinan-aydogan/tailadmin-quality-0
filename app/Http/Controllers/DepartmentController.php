@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
@@ -9,20 +10,35 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+
 class DepartmentController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
      * @return Response|\Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $content = Department::with('manager:id,name,profile_photo_path','department:id,name')->get(['id','name','manager_id','department_type','department_id','is_production','is_complaint']);
+        /*Departments List*/
+        $departments = Department::query()
+            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->manager_id, fn($query,$manager_id)=>$query->where('manager_id',$manager_id))
+            ->when($request->is_complaint, fn($query,$is_complaint)=>$query->where('is_complaint',$is_complaint))
+            ->when($request->is_production, fn($query,$is_production)=>$query->where('is_production',$is_production))
+            ->get();
+        /*Department Managers List*/
+        $departmentManagers = Department::where('manager_id', '!=', null)->get()->map(function ($department) {
+            return $department->manager_id;
+        });
+        $managers = User::find($departmentManagers,['id','name','profile_photo_path']);
 
-        return Inertia::render('Department/Index',[
-            'content'=>$content
+        return Inertia::render('Modules/Department/Index', [
+            'tableData' => DepartmentResource::collection($departments),
+            'searchDataManager' => $managers,
         ]);
     }
 
@@ -33,12 +49,12 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        $departments = Department::where('department_type',0)->get();
+        $users = User::all(['id','name','profile_photo_path']);
+        $departments = Department::where('department_type', 1)->get(['id','name']);
 
-        return Inertia::render('Department/Create',[
-            'users'=>$users,
-            'departments'=>$departments
+        return Inertia::render('Modules/Department/Create', [
+            'users' => $users,
+            'departments' => $departments,
         ]);
     }
 
@@ -51,25 +67,17 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->all();
-        $attributes['manager_id'] = $request->manager_id['id'];
-        $attributes['department_type'] = $request->department_type['value'];
-       isset($request->department_id) ? $attributes['department_id'] = $request->department_id['id'] : $attributes['department_id'] = null;
-        $attributes['is_complaint'] = $request->is_complaint['value'];
-        $attributes['is_production'] = $request->is_production['value'];
         $attributes['creator_id'] = Auth::id();
         Department::create($attributes);
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The department has been successfully created. The department created: '.$request->name ;
 
-        return redirect()->route('department.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The department has been successfully created.</b><br><b>Department: </b>'.$request['name']]);
+        return redirect()->route('department.index') ;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return RedirectResponse|Response
      */
     public function show($id)
@@ -80,7 +88,7 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return RedirectResponse|Response
      */
     public function edit($id)
@@ -92,7 +100,7 @@ class DepartmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int  $id
+     * @param int $id
      * @return Response
      */
     public function update(Request $request, $id)
@@ -103,11 +111,25 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return Response
      */
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Display a listing of the deleted resource.
+     *
+     * @return Response|\Inertia\Response
+     */
+    public function trash()
+    {
+        $content = Department::with('manager:id,name,profile_photo_path', 'department:id,name')->get(['id', 'name', 'manager_id', 'department_type', 'department_id', 'is_production', 'is_complaint']);
+
+        return Inertia::render('Modules/Department/Index', [
+            'tableData' => $content
+        ]);
     }
 }

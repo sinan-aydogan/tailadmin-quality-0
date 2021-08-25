@@ -1,50 +1,37 @@
 <template>
   <app-layout :action-buttons="true">
     <!--Header-->
-    <template #header>Create New Job Description</template>
-    <template #subHeader>You can new job description for your HR management</template>
+    <template #header>Create New Product Type</template>
+    <template #subHeader>You can new product type for your products</template>
     <!--Action Buttons-->
     <template #action-buttons>
-      <t-action-buttons-create model="job-description"/>
+      <t-action-buttons-create model="product-type"/>
     </template>
     <template #default>
       <t-form-content @reset="reset" @submitted="save()">
-        <!--Job Description Infos-->
+        <!--Product Info-->
         <t-form-section
-            description="You are going to create new job description for relation with your staff"
-            title="Job Description Infos"
+            description="You are going to create new product for your company"
+            title="Product Infos"
         >
           <grid-section :col-tablet="2">
-            <!--Title-->
+
+            <!--Product Name-->
             <t-input-group
                 :error="error.name"
-                class="col-span-2"
-                label="Title"
+                label="Product Name"
             >
               <t-input-text id="name" v-model="form.name"/>
             </t-input-group>
 
-            <!--Collar Type-->
+            <!--Product Code-->
             <t-input-group
-                :error="error.collar_type"
-                label="Collar Type"
+                :error="error.code"
+                label="Product Code"
             >
-              <t-input-select
-                  id="collar_type"
-                  v-model="form.collar_type"
-                  :clear-button="true"
-                  :options="collarType"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a collar type"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-row items-center">
-                    <component :is="props.icon" :class="['w-4 h-4 mr-1', props.style]"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-select>
+              <t-input-text id="code" v-model="form.code">
+                <t-finger-print-icon slot="icon" class="w-6 h-6"/>
+              </t-input-text>
             </t-input-group>
 
             <!--Related Department-->
@@ -61,151 +48,104 @@
                   options-label-key="name"
                   options-value-key="id"
                   place-holder="Select a department"
+                  @input="departmentChange"
               />
             </t-input-group>
 
-            <!--Summary-->
+            <!--Product Type-->
             <t-input-group
-                :error="error.summary"
-                class="col-span-2"
-                label="Summary"
+                :error="
+                form.department_id === null ?
+                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
+                    error.product_type_id
+                "
+                label="Product Type"
+            >
+              <t-input-select
+                  id="product_type_id"
+                  v-model="form.product_type_id"
+                  :clear-button="true"
+                  :disabled="form.department_id === null"
+                  :options="productTypes"
+                  :search="true"
+                  options-label-key="name"
+                  options-value-key="id"
+                  place-holder="Select a type"
+
+              />
+            </t-input-group>
+
+            <!--Related Standard-->
+            <t-input-group
+                :error="
+                    form.department_id === null ?
+                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
+                    error.standard_id"
+                label="Related Standard"
+            >
+              <t-input-select
+                  id="standard_id"
+                  v-model="form.standard_id"
+                  :clear-button="true"
+                  :disabled="form.department_id === null"
+                  :options="standards"
+                  :search="true"
+                  options-label-key="code"
+                  options-value-key="id"
+                  place-holder="Select a standard"
+              />
+            </t-input-group>
+
+            <!--Certification Status-->
+            <t-input-group
+                :error="error.is_certified"
+                label="Certification Status"
+            >
+              <t-input-select
+                  id="is_certified"
+                  v-model="form.is_certified"
+                  :clear-button="true"
+                  :options="is_certified"
+                  :search="true"
+                  options-label-key="name"
+                  options-value-key="id"
+                  place-holder="Select a certification status"
+              >
+                <template #label="{props}">
+                  <t-badge :color="props.color">
+                    {{ props.name }}
+                  </t-badge>
+                </template>
+              </t-input-select>
+            </t-input-group>
+
+            <!--Photo-->
+            <t-input-group
+                :error="error.photo"
+                label="Product Photo"
+            >
+              <t-input-file
+                  v-model="form.photo"
+                  placeholder="Select a photo"
+                  :preview="true"
+              />
+            </t-input-group>
+
+            <!--Description-->
+            <t-input-group
+                :error="error.description"
+                label="Description"
+                class="col-span-full"
             >
               <t-input-text-area
-                  id="address"
-                  v-model="form.summary"
-                  :rows="2"
+                  id="description"
+                  v-model="form.description"
+                  :clear-button="true"
               />
             </t-input-group>
 
           </grid-section>
         </t-form-section>
-
-        <!--Job Description Infos-->
-        <t-form-section
-            description="Job description's definitions"
-            title="Requirements, Powers and Responsibilities"
-        >
-
-          <grid-section :col="1">
-            <!--Job Requirements-->
-            <t-input-group
-                :error="error.job_requirement"
-                label="Job Requirements"
-            >
-              <t-input-inline-editable-repeatable
-                  id="job_requirement"
-                  v-model="form.job_requirement"
-                  value1name="Requirement"
-                  value2name="Level"
-              />
-            </t-input-group>
-
-            <!--Job Responsibilities-->
-            <t-input-group
-                :error="error.job_responsibility"
-                label="Job Responsibilities"
-            >
-              <t-input-inline-editable-repeatable
-                  id="job_responsibility"
-                  v-model="form.job_responsibility"
-                  value1name="Requirement"
-                  value2name="Level"
-              />
-            </t-input-group>
-
-            <!--Key Performance Indicators (KPIs)-->
-            <t-input-group
-                :error="error.kpi"
-                label="Key Performance Indicators (KPIs)"
-            >
-              <t-input-inline-editable-repeatable
-                  id="kpi"
-                  v-model="form.kpi"
-                  value1name="KPI"
-                  value2name="Rate"
-              />
-            </t-input-group>
-
-            <!--Working Conditions and Areas-->
-            <t-input-group
-                :error="error.working_conditions"
-                label="Working Conditions and Areas"
-            >
-              <t-input-inline-editable-repeatable
-                  id="working_conditions"
-                  v-model="form.working_conditions"
-                  value1name="Condition"
-              />
-            </t-input-group>
-
-            <!--Working Equipments-->
-            <t-input-group
-                :error="error.working_equipments"
-                label="Working Equipments"
-            >
-              <t-input-inline-editable-repeatable
-                  id="working_equipments"
-                  v-model="form.working_equipments"
-                  value1name="Equipment"
-              />
-            </t-input-group>
-
-          </grid-section>
-
-          <grid-section :col-tablet="2">
-
-            <!--It works together with-->
-            <t-input-group
-                :error="error.working_together"
-                label="It works together with"
-            >
-              <t-input-multi-select
-                  id="working_together"
-                  v-model="form.working_together"
-                  :clear-button="true"
-                  :options="staff"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select staff"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-row whitespace-nowrap items-center gap-1">
-                    <t-avatar :radius="8" :size="1"
-                              :src="props.profile_photo_path !== null ? '/storage/'+props.profile_photo_path : null"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-multi-select>
-            </t-input-group>
-
-            <!--It reports to-->
-            <t-input-group
-                :error="error.report_to"
-                label="It reports to"
-            >
-              <t-input-multi-select
-                  id="report_to"
-                  v-model="form.report_to"
-                  :clear-button="true"
-                  :options="staff"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select staff"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-row whitespace-nowrap items-center gap-1">
-                    <t-avatar :radius="8" :size="1"
-                              :src="props.profile_photo_path !== null ? '/storage/'+props.profile_photo_path : null"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-multi-select>
-            </t-input-group>
-          </grid-section>
-        </t-form-section>
-
       </t-form-content>
       <t-loading-screen v-if="loading"/>
     </template>
@@ -214,55 +154,50 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
+import GridSection from "@/Layouts/GridSection";
 import TActionButtonsCreate from "@/Components/Button/ActionButtonsCreate";
+import TBadge from "@/Components/Badge/TBadge";
+import TFingerPrintIcon from "@/Components/Icon/TFingerPrintIcon";
 import TFormContent from "@/Components/Form/TFormContent";
 import TFormSection from "@/Components/Form/TFormSection";
 import TInputGroup from "@/Components/Form/TInputGroup";
-import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import GridSection from "@/Layouts/GridSection";
-import TBadge from "@/Components/Badge/TBadge";
-import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
-import {StaffConsts} from "@/Mixins/SectionConsts/StaffConsts";
+import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputTextArea from "@/Components/Form/Inputs/TInputTextArea";
-import TBlueCollarIcon from "@/Components/Icon/TBlueCollarIcon";
-import TWhiteCollarIcon from "@/Components/Icon/TWhiteCollarIcon";
 import TLoadingScreen from "@/Components/Misc/TLoadingScreen";
-import TInputInlineEditableRepeatable from "@/Components/Form/Inputs/TInputInlineEditableRepeatable";
-import TInputMultiSelect from "@/Components/Form/Inputs/TInputMultiSelect";
-import TAvatar from "@/Components/Avatar/TAvatar";
+import {ProductConsts} from "@/Mixins/SectionConsts/ProductConsts";
+import TInputFile from "@/Components/Form/Inputs/TInputFile";
 
 
 export default {
   name: "Create",
   components: {
-    TAvatar,
-    TInputMultiSelect,
-    TInputInlineEditableRepeatable,
+    TInputFile,
     AppLayout,
     GridSection,
     TActionButtonsCreate,
     TBadge,
-    TBlueCollarIcon,
     TFormContent,
     TFormSection,
     TInputGroup,
     TInputSelect,
     TInputText,
     TInputTextArea,
-    TWhiteCollarIcon,
-    TXCircleIcon,
-    TLoadingScreen
+    TLoadingScreen,
+    TFingerPrintIcon
   },
-  mixins: [StaffConsts],
+  mixins: [ProductConsts],
   props: {
-    staff: {
+    managers: {
       type: Array
     },
     departments: {
       type: Array
     },
-    jobDescriptions: {
+    productTypes: {
+      type: Array
+    },
+    standards: {
       type: Array
     },
   },
@@ -273,50 +208,56 @@ export default {
       form: this.$inertia.form({
         _method: 'POST',
         name: null,
-        collar_type: null,
+        code: null,
         department_id: null,
-        summary: null,
-        job_requirement: [],
-        job_responsibility: [],
-        kpi: [],
-        working_conditions: [],
-        working_equipments: [],
-        working_together: [],
-        report_to: [],
+        product_type_id: null,
+        standard_id: null,
+        is_certified: 4,
+        description: null,
+        photo: null,
       }),
     }
   },
   methods: {
     reset: function () {
       this.form.name = null;
-      this.form.collar_type = null;
+      this.form.code = null;
       this.form.department_id = null;
-      this.form.summary = null;
-      this.form.job_requirement = [];
-      this.form.job_responsibility = [];
-      this.form.kpi = [];
-      this.form.working_conditions = [];
-      this.form.working_equipments = [];
-      this.form.working_together = [];
-      this.form.report_to = []
+      this.form.product_type_id = null;
+      this.form.standard_id = null;
+      this.form.is_certified = null;
+      this.form.description = null;
+      this.form.photo= null;
     },
     save() {
       this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');
-      this.form.collar_type === null ? this.$set(this.error, 'collar_type', 'Collar type is required') : this.$delete(this.error, 'collar_type');
-      this.form.department_id === null ? this.$set(this.error, 'department_id', 'Related department is required') : this.$delete(this.error, 'department_id');
-      this.form.job_requirement === null ? this.$set(this.error, 'job_requirement', 'Job requirements are required') : this.$delete(this.error, 'job_requirement');
-      this.form.job_responsibility === null ? this.$set(this.error, 'job_responsibility', 'Job responsibilities are required') : this.$delete(this.error, 'job_responsibility');
-      this.form.working_conditions === null ? this.$set(this.error, 'working_conditions', 'Working conditions are required') : this.$delete(this.error, 'working_conditions');
-      this.form.working_equipments === null ? this.$set(this.error, 'working_equipments', 'Working equipments are required') : this.$delete(this.error, 'working_equipments');
+      this.form.code === null ? this.$set(this.error, 'code', 'Code is required') : this.$delete(this.error, 'code');
+      this.form.department_id === null ? this.$set(this.error, 'department_id', 'Department is required') : this.$delete(this.error, 'department_id');
+      this.form.product_type_id === null ? this.$set(this.error, 'product_type_id', 'Type is required') : this.$delete(this.error, 'product_type_id');
+      this.form.is_certified === null ? this.$set(this.error, 'is_certified', 'Certification status is required') : this.$delete(this.error, 'is_certified');
 
+      console.log(Object.keys(this.error).length)
+      console.log(this.error)
       if (Object.keys(this.error).length === 0) {
-        this.form.post(route('job-description.store'), {
-          errorBag: 'job-description',
+        this.form.post(route('product.store'), {
+          errorBag: 'product',
           preserveScroll: true,
         });
         this.reset();
         this.loading = true;
       }
+    },
+    departmentChange() {
+      this.$inertia.reload({
+        method: 'get',
+        data: {
+          department_id: this.form.department_id,
+        },
+        replace: true,
+        preserveState: true,
+        preserveScroll: true,
+        only: ['productTypes', 'standards'],
+      })
     }
   }
 }

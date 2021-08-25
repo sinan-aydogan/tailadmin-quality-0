@@ -1,31 +1,23 @@
 <template>
 <div class="inline-flex gap-1">
-  <!--Add new button-->
+  <!--Back button-->
   <t-button
-      color="solid-green"
-      :link="route(model+'.create')"
+      color="solid-blue"
+      type="link"
+      :link="route(model+'.index')"
   >
-    <t-plus-icon class="w-5 h-5"/>
-    Add New
-  </t-button>
-  <!--Deleted items button-->
-  <t-button
-      color="solid-gray"
-      :link="route(model+'.trash')"
-  >
-    <t-trash-icon class="w-5 h-5"/>
-    Deleted Items
+    <t-chevron-left-icon class="w-5 h-5"/>
+    Back to Contents List
   </t-button>
 </div>
 </template>
 
 <script>
-import TPlusIcon from "@/Components/Icon/TPlusIcon";
 import TButton from "@/Components/Button/TButton";
-import TTrashIcon from "@/Components/Icon/TTrashIcon";
+import TChevronLeftIcon from "@/Components/Icon/TChevronLeftIcon";
 export default {
-  name: "TActionButtonsIndex",
-  components: {TTrashIcon, TButton, TPlusIcon},
+  name: "TActionButtonsCreate",
+  components: {TChevronLeftIcon, TButton},
   props: {
     model: {
       type: String
@@ -33,7 +25,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

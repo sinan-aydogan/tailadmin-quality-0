@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StaffResource;
 use App\Models\Department;
 use App\Models\JobDescription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+
 /*Mail Controller*/
+
 use App\Mail\StaffRegister;
 use Illuminate\Support\Facades\Mail;
 
@@ -20,10 +24,40 @@ class StaffController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Staff/Index',[
-            'staff'=>User::with('department:id,name','jobDescription:id,name')->get(),
+        /*Staff List*/
+        $staff = User::query()
+            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+            ->when($request->job_description_id, fn($query,$job_description_id)=>$query->where('job_description_id',$job_description_id))
+            ->when($request->manager_id, fn($query,$manager_id)=>$query->where('manager_id',$manager_id))
+            ->when($request->status, fn($query,$status)=>$query->where('status',$status))
+            ->get();
+
+        /*Staff Department List*/
+        $staffDepartment = User::where('department_id', '!=', null)->get()->map(function ($staff) {
+            return $staff->department_id;
+        });
+        $departments = Department::find($staffDepartment,['id','name']);
+
+        /*Staff Manager List*/
+        $staffManager = User::where('manager_id', '!=', null)->get()->map(function ($staff) {
+            return $staff->manager_id;
+        });
+        $managers = User::find($staffManager,['id','name','profile_photo_path']);
+
+        /*Staff Job Description List*/
+        $staffJobDescription = User::where('job_description_id', '!=', null)->get()->map(function ($staff) {
+            return $staff->job_description_id;
+        });
+        $jobDescriptions = JobDescription::find($staffJobDescription,['id','name']);
+
+        return Inertia::render('Modules/Staff/Index', [
+            'tableData' => StaffResource::collection($staff),
+            'searchDataManager' => $managers,
+            'searchDataDepartment' => $departments,
+            'searchDataJobDescription' => $jobDescriptions
         ]);
     }
 
@@ -34,29 +68,30 @@ class StaffController extends Controller
      */
     public function create(Request $request)
     {
-        $collarTypeId = $request->collarTypeId;
-        return Inertia::render('Staff/Create',[
-            'departments'=>Department::all(['id','name']),
-            'jobDescriptions'=>JobDescription::where('collar_type',$collarTypeId)->get(['id','name']),
-            'users'=>User::where('collar_type',1)->get(['id','name','profile_photo_path']),
+        $collar_type = $request->collar_type;
+        $manager_id = $request->manager_id;
+        $departments = Department::all(['id', 'name']);
+        $jobDescriptions = JobDescription::where('collar_type', '=',$collar_type)->get(['id', 'name']);
+        $managers = User::where('collar_type', 1)->get(['id', 'name', 'profile_photo_path']);
+        $staff = User::where('id','!=', $manager_id)->get(['id', 'name', 'profile_photo_path']);
+
+        return Inertia::render('Modules/Staff/Create', [
+            'departments' => $departments,
+            'jobDescriptions' => $jobDescriptions,
+            'managers' => $managers,
+            'staff' => $staff,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $attributes = $request->all();
-        $request->department_id != null  && $attributes['department_id'] = $request->department_id['id'];
-        $request->job_description_id != null  && $attributes['job_description_id'] = $request->job_description_id['id'];
-        $request->collar_type != null  && $attributes['collar_type'] = $request->collar_type['value'];
-        $request->manager_id != null  && $attributes['manager_id'] = $request->manager_id['id'];
-        $request->status != null  && $attributes['status'] = $request->status['value'];
-        $request->blood_group != null  && $attributes['blood_group'] = $request->blood_group['value'];
         $attributes['creator_id'] = Auth::id();
         $randomPassword = Str::random(8);
         $attributes['password'] = bcrypt($randomPassword);
@@ -66,20 +101,17 @@ class StaffController extends Controller
         $mailData['password'] = $randomPassword;
         User::create($attributes);
 
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The staff has been successfully created. The staff created: '.$request->name ;
-
         Mail::to($request->email)->send(new StaffRegister($mailData));
 
-        return redirect()->route('staff.index')
-            ->with('message', $message);
+
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The staff has been successfully created.</b><br><b>Staff: </b>'.$request['name']]);
+        return redirect()->route('staff.index') ;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -90,7 +122,7 @@ class StaffController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -101,8 +133,8 @@ class StaffController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -113,7 +145,7 @@ class StaffController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

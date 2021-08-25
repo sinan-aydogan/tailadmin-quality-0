@@ -26,9 +26,7 @@
     <slot></slot>
     <!--Error-->
     <div v-show="error">
-      <p class="text-sm text-red-600 mt-2 whitespace-nowrap">
-        {{ error }}
-      </p>
+      <p class="text-sm text-red-600 mt-2" v-html="error"/>
     </div>
   </div>
 </template>

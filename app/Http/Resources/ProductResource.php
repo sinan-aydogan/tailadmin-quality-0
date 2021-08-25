@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Department;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -18,13 +19,13 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
-            'department' => $this->department->name,
+            'department_name' => $this->department->name,
             'department_id' => $this->department_id,
             'productType' => $this->productType->name,
             'is_certified' => $this->is_certified,
-            'is_certified' => $this->is_certified,
             'standard_id' => $this->standard_id,
-            'standard' => $this->standard->code,
+            'standard_code' => $this->standard->code,
+            'standard_name' => $this->standard->name,
             'photo' => $this->getFirstMediaUrl('photo'),
         ];
         /*return parent::toArray($request);*/

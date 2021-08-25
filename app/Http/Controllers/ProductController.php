@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\MediaLibrary\HasMedia;
@@ -26,10 +27,42 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('Product/Index',[
-            'departments'=>Department::where('is_production',1)->get(['id','name']),
-            'products'=>ProductResource::collection(Product::all())
+        $products = Product::query()
+            ->when($request->code, fn($query,$code)=>$query->where('code','like',"%{$code}%"))
+            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->product_type_id, fn($query,$product_type_id)=>$query->where('product_type_id',$product_type_id))
+            ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+            ->when($request->standard_id, fn($query,$standard_id)=>$query->where('standard_id',$standard_id))
+            ->when($request->is_certified, fn($query,$is_certified)=>$query->where('is_certified',$is_certified))
+            ->orderBy('created_at')
+            ->get();
+
+        /*Product Types List*/
+        $productProductType = Product::where('product_type_id', '!=', null)->get()->map(function ($product) {
+            return $product->product_type_id;
+        });
+        $productTypes = ProductType::find($productProductType,['id','name']);
+
+        /*Product Department List*/
+        $productDepartment = Product::where('department_id', '!=', null)->get()->map(function ($product) {
+            return $product->department_id;
+        });
+        $departments = Department::find($productDepartment,['id','name']);
+
+        /*Product Standard List*/
+        $productStandard = Product::where('standard_id', '!=', null)->get()->map(function ($product) {
+            return $product->standard_id;
+        });
+        $standards = Standard::find($productStandard,['id','name']);
+
+        return Inertia::render('Modules/Product/Index',[
+            'tableData'=>ProductResource::collection($products),
+            'searchDataDepartment'=>$departments,
+            'searchDataType' => $productTypes,
+            'searchDataStandard' => $standards
         ]);
+
+
     }
 
     /**
@@ -39,10 +72,16 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
-        return Inertia::render('Product/Create',[
-            'departments'=> Department::where('is_production',1)->get(),
-            'standards'=>Standard::where('department_id',$request->departmentId)->get(['id','code']),
-            'productTypes' => ProductType::where('department_id',$request->departmentId)->get(['id','name']),
+        $department_id = $request->department_id;
+        $departments = Department::where('is_production','=', 2)->get(['id','name']);
+        $standards = Standard::where('department_id',$department_id)->get(['id','code']);
+        $productTypes = ProductType::where('department_id',$department_id)->get(['id','name']);
+
+
+        return Inertia::render('Modules/Product/Create',[
+            'departments'=> $departments,
+            'standards'=> $standards,
+            'productTypes' => $productTypes,
         ]);
     }
 
@@ -55,10 +94,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $attributes = new Product($request->all());
-        $attributes['product_type_id'] = $request->product_type_id['id'];
-        isset($request->department_id) ? $attributes['department_id'] = $request->department_id['id'] : $attributes['department_id'] = null;
-        $attributes['is_certified'] = $request->is_certified['value'];
-        isset($request->standard_id) ? $attributes['standard_id'] = $request->standard_id['id'] : $attributes['standard_id'] = null;
         $attributes['creator_id'] = Auth::id();
         $attributes->save();
 
@@ -69,12 +104,8 @@ class ProductController extends Controller
                 ->toMediaCollection('photo');
         }
 
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The product has been successfully created. The product created: '.$request->name ;
-
-        return redirect()->route('product.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The product has been successfully created.</b><br><b>Product: </b>'.$request['name']]);
+        return redirect()->route('product.index') ;
     }
 
     /**

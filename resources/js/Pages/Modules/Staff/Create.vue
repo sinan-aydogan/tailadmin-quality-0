@@ -1,25 +1,209 @@
 <template>
   <app-layout :action-buttons="true">
     <!--Header-->
-    <template #header>Create Department</template>
-    <template #subHeader>Management of the departments</template>
+    <template #header>Create Staff</template>
+    <template #subHeader>You can new staff for your company</template>
     <!--Action Buttons-->
     <template #action-buttons>
-      <t-action-buttons-create model="department"/>
+      <t-action-buttons-create model="staff"/>
     </template>
     <template #default>
-      <t-form-content @submitted="save()"  @reset="reset">
+      <t-form-content @reset="reset" @submitted="save()">
+        <!--Personal Info-->
         <t-form-section
-            description="You are going to create new department for your company"
-            title="Department Infos"
+            description="This information is subject to personal data protection law."
+            title="Personal Infos"
         >
           <grid-section :col-tablet="2">
-            <!--Department Name-->
+            <!--Staff Name-->
             <t-input-group
-                label="Department Name"
                 :error="error.name"
+                label="Staff Name"
             >
               <t-input-text id="name" v-model="form.name"/>
+            </t-input-group>
+
+            <!--Citizen ID-->
+            <t-input-group
+                :error="error.citizen_id"
+                label="Citizen ID"
+            >
+              <t-input-text id="citizen_id" v-model="form.citizen_id"/>
+            </t-input-group>
+
+            <!--Birthday-->
+            <t-input-group
+                :error="error.birthday_date"
+                label="Birthday"
+            >
+              <t-input-date id="birthday_date" v-model="form.birthday_date"/>
+            </t-input-group>
+
+            <!--Blood Group-->
+            <t-input-group
+                :error="error.blood_group"
+                label="Blood Group"
+            >
+              <t-input-select
+                  id="blood_group"
+                  v-model="form.blood_group"
+                  :clear-button="true"
+                  :options="bloodGroup"
+                  options-label-key="name"
+                  options-value-key="id"
+                  place-holder="Select a blood group"
+              />
+            </t-input-group>
+
+            <!--Phone-->
+            <t-input-group
+                :error="error.phone"
+                label="Phone"
+            >
+              <t-input-repeatable
+                  id="phone"
+                  v-model="form.phone"
+                  value1name="Phone"
+              />
+            </t-input-group>
+
+            <!--Address-->
+            <t-input-group
+                :error="error.address"
+                label="Address"
+            >
+              <t-input-text-area
+                  id="address"
+                  v-model="form.address"
+                  :rows="2"
+              />
+            </t-input-group>
+
+            <!--Emergency Contacts-->
+            <t-input-group
+                :error="error.emergency_contacts"
+                label="Emergency Contacts"
+            >
+              <t-input-repeatable
+                  id="emergency_contacts"
+                  v-model="form.emergency_contacts"
+                  value1name="Name"
+                  value2name="Phone"
+              />
+            </t-input-group>
+
+            <!--Education Info-->
+            <t-input-group
+                :error="error.education_info"
+                label="Education Info"
+            >
+              <t-input-repeatable
+                  id="education_info"
+                  v-model="form.education_info"
+                  value1name="School"
+                  value2name="Section"
+              />
+            </t-input-group>
+
+            <!--Skill Info-->
+            <t-input-group
+                :error="error.skill_info"
+                label="Skill Info"
+            >
+              <t-input-repeatable
+                  id="skill_info"
+                  v-model="form.skill_info"
+                  value1name="Skill"
+                  value2name="Reg. No/Place"
+              />
+            </t-input-group>
+
+            <!--Additional Tasks-->
+            <t-input-group
+                :error="error.additional_task"
+                label="Additional Tasks"
+            >
+              <t-input-repeatable
+                  id="additional_task"
+                  v-model="form.additional_task"
+                  value1name="Task"
+                  value2name="Additional Info"
+              />
+            </t-input-group>
+
+          </grid-section>
+        </t-form-section>
+
+        <!--Staff of business information-->
+        <t-form-section
+            description="The position and other information about of the staff in the business"
+            title="Staff of business information"
+        >
+          <grid-section :col-tablet="2">
+            <!--Email-->
+            <t-input-group
+                :error="error.email"
+                label="Email"
+            >
+              <t-input-text id="email" v-model="form.email"/>
+            </t-input-group>
+
+            <!--Department-->
+            <t-input-group
+                :error="error.department_id"
+                label="Department"
+            >
+              <t-input-select
+                  id="department_id"
+                  v-model="form.department_id"
+                  :options="departments"
+                  options-label-key="name"
+                  options-value-key="id"
+                  :clear-button="true"
+                  :search="true"
+                  place-holder="Select a department"
+              />
+            </t-input-group>
+
+            <!--Collar Type-->
+            <t-input-group
+                :error="error.collar_type"
+                label="Collar Type"
+            >
+              <t-input-select
+                  id="collar_type"
+                  v-model="form.collar_type"
+                  :options="collarType"
+                  options-label-key="name"
+                  options-value-key="id"
+                  :clear-button="true"
+                  place-holder="Select a collar type"
+                  @input="jobDescriptionChange"
+              >
+                <template #label="{props}">
+                  <div class="flex flex-row items-center">
+                    <component :is="props.icon" :class="['w-4 h-4 mr-1', props.style]"/> {{props.name}}
+                  </div>
+                </template>
+              </t-input-select>
+            </t-input-group>
+
+            <!--Job Description-->
+            <t-input-group
+                :error="form.collar_type === null ? 'Please firstly select collar type' : error.job_description_id"
+                label="Job Description"
+            >
+              <t-input-select
+                  id="job_description_id"
+                  v-model="form.job_description_id"
+                  :options="jobDescriptions"
+                  options-label-key="name"
+                  options-value-key="id"
+                  :clear-button="true"
+                  :search="true"
+                  place-holder="Select a description"
+                  :disabled="form.collar_type === null"
+              />
             </t-input-group>
 
             <!--Manager-->
@@ -33,13 +217,14 @@
                   :search="true"
                   place-holder="Select a manager"
                   :clear-button="true"
-                  :options="users"
+                  :options="managers"
                   options-value-key="id"
                   options-label-key="name"
+                  @input="managerChange"
               >
                 <template #label="{props}">
                   <div class="flex flex-wrap whitespace-nowrap items-center gap-1">
-                    <t-avatar :radius="8" :size="2"
+                    <t-avatar :radius="8" :size="1"
                               :src="props.profile_photo_path !== null ? '/storage/'+props.profile_photo_path : null"/>
                     {{ props.name }}
                   </div>
@@ -47,92 +232,97 @@
               </t-input-select>
             </t-input-group>
 
-            <!--Department Type-->
+            <!--Directed Staff-->
             <t-input-group
-                label="Department Type"
-                :error="error.department_type"
+                label="Directed Staff"
+                :error="error.directed_staff"
             >
-              <t-input-select
-                  id="department_type"
-                  v-model="form.department_type"
-                  place-holder="Select department type"
-                  :options="department_type"
-                  options-label-key="name"
-                  options-value-key="id"
-              />
-            </t-input-group>
-
-            <!--Main Department-->
-            <t-input-group
-                label="Main Department"
-                :error="
-                    form.department_type === null ? 'Please firstly select department type':
-                    form.department_type === 1 ? '<span class=\'text-yellow-500\'>You department type is main department, you can\'t select a sub department</span>': null
-                    "
-            >
-              <t-input-select
-                  id="main_department_id"
-                  v-model="form.main_department_id"
+              <t-input-multi-select
+                  id="directed_staff"
+                  v-model="form.directed_staff"
                   :search="true"
-                  place-holder="Select a department"
+                  place-holder="Select staff"
                   :clear-button="true"
-                  :options="departments"
-                  options-label-key="name"
+                  :options="staff"
                   options-value-key="id"
-                  :disabled="form.department_type === 1 || form.department_type === null"
-                  :class="[form.department_type === 1 || form.department_type === null ? 'placeholder-gray-100 text-gray-100':'']"
-              />
-            </t-input-group>
-
-            <!--Customer Complaints-->
-            <t-input-group
-                label="Can it get a customer complaint?"
-                :error="error.is_complaint"
-            >
-              <t-input-select
-                  id="is_complaint"
-                  v-model="form.is_complaint"
-                  :clear-button="true"
-                  :options="is_complaint"
                   options-label-key="name"
-                  options-value-key="id"
               >
                 <template #label="{props}">
-                  <div class="flex flex-row items-center gap-1">
-                    <t-check-circle-icon v-if="props.id == 1" :radius="8" class="text-green-500 w-5 h-5"/>
-                    <t-x-circle-icon v-if="props.id == 2" :radius="8" class="text-red-500 w-5 h-5"/>
+                  <div class="flex flex-row whitespace-nowrap items-center gap-1">
+                    <t-avatar :radius="8" :size="1"
+                              :src="props.profile_photo_path !== null ? '/storage/'+props.profile_photo_path : null"/>
                     {{ props.name }}
                   </div>
                 </template>
-              </t-input-select>
-            </t-input-group>
-
-            <!--Production-->
-            <t-input-group
-                label="Can it make production or has any product?"
-                :error="error.is_production"
-            >
-              <t-input-select
-                  id="is_production"
-                  v-model="form.is_production"
-                  :clear-button="true"
-                  :options="is_production"
-                  options-label-key="name"
-                  options-value-key="id"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-row items-center gap-1">
-                    <t-check-circle-icon v-if="props.id == 1" :radius="8" class="text-green-500 w-5 h-5"/>
-                    <t-x-circle-icon v-if="props.id == 2" :radius="8" class="text-red-500 w-5 h-5"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-select>
+              </t-input-multi-select>
             </t-input-group>
           </grid-section>
         </t-form-section>
 
+        <!--Employment status of the staff-->
+        <t-form-section>
+          <grid-section :col-tablet="2">
+
+            <!--Employment Start Date-->
+            <t-input-group
+                :error="error.starting_date"
+                label="Employment Start Date"
+            >
+              <t-input-date id="starting_date" v-model="form.starting_date"/>
+            </t-input-group>
+
+            <!--Employment Status-->
+            <t-input-group
+                :error="error.status"
+                label="Employment Status"
+            >
+              <t-input-select
+                  id="status"
+                  v-model="form.status"
+                  :options="status"
+                  options-label-key="name"
+                  options-value-key="id"
+                  :clear-button="true"
+                  place-holder="Select a collar type"
+                  @input="jobDescriptionChange"
+              >
+                <template #label="{props}">
+                  <div class="flex flex-row items-center">
+                    <t-badge :color="status[status.findIndex( s => s.id === props.id )].color">
+                      {{props.name}}
+                    </t-badge>
+
+                  </div>
+                </template>
+              </t-input-select>
+            </t-input-group>
+
+            <!--Finish Date of Employment-->
+            <t-input-group
+                :error="error.leaving_date"
+                label="Finish Date of Employment"
+                v-if="form.status > 1"
+            >
+              <t-input-date id="leaving_date" v-model="form.leaving_date"/>
+            </t-input-group>
+
+            <!--Leaving Reason-->
+            <t-input-group
+                :error="error.leaving_reason"
+                :label="form.status === 2 ? 'Reason for Leaving': 'Reason to be Fired'"
+                v-if="form.status === 2 || form.status === 3"
+            >
+              <t-input-text-area
+                  id="leaving_reason"
+                  v-model="form.leaving_reason"
+                  :rows="2"
+              />
+            </t-input-group>
+
+          </grid-section>
+        </t-form-section>
       </t-form-content>
+      <t-loading-screen v-if="loading"/>
     </template>
   </app-layout>
 </template>
@@ -151,11 +341,26 @@ import TBadge from "@/Components/Badge/TBadge";
 import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
 import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
 import TAvatar from "@/Components/Avatar/TAvatar";
-import {DepartmentConsts} from "@/Mixins/SectionConsts/DepartmentConsts";
+import {StaffConsts} from "@/Mixins/SectionConsts/StaffConsts";
+import TInputDate from "@/Components/Form/Inputs/TInputDate";
+import TInputRepeatable from "@/Components/Form/Inputs/TInputRepeatable";
+import TInputTextArea from "@/Components/Form/Inputs/TInputTextArea";
+import TBlueCollarIcon from "@/Components/Icon/TBlueCollarIcon";
+import TWhiteCollarIcon from "@/Components/Icon/TWhiteCollarIcon";
+import TInputMultiSelect from "@/Components/Form/Inputs/TInputMultiSelect";
+import TLoadingScreen from "@/Components/Misc/TLoadingScreen";
+
 
 export default {
   name: "Create",
   components: {
+    TLoadingScreen,
+    TInputMultiSelect,
+    TBlueCollarIcon,
+    TWhiteCollarIcon,
+    TInputTextArea,
+    TInputRepeatable,
+    TInputDate,
     TAvatar,
     TXCircleIcon,
     TCheckCircleIcon,
@@ -164,60 +369,125 @@ export default {
     TInputSelectItem,
     TInputSelect, TInputText, TInputGroup, TFormSection, TFormContent, TActionButtonsCreate, AppLayout
   },
-  mixins: [DepartmentConsts],
+  mixins: [StaffConsts],
   props: {
-    users: {
+    managers: {
+      type: Array
+    },
+    staff: {
       type: Array
     },
     departments: {
+      type: Array
+    },
+    jobDescriptions: {
       type: Array
     },
   },
   data() {
     return {
       loading: false,
-      error:{},
+      error: {},
       form: this.$inertia.form({
         _method: 'POST',
         name: null,
+        email: null,
+        department_id: null,
+        job_description_id: null,
+        collar_type: null,
         manager_id: null,
-        department_type: null,
-        main_department_id: null,
-        is_complaint: null,
-        is_production: null,
+        directed_staff: [],
+        citizen_id: null,
+        status: null,
+        starting_date: null,
+        birthday_date: null,
+        leaving_date: null,
+        leaving_reason: null,
+        blood_group: null,
+        phone: [],
+        address: null,
+        emergency_contacts: [],
+        education_info: [],
+        skill_info: [],
+        additional_task: [],
       }),
     }
   },
   methods: {
     reset: function () {
       this.form.name = null;
+      this.form.email = null;
+      this.form.department_id = null;
+      this.form.job_description_id = null;
+      this.form.collar_type = null;
       this.form.manager_id = null;
-      this.form.department_type = null;
-      this.form.department_id = '';
-      this.form.is_complaint = null;
-      this.form.is_production = null;
+      this.form.directed_staff = [];
+      this.form.citizen_id = null;
+      this.form.status = 1;
+      this.form.starting_date = null;
+      this.form.birthday_date = null;
+      this.form.leaving_date = null;
+      this.form.leaving_reason = null;
+      this.form.blood_group = null;
+      this.form.phone = [];
+      this.form.address = null;
+      this.form.emergency_contacts = [];
+      this.form.education_info = [];
+      this.form.skill_info = [];
+      this.form.additional_task = [];
     },
     save() {
-      this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$set(this.error, 'name', '');
-      this.form.manager_id === null ? this.$set(this.error, 'manager_id', 'You should select a manager') : this.$set(this.error, 'manager_id', '');
-      this.form.department_type === null ? this.$set(this.error, 'department_type', 'You should select a department type') : this.$set(this.error, 'department_type', '');
-      this.form.is_complaint === null ? this.$set(this.error, 'is_complaint', 'You should select a complaint status') : this.$set(this.error, 'is_complaint', '');
-      this.form.is_production === null ? this.$set(this.error, 'is_production', 'You should select a production status') : this.$set(this.error, 'is_production', '');
-      if(this.form.name !== null && this.form.manager_id !== null && this.form.department_type !== null && this.form.is_complaint !== null && this.form.is_production !== null) {
-        this.form.post(route('department.store'), {
-          errorBag: 'department',
+      this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');
+      this.form.email === null ? this.$set(this.error, 'email', 'Email is required') : this.$delete(this.error, 'email');
+      this.form.department_id === null ? this.$set(this.error, 'department_id', 'Department is required') : this.$delete(this.error, 'department_id');
+      this.form.job_description_id === null ? this.$set(this.error, 'job_description_id', 'Job description is required') : this.$delete(this.error, 'job_description_id');
+      this.form.collar_type === null ? this.$set(this.error, 'collar_type', 'Collar type is required') : this.$delete(this.error, 'collar_type');
+      this.form.manager_id === null ? this.$set(this.error, 'manager_id', 'Manager is required') : this.$delete(this.error, 'manager_id');
+      this.form.citizen_id === null ? this.$set(this.error, 'citizen_id', 'Name is required') : this.$delete(this.error, 'citizen_id');
+      this.form.starting_date === null ? this.$set(this.error, 'starting_date', 'Starting date is required') : this.$delete(this.error, 'starting_date');
+      this.form.birthday_date === null ? this.$set(this.error, 'birthday_date', 'Birthday is required') : this.$delete(this.error, 'birthday_date');
+
+      if(this.status > 1){
+        this.form.leaving_date === null ? this.$set(this.error, 'leaving_date', 'Leaving date is required') : this.$delete(this.error, 'leaving_date');
+      }
+
+      if(this.status === 2 || this.status === 3){
+        this.form.leaving_reason === null ? this.$set(this.error, 'leaving_reason', 'Reason of Leaving/Fired is required') : this.$delete(this.error, 'leaving_reason');
+      }
+      console.log(Object.keys(this.error).length)
+      console.log(this.error)
+      if (Object.keys(this.error).length === 0) {
+        this.form.post(route('staff.store'), {
+          errorBag: 'staff',
           preserveScroll: true,
         });
         this.reset();
         this.loading = true;
       }
     },
-  },
-  watch: {
-    'form.department_type'(){
-      if(this.form.department_type === 1){
-        this.form.main_department_id = null
-      }
+    jobDescriptionChange() {
+      this.$inertia.reload({
+        method: 'get',
+        data: {
+          collar_type: this.form.collar_type,
+        },
+        replace: true,
+        preserveState: true,
+        preserveScroll: true,
+        only: ['jobDescriptions'],
+      })
+    },
+    managerChange() {
+      this.$inertia.reload({
+        method: 'get',
+        data: {
+          manager_id: this.form.manager_id,
+        },
+        replace: true,
+        preserveState: true,
+        preserveScroll: true,
+        only: ['staff'],
+      })
     }
   }
 }

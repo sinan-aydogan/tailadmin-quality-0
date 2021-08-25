@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Department;
+use App\Models\JobDescription;
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StaffResource extends JsonResource
@@ -14,6 +17,18 @@ class StaffResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'photo' => $this->profile_photo_path,
+            'department_id' => $this->department_id,
+            'department_name' => $this->department->name,
+            'job_description_id' => $this->job_description_id,
+            'job_description_name' => $this->jobDescription->name,
+            'manager_name' => $this->manager->name,
+            'status' => $this->status
+        ];
+
+        /*return parent::toArray($request);*/
     }
 }

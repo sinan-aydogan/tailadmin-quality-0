@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -14,10 +16,16 @@ class CustomerController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Customer/Index',[
-            'customers'=>Customer::all(['id','name','tax_id','email','phone','status']),
+        $customer = Customer::query()->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->tax_id, fn($query,$tax_id)=>$query->where('tax_id','like',"%{$tax_id}%"))
+            ->when($request->phone, fn($query,$phone)=>$query->where('phone','like',"%{$phone}%"))
+            ->when($request->status, fn($query,$status)=>$query->where('status',$status))
+            ->get();
+
+        return Inertia::render('Modules/Customer/Index',[
+            'tableData'=>CustomerResource::collection($customer),
         ]);
     }
 
@@ -28,7 +36,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Customer/Create');
+        return Inertia::render('Modules/Customer/Create');
     }
 
     /**
@@ -40,15 +48,12 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->all();
-        $attributes['status'] = $request->status != null  ? $request->status['value'] : 1 ;
+
         $attributes['creator_id'] = Auth::id();
         Customer::create($attributes);
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The customer has been successfully created. The customer created: '.$request->name ;
 
-        return redirect()->route('customer.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The customer has been successfully created.</b><br><b>Customer: </b>'.$request['name']]);
+        return redirect()->route('customer.index') ;
     }
 
     /**

@@ -1,131 +1,87 @@
 <template>
   <app-layout :action-buttons="true" :loading="loading">
     <!--Header-->
-    <template #header>Create Department</template>
-    <template #subHeader>Management of the departments</template>
+    <template #header>Create New Customer</template>
+    <template #subHeader>You can new customer</template>
     <!--Action Buttons-->
     <template #action-buttons>
-      <t-action-buttons-create model="department"/>
+      <t-action-buttons-create model="customer"/>
     </template>
     <template #default>
       <t-form-content @reset="reset" @submitted="save()">
         <t-form-section
-            description="You are going to create new department for your company"
-            title="Department Infos"
+            description="You are going to create new customer"
+            title="Customer Infos"
         >
           <grid-section :col-tablet="2">
-            <!--Department Name-->
+            <!--Customer Name-->
             <t-input-group
                 :error="error.name"
                 label="Department Name"
             >
-              <t-input-text id="name" v-model="form.name"/>
+              <t-input-text id="name" v-model="form.name">
+                <t-office-icon slot="icon" class="w-6 h-6"/>
+              </t-input-text>
             </t-input-group>
 
-            <!--Manager-->
+            <!--Tax ID-->
             <t-input-group
-                :error="error.manager_id"
-                label="Manager"
+                :error="error.tax_id"
+                label="Tax ID"
             >
-              <t-input-select
-                  id="manager_id"
-                  v-model="form.manager_id"
-                  :clear-button="true"
-                  :options="users"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a manager"
+              <t-input-text id="tax_id" v-model="form.tax_id">
+                <t-finger-print-icon slot="icon" class="w-6 h-6"/>
+              </t-input-text>
+            </t-input-group>
+
+            <!--Phone-->
+            <t-input-group
+                :error="error.phone"
+                label="Phone"
+            >
+              <t-input-text id="phone" v-model="form.phone" type="tel">
+                <t-phone-icon slot="icon" class="w-6 h-6"/>
+              </t-input-text>
+            </t-input-group>
+
+            <!--Email-->
+            <t-input-group
+                :error="error.email"
+                label="Email"
+            >
+              <t-input-text id="email" v-model="form.email" type="email" placeholder=". . . @ . . . .">
+                <t-email-at-icon slot="icon" class="w-6 h-6"/>
+              </t-input-text>
+            </t-input-group>
+
+            <!--Address-->
+            <t-input-group
+              :error="error.address"
+              label="Address"
               >
-                <template #label="{props}">
-                  <div class="flex flex-wrap whitespace-nowrap items-center gap-1">
-                    <t-avatar :radius="8" :size="2"
-                              :src="props.profile_photo_path !== null ? '/storage/'+props.profile_photo_path : null"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-select>
+              <t-input-text-area
+                id="address"
+                v-model="form.address"
+                />
             </t-input-group>
 
-            <!--Department Type-->
+            <!--Status-->
             <t-input-group
-                :error="error.department_type"
-                label="Department Type"
+                :error="error.status"
+                label="Status"
             >
               <t-input-select
-                  id="department_type"
-                  v-model="form.department_type"
-                  :options="department_type"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select department type"
-              />
-            </t-input-group>
-
-            <!--Main Department-->
-            <t-input-group
-                :error="
-                    form.department_type === null ? 'Please firstly select department type':
-                    form.department_type === 1 ? '<span class=\'text-yellow-500\'>You department type is main department, you can\'t select a sub department</span>': null
-                    "
-                label="Main Department"
-            >
-              <t-input-select
-                  id="main_department_id"
-                  v-model="form.main_department_id"
-                  :class="[form.department_type === 1 || form.department_type === null ? 'placeholder-gray-100 text-gray-100':'']"
+                  id="status"
+                  v-model="form.status"
                   :clear-button="true"
-                  :disabled="form.department_type === 1 || form.department_type === null"
-                  :options="departments"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a department"
-              />
-            </t-input-group>
-
-            <!--Customer Complaints-->
-            <t-input-group
-                :error="error.is_complaint"
-                label="Can it get a customer complaint?"
-            >
-              <t-input-select
-                  id="is_complaint"
-                  v-model="form.is_complaint"
-                  :clear-button="true"
-                  :options="is_complaint"
+                  :options="status"
                   options-label-key="name"
                   options-value-key="id"
               >
                 <template #label="{props}">
-                  <div class="flex flex-row items-center gap-1">
-                    <t-check-circle-icon v-if="props.id == 1" :radius="8" class="text-green-500 w-5 h-5"/>
-                    <t-x-circle-icon v-if="props.id == 2" :radius="8" class="text-red-500 w-5 h-5"/>
+                  <t-badge :color="props.color">
                     {{ props.name }}
-                  </div>
-                </template>
-              </t-input-select>
-            </t-input-group>
-
-            <!--Production-->
-            <t-input-group
-                :error="error.is_production"
-                label="Can it make production or has any product?"
-            >
-              <t-input-select
-                  id="is_production"
-                  v-model="form.is_production"
-                  :clear-button="true"
-                  :options="is_production"
-                  options-label-key="name"
-                  options-value-key="id"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-row items-center gap-1">
-                    <t-check-circle-icon v-if="props.id == 1" :radius="8" class="text-green-500 w-5 h-5"/>
-                    <t-x-circle-icon v-if="props.id == 2" :radius="8" class="text-red-500 w-5 h-5"/>
-                    {{ props.name }}
-                  </div>
+                  </t-badge>
                 </template>
               </t-input-select>
             </t-input-group>
@@ -140,17 +96,18 @@
 import AppLayout from "@/Layouts/AppLayout";
 import GridSection from "@/Layouts/GridSection";
 import TActionButtonsCreate from "@/Components/Button/ActionButtonsCreate";
-import TAvatar from "@/Components/Avatar/TAvatar";
 import TBadge from "@/Components/Badge/TBadge";
-import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
+import TEmailAtIcon from "@/Components/Icon/TEmailAtIcon";
+import TFingerPrintIcon from "@/Components/Icon/TFingerPrintIcon";
 import TFormContent from "@/Components/Form/TFormContent";
 import TFormSection from "@/Components/Form/TFormSection";
 import TInputGroup from "@/Components/Form/TInputGroup";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import TInputText from "@/Components/Form/Inputs/TInputText";
-import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
-import {DepartmentConsts} from "@/Mixins/SectionConsts/DepartmentConsts";
+import TInputTextArea from "@/Components/Form/Inputs/TInputTextArea";
+import TOfficeIcon from "@/Components/Icon/TOfficeIcon";
+import TPhoneIcon from "@/Components/Icon/TPhoneIcon";
+import {CustomerConsts} from "@/Mixins/SectionConsts/CustomerConsts";
 
 export default {
   name: "Create",
@@ -158,26 +115,19 @@ export default {
     AppLayout,
     GridSection,
     TActionButtonsCreate,
-    TAvatar,
     TBadge,
-    TCheckCircleIcon,
+    TEmailAtIcon,
+    TFingerPrintIcon,
     TFormContent,
     TFormSection,
     TInputGroup,
     TInputSelect,
-    TInputSelectItem,
     TInputText,
-    TXCircleIcon
+    TOfficeIcon,
+    TPhoneIcon,
+    TInputTextArea,
   },
-  mixins: [DepartmentConsts],
-  props: {
-    users: {
-      type: Array
-    },
-    departments: {
-      type: Array
-    },
-  },
+  mixins: [CustomerConsts],
   data() {
     return {
       loading: false,
@@ -185,49 +135,39 @@ export default {
       form: this.$inertia.form({
         _method: 'POST',
         name: null,
-        manager_id: null,
-        department_type: null,
-        main_department_id: null,
-        is_complaint: null,
-        is_production: null,
+        tax_id: null,
+        phone: null,
+        email: null,
+        address: null,
+        status: 1,
       }),
     }
   },
   methods: {
     reset: function () {
       this.form.name = null;
-      this.form.manager_id = null;
-      this.form.department_type = null;
-      this.form.department_id = '';
-      this.form.is_complaint = null;
-      this.form.is_production = null;
+      this.form.tax_id = null;
+      this.form.phone = null;
+      this.form.email = '';
+      this.form.address = null;
+      this.form.status = null;
     },
     save() {
       this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');
-      this.form.manager_id === null ? this.$set(this.error, 'manager_id', 'You should select a manager') : this.$delete(this.error, 'manager_id');
-      this.form.department_type === null ? this.$set(this.error, 'department_type', 'You should select a department type') : this.$delete(this.error, 'department_type');
-      this.form.is_complaint === null ? this.$set(this.error, 'is_complaint', 'You should select a complaint status') : this.$delete(this.error, 'is_complaint');
-      this.form.is_production === null ? this.$set(this.error, 'is_production', 'You should select a production status') : this.$delete(this.error, 'is_production');
+      this.form.tax_id === null ? this.$set(this.error, 'tax_id', 'Tax ID is required') : this.$delete(this.error, 'tax_id');
+      this.form.phone === null ? this.$set(this.error, 'phone', 'Phone is required') : this.$delete(this.error, 'phone');
+      this.form.email === null ? this.$set(this.error, 'email', 'Email is required') : this.$delete(this.error, 'email');
+      this.form.status === null ? this.$set(this.error, 'status', 'You should select a status') : this.$delete(this.error, 'status');
 
       if (Object.keys(this.error).length === 0) {
-        this.form.post(route('department.store'), {
-          errorBag: 'department',
+        this.form.post(route('customer.store'), {
+          errorBag: 'customer',
           preserveScroll: true,
         });
         this.reset();
         this.loading = true;
       }
     },
-  },
-  updated() {
-    console.log(this.$page)
-  },
-  watch: {
-    'form.department_type'() {
-      if (this.form.department_type === 1) {
-        this.form.main_department_id = null
-      }
-    }
   }
 }
 </script>

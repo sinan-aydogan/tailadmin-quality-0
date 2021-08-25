@@ -1,8 +1,8 @@
 <template>
   <app-layout>
     <!--Header-->
-    <template #header>Departments</template>
-    <template #subHeader>Management of the departments</template>
+    <template #header>Staff</template>
+    <template #subHeader>Management of the staff</template>
     <!--Content-->
     <template #default>
       <t-table
@@ -14,16 +14,47 @@
       >
         <!--Search Area-->
         <template #search>
-          <grid-section :col-tablet="4">
-            <!--Department Name-->
+          <grid-section :col-tablet="3">
+            <!--Staff Name-->
             <t-input-group
-                label="Department Name"
+                label="Person Name"
             >
               <t-input-text
                   v-model="searchData.name"
                   @input="search"
               />
             </t-input-group>
+
+            <!--Department-->
+            <t-input-group
+                label="Department"
+            >
+              <t-input-select
+                  v-model="searchData.department_id"
+                  :clear-button="true"
+                  :options="searchDataDepartment"
+                  :search="true"
+                  options-label-key="name"
+                  options-value-key="id"
+                  @input="search"
+              />
+            </t-input-group>
+
+            <!--Job Description-->
+            <t-input-group
+                label="Job Description"
+            >
+              <t-input-select
+                  v-model="searchData.job_description_id"
+                  :clear-button="true"
+                  :options="searchDataJobDescription"
+                  :search="true"
+                  options-label-key="name"
+                  options-value-key="id"
+                  @input="search"
+              />
+            </t-input-group>
+
             <!--Manager-->
             <t-input-group
                 label="Manager"
@@ -32,6 +63,7 @@
                   v-model="searchData.manager_id"
                   :clear-button="true"
                   :options="searchDataManager"
+                  :search="true"
                   options-label-key="name"
                   options-value-key="id"
                   @input="search"
@@ -45,47 +77,21 @@
                 </template>
               </t-input-select>
             </t-input-group>
-            <!--Customer Complaints-->
+
+            <!--Status-->
             <t-input-group
-                label="Get a Complaints?"
+                label="Status"
             >
               <t-input-select
-                  v-model="searchData.is_complaint"
+                  v-model="searchData.status"
                   :clear-button="true"
-                  :options="is_complaint"
+                  :options="status"
                   options-label-key="name"
                   options-value-key="id"
                   @input="search"
               >
                 <template #label="{props}">
-                  <t-badge :color="props.color" :radius="8">
-                    <template #icon>
-                      <t-check-circle-icon v-if="props.id == 1" :radius="8"/>
-                      <t-x-circle-icon v-if="props.id == 2" :radius="8"/>
-                    </template>
-                    {{ props.name }}
-                  </t-badge>
-                </template>
-              </t-input-select>
-            </t-input-group>
-            <!--Production-->
-            <t-input-group
-                label="Make Production?"
-            >
-              <t-input-select
-                  v-model="searchData.is_production"
-                  :clear-button="true"
-                  :options="is_production"
-                  options-label-key="name"
-                  options-value-key="id"
-                  @input="search"
-              >
-                <template #label="{props}">
-                  <t-badge :color="props.color" :radius="8">
-                    <template #icon>
-                      <t-check-circle-icon v-if="props.id == 1" :radius="8"/>
-                      <t-x-circle-icon v-if="props.id == 2" :radius="8"/>
-                    </template>
+                  <t-badge :color="props.color">
                     {{ props.name }}
                   </t-badge>
                 </template>
@@ -94,34 +100,20 @@
           </grid-section>
         </template>
         <template #right>
-          <t-action-buttons-index model="department"/>
+          <t-action-buttons-index model="staff"/>
         </template>
-        <!--Manager-->
-        <template #manager_name="{props}">
+        <!--Name-->
+        <template #name="{props}">
           <div class="inline-flex whitespace-nowrap items-center gap-1">
             <t-avatar :radius="8" :size="2"
-                      :src="props.manager_photo !== null ? 'storage/'+props.manager_photo : null"/>
-            {{ props.manager_name }}
+                      :src="props.photo !== null ? 'storage/'+props.photo : null"/>
+            {{ props.name }}
           </div>
         </template>
-        <!--Customer Complaints-->
-        <template #is_complaint="{props}">
-          <t-badge :color="is_complaint[is_complaint.findIndex( s => s.id === props.is_complaint )].color" :radius="8">
-            <template #icon>
-              <t-x-circle-icon v-if="props.is_complaint === 0" :radius="8"/>
-              <t-check-circle-icon v-else :radius="8"/>
-            </template>
-            {{ is_complaint[is_complaint.findIndex( s => s.id === props.is_complaint )].name }}
-          </t-badge>
-        </template>
-        <!--Production-->
-        <template #is_production="{props}">
-          <t-badge :color="is_production[is_production.findIndex( s => s.id === props.is_production )].color" :radius="8">
-            <template #icon>
-              <t-x-circle-icon v-if="props.is_production === 0" :radius="8"/>
-              <t-check-circle-icon v-else :radius="8"/>
-            </template>
-            {{ is_production[is_production.findIndex( s => s.id === props.is_production )].name }}
+        <!--Status-->
+        <template #status="{props}">
+          <t-badge :color="status[status.findIndex( s => s.id === props.status )].color">
+            {{ status[status.findIndex( s => s.id === props.status )].name }}
           </t-badge>
         </template>
       </t-table>
@@ -142,7 +134,7 @@ import TBadge from "@/Components/Badge/TBadge";
 import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
 import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
 import TAvatar from "@/Components/Avatar/TAvatar";
-import {DepartmentConsts} from "@/Mixins/SectionConsts/DepartmentConsts";
+import {StaffConsts} from "@/Mixins/SectionConsts/StaffConsts";
 
 export default {
   name: "Index",
@@ -160,28 +152,36 @@ export default {
     TTable,
     AppLayout
   },
-  mixins: [DepartmentConsts],
+  mixins: [StaffConsts],
   props: {
     tableData: {
       type: Object
     },
+    searchDataDepartment : {
+      type: Array
+    },
     searchDataManager: {
+      type: Array
+    },
+    searchDataJobDescription: {
       type: Array
     }
   },
   data() {
     return {
       tableHeaders: [
-        {label: 'Department', key: 'name', align: 'left'},
+        {label: 'Person Name', key: 'name', align: 'left'},
+        {label: 'Department', key: 'department_name', align: 'left'},
+        {label: 'Job Description', key: 'job_description_name', align: 'left'},
         {label: 'Manager', key: 'manager_name', align: 'left'},
-        {label: 'Get a Complaints?', key: 'is_complaint', align: 'center'},
-        {label: 'Make Production?', key: 'is_production', align: 'center'},
+        {label: 'Status', key: 'status', align: 'center'},
       ],
       searchData: {
         name: '',
+        department_id: null,
+        job_description_id: null,
         manager_id: null,
-        is_complaint: null,
-        is_production: null
+        status: null,
       }
     }
   },
@@ -190,9 +190,10 @@ export default {
       this.$inertia.reload({
         data: {
           name: this.searchData.name,
+          department_id: this.searchData.department_id,
+          job_description_id: this.searchData.job_description_id,
           manager_id: this.searchData.manager_id,
-          is_complaint: this.searchData.is_complaint,
-          is_production: this.searchData.is_production
+          status: this.searchData.status,
         },
         only: ['tableData'],
       })

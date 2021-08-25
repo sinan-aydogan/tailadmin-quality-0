@@ -1,8 +1,8 @@
 <template>
   <app-layout>
     <!--Header-->
-    <template #header>Departments</template>
-    <template #subHeader>Management of the departments</template>
+    <template #header>Customers</template>
+    <template #subHeader>All of customers in your company</template>
     <!--Content-->
     <template #default>
       <t-table
@@ -15,7 +15,7 @@
         <!--Search Area-->
         <template #search>
           <grid-section :col-tablet="4">
-            <!--Department Name-->
+            <!--Customer Name-->
             <t-input-group
                 label="Department Name"
             >
@@ -24,68 +24,41 @@
                   @input="search"
               />
             </t-input-group>
-            <!--Manager-->
+
+            <!--Tax ID-->
             <t-input-group
-                label="Manager"
+                label="Tax ID"
             >
-              <t-input-select
-                  v-model="searchData.manager_id"
-                  :clear-button="true"
-                  :options="searchDataManager"
-                  options-label-key="name"
-                  options-value-key="id"
+              <t-input-text
+                  v-model="searchData.tax_id"
                   @input="search"
-              >
-                <template #label="{props}">
-                  <div class="flex flex-wrap whitespace-nowrap items-center gap-1">
-                    <t-avatar :radius="8" :size="2"
-                              :src="props.profile_photo_path !== null ? 'storage/'+props.profile_photo_path : null"/>
-                    {{ props.name }}
-                  </div>
-                </template>
-              </t-input-select>
+              />
             </t-input-group>
-            <!--Customer Complaints-->
+
+            <!--Phone-->
             <t-input-group
-                label="Get a Complaints?"
+                label="Phone"
             >
-              <t-input-select
-                  v-model="searchData.is_complaint"
-                  :clear-button="true"
-                  :options="is_complaint"
-                  options-label-key="name"
-                  options-value-key="id"
+              <t-input-text
+                  v-model="searchData.phone"
                   @input="search"
-              >
-                <template #label="{props}">
-                  <t-badge :color="props.color" :radius="8">
-                    <template #icon>
-                      <t-check-circle-icon v-if="props.id == 1" :radius="8"/>
-                      <t-x-circle-icon v-if="props.id == 2" :radius="8"/>
-                    </template>
-                    {{ props.name }}
-                  </t-badge>
-                </template>
-              </t-input-select>
+              />
             </t-input-group>
-            <!--Production-->
+
+            <!--Status-->
             <t-input-group
-                label="Make Production?"
+                label="Status"
             >
               <t-input-select
-                  v-model="searchData.is_production"
+                  v-model="searchData.status"
                   :clear-button="true"
-                  :options="is_production"
+                  :options="status"
                   options-label-key="name"
                   options-value-key="id"
                   @input="search"
               >
                 <template #label="{props}">
-                  <t-badge :color="props.color" :radius="8">
-                    <template #icon>
-                      <t-check-circle-icon v-if="props.id == 1" :radius="8"/>
-                      <t-x-circle-icon v-if="props.id == 2" :radius="8"/>
-                    </template>
+                  <t-badge :color="props.color">
                     {{ props.name }}
                   </t-badge>
                 </template>
@@ -94,34 +67,12 @@
           </grid-section>
         </template>
         <template #right>
-          <t-action-buttons-index model="department"/>
+          <t-action-buttons-index model="customer"/>
         </template>
-        <!--Manager-->
-        <template #manager_name="{props}">
-          <div class="inline-flex whitespace-nowrap items-center gap-1">
-            <t-avatar :radius="8" :size="2"
-                      :src="props.manager_photo !== null ? 'storage/'+props.manager_photo : null"/>
-            {{ props.manager_name }}
-          </div>
-        </template>
-        <!--Customer Complaints-->
-        <template #is_complaint="{props}">
-          <t-badge :color="is_complaint[is_complaint.findIndex( s => s.id === props.is_complaint )].color" :radius="8">
-            <template #icon>
-              <t-x-circle-icon v-if="props.is_complaint === 0" :radius="8"/>
-              <t-check-circle-icon v-else :radius="8"/>
-            </template>
-            {{ is_complaint[is_complaint.findIndex( s => s.id === props.is_complaint )].name }}
-          </t-badge>
-        </template>
-        <!--Production-->
-        <template #is_production="{props}">
-          <t-badge :color="is_production[is_production.findIndex( s => s.id === props.is_production )].color" :radius="8">
-            <template #icon>
-              <t-x-circle-icon v-if="props.is_production === 0" :radius="8"/>
-              <t-check-circle-icon v-else :radius="8"/>
-            </template>
-            {{ is_production[is_production.findIndex( s => s.id === props.is_production )].name }}
+        <!--Status-->
+        <template #status="{props}">
+          <t-badge :color="status[status.findIndex( s => s.id === props.status )].color">
+            {{ status[status.findIndex(s => s.id === props.status)].name }}
           </t-badge>
         </template>
       </t-table>
@@ -131,36 +82,30 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
-import TTable from "@/Components/Table/TTable";
+import GridSection from "@/Layouts/GridSection";
 import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
+import TBadge from "@/Components/Badge/TBadge";
 import TInputGroup from "@/Components/Form/TInputGroup";
-import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
 import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
-import GridSection from "@/Layouts/GridSection";
-import TBadge from "@/Components/Badge/TBadge";
-import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
-import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
-import TAvatar from "@/Components/Avatar/TAvatar";
-import {DepartmentConsts} from "@/Mixins/SectionConsts/DepartmentConsts";
+import TInputText from "@/Components/Form/Inputs/TInputText";
+import TTable from "@/Components/Table/TTable";
+import {CustomerConsts} from "@/Mixins/SectionConsts/CustomerConsts";
 
 export default {
   name: "Index",
   components: {
-    TAvatar,
-    TCheckCircleIcon,
-    TXCircleIcon,
-    TBadge,
+    AppLayout,
     GridSection,
-    TInputSelectItem,
-    TInputSelect,
-    TInputText,
-    TInputGroup,
     TActionButtonsIndex,
-    TTable,
-    AppLayout
+    TBadge,
+    TInputGroup,
+    TInputSelect,
+    TInputSelectItem,
+    TInputText,
+    TTable
   },
-  mixins: [DepartmentConsts],
+  mixins: [CustomerConsts],
   props: {
     tableData: {
       type: Object
@@ -172,16 +117,17 @@ export default {
   data() {
     return {
       tableHeaders: [
-        {label: 'Department', key: 'name', align: 'left'},
-        {label: 'Manager', key: 'manager_name', align: 'left'},
-        {label: 'Get a Complaints?', key: 'is_complaint', align: 'center'},
-        {label: 'Make Production?', key: 'is_production', align: 'center'},
+        {label: 'Customer', key: 'name', align: 'left'},
+        {label: 'Tax ID', key: 'tax_id', align: 'left'},
+        {label: 'Email', key: 'email', align: 'left'},
+        {label: 'Phone', key: 'phone', align: 'left'},
+        {label: 'Status', key: 'status', align: 'center'},
       ],
       searchData: {
         name: '',
-        manager_id: null,
-        is_complaint: null,
-        is_production: null
+        tax_id: null,
+        phone: null,
+        status: null
       }
     }
   },
@@ -190,9 +136,9 @@ export default {
       this.$inertia.reload({
         data: {
           name: this.searchData.name,
-          manager_id: this.searchData.manager_id,
-          is_complaint: this.searchData.is_complaint,
-          is_production: this.searchData.is_production
+          tax_id: this.searchData.tax_id,
+          phone: this.searchData.phone,
+          status: this.searchData.status
         },
         only: ['tableData'],
       })

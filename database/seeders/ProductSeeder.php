@@ -22,6 +22,7 @@ class ProductSeeder extends Seeder
             'code' => 'TP-X125-01',
             'department_id' => Department::where('name','Canned Food Production')->first()->id,
             'product_type_id' => ProductType::where('name','Tomato Paste')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -31,6 +32,7 @@ class ProductSeeder extends Seeder
             'code' => 'TP-X005-01',
             'department_id' => Department::where('name','Canned Food Production')->first()->id,
             'product_type_id' => ProductType::where('name','Tomato Paste')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -40,6 +42,7 @@ class ProductSeeder extends Seeder
             'code' => 'PP-X125-01',
             'department_id' => Department::where('name','Canned Food Production')->first()->id,
             'product_type_id' => ProductType::where('name','Pepper Paste')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -49,6 +52,7 @@ class ProductSeeder extends Seeder
             'code' => 'PP-X005-01',
             'department_id' => Department::where('name','Canned Food Production')->first()->id,
             'product_type_id' => ProductType::where('name','Pepper Paste')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -58,6 +62,7 @@ class ProductSeeder extends Seeder
             'code' => 'KT-X033-01',
             'department_id' => Department::where('name','Sauces Production')->first()->id,
             'product_type_id' => ProductType::where('name','Ketchup')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -67,6 +72,7 @@ class ProductSeeder extends Seeder
             'code' => 'KT-X033-02',
             'department_id' => Department::where('name','Sauces Production')->first()->id,
             'product_type_id' => ProductType::where('name','Ketchup')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -76,6 +82,7 @@ class ProductSeeder extends Seeder
             'code' => 'MY-X033-01',
             'department_id' => Department::where('name','Sauces Production')->first()->id,
             'product_type_id' => ProductType::where('name','Mayonnaise')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
 
@@ -85,6 +92,7 @@ class ProductSeeder extends Seeder
             'code' => 'MY-X050-01',
             'department_id' => Department::where('name','Sauces Production')->first()->id,
             'product_type_id' => ProductType::where('name','Mayonnaise')->first()->id,
+            'is_certified' => 4,
             'creator_id' => 1,
         ]);
     }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\JobDescriptionResource;
 use App\Models\Department;
 use App\Models\JobDescription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class JobDescriptionController extends Controller
@@ -16,10 +18,24 @@ class JobDescriptionController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('JobDescription/Index',[
-            'jobDescriptions'=>JobDescription::with('department:id,name')->get(),
+        /*Job Descriptions List*/
+        $jobDescription = JobDescription::query()->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+            ->when($request->collar_type, fn($query,$collar_type)=>$query->where('collar_type',$collar_type))
+            ->when($request->status, fn($query,$status)=>$query->where('status',$status))
+            ->get();
+
+        /*Job Description Department List*/
+        $jobDescriptionDepartment = JobDescription::where('department_id', '!=', null)->get()->map(function ($jobDescription) {
+            return $jobDescription->department_id;
+        });
+        $departments = Department::find($jobDescriptionDepartment,['id','name']);
+
+        return Inertia::render('Modules/Staff/JobDescription/Index',[
+            'tableData'=> JobDescriptionResource::collection($jobDescription),
+            'searchDataDepartment'=> $departments
         ]);
     }
 
@@ -30,8 +46,8 @@ class JobDescriptionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('JobDescription/Create',[
-            'users'=>User::all(['id','name','profile_photo_path']),
+        return Inertia::render('Modules/Staff/JobDescription/Create',[
+            'staff'=>User::all(['id','name','profile_photo_path']),
             'departments'=>Department::all(['id','name']),
             'jobDescriptions'=>JobDescription::all(['id','name']),
         ]);
@@ -46,16 +62,11 @@ class JobDescriptionController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->all();
-        $attributes['department_id'] = $request->department_id['id'];
-        $attributes['collar_type'] = $request->collar_type['value'];
         $attributes['creator_id'] = Auth::id();
         JobDescription::create($attributes);
 
-        $message = [];
-        $message['type'] = 'success';
-        $message['content'] = 'The job description has been successfully created. The job decription created: '.$request->name ;
-
-        return redirect()->route('job-description.index')->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The job description has been successfully created.</b><br><b>Title: </b>'.$request['name']]);
+        return redirect()->route('job-description.index') ;
     }
 
     /**

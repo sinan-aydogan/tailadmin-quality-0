@@ -8,7 +8,7 @@
           <div class="flex justify-between h-10 overflow-hidden mx-4">
             <t-logo class="w-10 h-10 text-white"/>
             <transition name="left-menu">
-              <div v-if="showingLeftMenu === 'true'" class="flex text-3xl text-white h-10 items-center">TailAdmin</div>
+              <div v-if="showingLeftMenu === 'true'" class="flex text-3xl text-white h-10 items-center">LaraQuality</div>
             </transition>
           </div>
         </div>

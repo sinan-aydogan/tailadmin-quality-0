@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductTypeResource;
 use App\Models\Department;
 use App\Models\ProductType;
 use Illuminate\Http\Request;
@@ -15,10 +16,23 @@ class ProductTypeController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Product/ProductType/Index',[
-            'productTypes'=>ProductType::with('department:id,name')->get(['id','name','department_id','description']),
+        /*Product Type List*/
+        $types = ProductType::query()
+            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+            ->get();
+
+        /*Product Type Department List*/
+        $typeDepartment = ProductType::where('department_id', '!=', null)->get()->map(function ($type) {
+            return $type->department_id;
+        });
+        $departments = Department::find($typeDepartment,['id','name']);
+
+        return Inertia::render('Modules/Product/Type/Index',[
+            'tableData'=>ProductTypeResource::collection($types),
+            'searchDataDepartment'=>$departments
         ]);
     }
 
@@ -29,7 +43,7 @@ class ProductTypeController extends Controller
      */
     public function create(Request $request)
     {
-        return Inertia::render('Product/ProductType/Create',[
+        return Inertia::render('Modules/Product/Type/Create',[
             'departments'=>Department::all(['id','name']),
         ]);
     }

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Department;
+use App\Models\JobDescription;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -30,6 +32,15 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'department_id' => Department::all()->random()->id,
+            'job_description_id' => JobDescription::all()->random()->id,
+            'collar_type' => 2,
+            'citizen_id' => $this->faker->regexify('[A-Z]{5}[0-9]{6}'),
+            'status'=> $this->faker->numberBetween(1, 4),
+            'starting_date' => $this->faker->dateTimeBetween(),
+            'leaving_date' => ($this->faker->numberBetween(0, 3) != 1 ? $this->faker->dateTimeBetween() : null),
+            'blood_group' => $this->faker->numberBetween(1, 8),
+            'creator_id' => 1,
         ];
     }
 

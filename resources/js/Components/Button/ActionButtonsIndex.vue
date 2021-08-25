@@ -4,6 +4,7 @@
   <t-button
       color="solid-green"
       :link="route(model+'.create')"
+      type="link"
   >
     <t-plus-icon class="w-5 h-5"/>
     Add New
@@ -12,6 +13,7 @@
   <t-button
       color="solid-gray"
       :link="route(model+'.trash')"
+      type="link"
   >
     <t-trash-icon class="w-5 h-5"/>
     Deleted Items

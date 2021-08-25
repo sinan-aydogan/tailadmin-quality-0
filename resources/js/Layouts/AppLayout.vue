@@ -391,8 +391,8 @@
         >
           <a
               class="text-blue-600 hover:underline"
-              href="https://tailadmin.dev/"
-          >TailAdmin v.1.0.3</a
+              href="https://laraquality.dev/"
+          >TailAdmin Quality v.1.0.0</a
           >
           <span>by</span>
           <a
@@ -402,7 +402,7 @@
           >
           <a
               class="flex items-center text-blue-600 hover:underline"
-              href="https://github.com/sinan-aydogan/tailadmin-laravel"
+              href="https://github.com/sinan-aydogan/tailadmin-quality"
               target="_blank"
           >
             <t-github-icon class="w-5 h-5 -mt-1"/>
@@ -411,6 +411,7 @@
         </footer>
       </div>
     </div>
+    <t-loading-screen v-if="loading"/>
   </div>
 </template>
 <script>
@@ -431,9 +432,15 @@ import THamburgerMenuTriggerIcon from "@/Components/Icon/THamburgerMenuTriggerIc
 import TXIcon from "@/Components/Icon/TXIcon";
 import TLogOutIcon from "@/Components/Icon/TLogOutIcon";
 import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
+import TLoadingScreen from "@/Components/Misc/TLoadingScreen";
+
+import { InertiaProgress } from '@inertiajs/progress'
+
+InertiaProgress.init()
 
 export default {
   components: {
+    TLoadingScreen,
     TCheckCircleIcon,
     TLogOutIcon,
     TXIcon,
@@ -456,6 +463,9 @@ export default {
   props: {
     actionButtons: {
       require: false,
+      default: false
+    },
+    loading: {
       default: false
     }
   },

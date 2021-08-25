@@ -52,72 +52,88 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
        Route::get('system', function () {return Inertia::render('Settings/System');})->name('settings-system');
     });
 
-    /*This pages for example, you can delete when you design the your system*/
-    //Example Pages
-    Route::get('login-app',function (){return Inertia::render('Samples/Examples/Login');})->name('login-app');
-        Route::get('login-app-1',function (){return Inertia::render('Samples/Examples/Auth/Login1');})->name('login-app-1');
-        Route::get('login-app-2',function (){return Inertia::render('Samples/Examples/Auth/Login2');})->name('login-app-2');
-        Route::get('login-app-3',function (){return Inertia::render('Samples/Examples/Auth/Login3');})->name('login-app-3');
-    Route::get('register-app',function (){return Inertia::render('Samples/Examples/Register');})->name('register-app');
-        Route::get('register-app-1',function (){return Inertia::render('Samples/Examples/Auth/Register1');})->name('register-app-1');
-        Route::get('register-app-2',function (){return Inertia::render('Samples/Examples/Auth/Register2');})->name('register-app-2');
-        Route::get('register-app-3',function (){return Inertia::render('Samples/Examples/Auth/Register3');})->name('register-app-3');
-    Route::get('forgot-password-app',function (){return Inertia::render('Samples/Examples/ForgotPassword');})->name('forgot-password-app');
-        Route::get('forgot-password-app-1',function (){return Inertia::render('Samples/Examples/Auth/ForgotPassword1');})->name('forgot-password-app-1');
-        Route::get('forgot-password-app-2',function (){return Inertia::render('Samples/Examples/Auth/ForgotPassword2');})->name('forgot-password-app-2');
-        Route::get('forgot-password-app-3',function (){return Inertia::render('Samples/Examples/Auth/ForgotPassword3');})->name('forgot-password-app-3');
-    Route::get('lock-app',function (){return Inertia::render('Samples/Examples/Lock');})->name('lock-app');
-        Route::get('lock-app-1',function (){return Inertia::render('Samples/Examples/Auth/Lock1');})->name('lock-app-1');
-        Route::get('lock-app-2',function (){return Inertia::render('Samples/Examples/Auth/Lock2');})->name('lock-app-2');
-        Route::get('lock-app-3',function (){return Inertia::render('Samples/Examples/Auth/Lock3');})->name('lock-app-3');
-    Route::get('profile',function (){return Inertia::render('Samples/Examples/Profile');})->name('profile');
-    Route::get('pricing',function (){return Inertia::render('Samples/Examples/Pricing');})->name('pricing');
-    Route::get('project-management-app',function (){return Inertia::render('Samples/Examples/ProjectApp');})->name('project-management-app');
-    Route::get('todo-app',function (){return Inertia::render('Samples/Examples/TodoApp');})->name('todo-app');
-    Route::get('email-app',function (){return Inertia::render('Samples/Examples/EmailApp');})->name('email-app');
-    Route::get('chat-app',function (){return Inertia::render('Samples/Examples/ChatApp');})->name('chat-app');
-    //Component Pages
-    Route::get('alert',function (){return Inertia::render('Samples/Components/Alert');})->name('alert');
-    Route::get('avatar',function (){return Inertia::render('Samples/Components/Avatar');})->name('avatar');
-    Route::get('badge',function (){return Inertia::render('Samples/Components/Badge');})->name('badge');
-    Route::get('breadcrumb',function (){return Inertia::render('Samples/Components/Breadcrumb');})->name('breadcrumb');
-    Route::get('button',function (){return Inertia::render('Samples/Components/Button');})->name('button');
-    Route::get('chart',function (){return Inertia::render('Samples/Components/Chart');})->name('chart');
-    Route::get('collapsible',function (){return Inertia::render('Samples/Components/Collapsible');})->name('collapsible');
-    Route::get('dropdown',function (){return Inertia::render('Samples/Components/Dropdown');})->name('dropdown');
-    Route::get('list',function (){return Inertia::render('Samples/Components/List');})->name('list');
-    Route::get('modal',function (){return Inertia::render('Samples/Components/Modal');})->name('modal');
-    Route::get('pagination',function (){return Inertia::render('Samples/Components/Paginate');})->name('pagination');
-    Route::get('popover',function (){return Inertia::render('Samples/Components/Popover');})->name('popover');
-    Route::get('progress',function (){return Inertia::render('Samples/Components/Progress');})->name('progress');
-    Route::get('tab',function (){return Inertia::render('Samples/Components/Tab');})->name('tab');
-    Route::get('table',function (){return Inertia::render('Samples/Components/Table',[
-        'users' => \App\Models\User::all()
-    ]);})->name('table');
+    /*Tailadmin Quality Routes*/
+    //Department
+    Route::resource('department', \App\Http\Controllers\DepartmentController::class);
+    Route::get('department/trash', [\App\Http\Controllers\DepartmentController::class, 'trash'])->name('department.trash');
+    //Staff
+    Route::resource('staff', \App\Http\Controllers\StaffController::class);
+    Route::get('staff/trash', [\App\Http\Controllers\StaffController::class, 'trash'])->name('staff.trash');
+    //Job Description
+    Route::resource('job-description', \App\Http\Controllers\JobDescriptionController::class);
+    Route::get('job-description/trash', [\App\Http\Controllers\JobDescriptionController::class, 'trash'])->name('job-description.trash');
 
-    /*TODO: Toastr Feature
-    Route::get('toastr',function (){return Inertia::render('Samples/Components/Toastr');})->name('toastr');*/
-    Route::get('tooltip',function (){return Inertia::render('Samples/Components/Tooltip');})->name('tooltip');
-    // Layout Pages
-    Route::get('layout-structure',function (){return Inertia::render('Samples/Layouts/LayoutStructure');})->name('layout-structure');
-    Route::get('layout-grid',function (){return Inertia::render('Samples/Layouts/Grid');})->name('layout-grid');
-    Route::get('layout-content-box',function (){return Inertia::render('Samples/Layouts/ContentBox');})->name('layout-content-box');
-    Route::get('layout-statistic-widget',function (){return Inertia::render('Samples/Layouts/StatisticWidget');})->name('layout-statistic-widget');
-    // Form Pages
-    Route::get('form-structure',function (){return Inertia::render('Samples/FormElements/FormStructure');})->name('form-structure');
-    Route::get('form-input-group',function (){return Inertia::render('Samples/FormElements/InputGroup');})->name('form-input-group');
-    Route::get('form-simple-field',function (){return Inertia::render('Samples/FormElements/SimpleField');})->name('form-simple-field');
-    Route::get('form-repeatable-field',function (){return Inertia::render('Samples/FormElements/RepeatableField');})->name('form-repeatable-field');
-    Route::get('form-inline-repeatable-field',function (){return Inertia::render('Samples/FormElements/InlineRepeatableField');})->name('form-inline-repeatable-field');
-    Route::get('form-date-field',function (){return Inertia::render('Samples/FormElements/DateField');})->name('form-date-field');
-    Route::get('form-select-input',function (){return Inertia::render('Samples/FormElements/SelectInput',[
-        'users' => \App\Models\User::all()
-    ]);})->name('form-select-input');
-    Route::get('form-multi-select-input',function (){return Inertia::render('Samples/FormElements/MultiSelectInput',[
-        'users' => \App\Models\User::all()
-    ]);})->name('form-multi-select-input');
-    Route::get('form-tag-input',function (){return Inertia::render('Samples/FormElements/TagInput');})->name('form-tag-input');
-    Route::get('form-validation',function (){return Inertia::render('Samples/FormElements/Validation');})->name('form-validation');
+    //Machine
+    Route::resource('machine', \App\Http\Controllers\MachineController::class);
+    //Machine Type
+    Route::resource('machine-type', \App\Http\Controllers\MachineTypeController::class);
+    //Maintenance
+    Route::resource('maintenance', \App\Http\Controllers\MaintenanceController::class);
+    //Maintenance Action
+    Route::resource('maintenance-action', \App\Http\Controllers\MaintenanceActionController::class);
+    //Maintenance Plan
+    Route::resource('maintenance-plan', \App\Http\Controllers\MaintenancePlanController::class);
+    //Maintenance Type
+    Route::resource('maintenance-type', \App\Http\Controllers\MaintenanceTypeController::class);
+    //Product
+    Route::resource('product', \App\Http\Controllers\ProductController::class);
+    Route::get('product/trash', [\App\Http\Controllers\ProductController::class, 'trash'])->name('product.trash');
+    //Product Type
+    Route::resource('product-type', \App\Http\Controllers\ProductTypeController::class);
+    Route::get('product-type/trash', [\App\Http\Controllers\ProductTypeController::class, 'trash'])->name('product-type.trash');
+
+    //Product Variation
+    Route::resource('product-variation', \App\Http\Controllers\ProductVariationController::class);
+    //Product Quality Plan
+    Route::resource('product-quality-plan', \App\Http\Controllers\ProductQualityPlanController::class);
+    //Recipe
+    Route::resource('recipe', \App\Http\Controllers\RecipeController::class);
+    //Raw Material
+    Route::resource('raw-material', \App\Http\Controllers\RawMaterialController::class);
+    //Raw Material Type
+    Route::resource('raw-material-type', \App\Http\Controllers\RawMaterialTypeController::class);
+    //Raw Material Quality Plan
+    Route::resource('raw-material-quality-plan', \App\Http\Controllers\RawMaterialQaulityPlanController::class);
+    //Suppliers
+    Route::resource('supplier', \App\Http\Controllers\SupplierController::class);
+    //Audit
+    Route::resource('audit', \App\Http\Controllers\AuditController::class);
+    //Audit Type
+    Route::resource('audit-type', \App\Http\Controllers\AuditTypeController::class);
+    //Audit Plan
+    Route::resource('audit-plan', \App\Http\Controllers\AuditPlanController::class);
+    //Audit Firm
+    Route::resource('audit-firm', \App\Http\Controllers\AuditFirmController::class);
+    //Auditor
+    Route::resource('auditor', \App\Http\Controllers\AuditorController::class);
+    //Standard
+    Route::resource('standard', \App\Http\Controllers\StandardController::class);
+    //Document
+    Route::resource('document', \App\Http\Controllers\DocumentTypeController::class);
+    //Document Type
+    Route::resource('document-type', \App\Http\Controllers\DocumentTypeController::class);
+    //Claim
+    Route::resource('complaint', \App\Http\Controllers\ComplaintController::class);
+    //Claim Type
+    Route::resource('complaint-type', \App\Http\Controllers\ComplaintTypeController::class);
+    //Claim Action
+    Route::resource('complaint-action', \App\Http\Controllers\ComplaintActionController::class);
+    //Claim Decision
+    Route::resource('complaint-decision', \App\Http\Controllers\ComplaintDecisionController::class);
+    //Claim Property
+    Route::resource('complaint-property', \App\Http\Controllers\ComplaintPropertyController::class);
+    //Customer
+    Route::resource('customer', \App\Http\Controllers\CustomerController::class);
+    Route::get('customer/trash', [\App\Http\Controllers\CustomerController::class, 'trash'])->name('customer.trash');
+    //Measurement Tool
+    Route::resource('measurement-tool', \App\Http\Controllers\MeasurementToolController::class);
+    //Measurement Tool Type
+    Route::resource('measurement-tool-type', \App\Http\Controllers\MeasurementToolTypeController::class);
+    //Measurement Tool Action
+    Route::resource('measurement-tool-action', \App\Http\Controllers\MeasurementToolActionController::class);
+    //Measurement Tool Property
+    Route::resource('measurement-tool-property', \App\Http\Controllers\MeasurementToolPropertyController::class);
+
 });
 
 

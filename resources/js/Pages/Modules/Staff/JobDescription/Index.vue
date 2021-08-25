@@ -1,8 +1,8 @@
 <template>
   <app-layout>
     <!--Header-->
-    <template #header>Staff</template>
-    <template #subHeader>Management of the staff</template>
+    <template #header>Job Descriptions</template>
+    <template #subHeader>All of staff in your company</template>
     <!--Content-->
     <template #default>
       <t-table
@@ -14,33 +14,64 @@
       >
         <!--Search Area-->
         <template #search>
-          <grid-section :col-tablet="4">
-            <!--Department Name-->
+          <grid-section :col-tablet="3">
+            <!--Title-->
             <t-input-group
-                label="Person Name"
+                label="Title"
             >
               <t-input-text
                   v-model="searchData.name"
                   @input="search"
               />
             </t-input-group>
+
+            <!--Collar Type-->
+            <t-input-group
+                label="Collar Type"
+            >
+              <t-input-select
+                  v-model="searchData.collar_type"
+                  :clear-button="true"
+                  :options="collarType"
+                  options-label-key="name"
+                  options-value-key="id"
+                  @input="search"
+              >
+                <template #label="{props}">
+                  <t-badge>
+                    <component :is="props.icon" slot="icon" :class="['w-4 h-4', props.style]"/>
+                    {{ props.name }}
+                  </t-badge>
+                </template>
+              </t-input-select>
+            </t-input-group>
+
+            <!--Department-->
+            <t-input-group
+                label="Department"
+            >
+              <t-input-select
+                  v-model="searchData.department_id"
+                  :clear-button="true"
+                  :options="searchDataDepartment"
+                  :search="true"
+                  options-label-key="name"
+                  options-value-key="id"
+                  @input="search"
+              />
+            </t-input-group>
           </grid-section>
         </template>
         <template #right>
-          <t-action-buttons-index model="staff"/>
+          <t-action-buttons-index model="job-description"/>
         </template>
         <!--Name-->
-        <template #name="{props}">
-          <div class="inline-flex whitespace-nowrap items-center gap-1">
-            <t-avatar :radius="8" :size="2"
-                      :src="props.photo !== null ? 'storage/'+props.photo : null"/>
-            {{ props.name }}
-          </div>
-        </template>
-        <!--Status-->
-        <template #status="{props}">
-          <t-badge :color="status[status.findIndex( s => s.id === props.status )].color">
-            {{ status[status.findIndex( s => s.id === props.status )].name }}
+        <template #collar_type="{props}">
+          <t-badge>
+            <component :is="collarType[collarType.findIndex( s => s.id === props.collar_type )].icon"
+                       slot="icon"
+                       :class="['w-4 h-4',collarType[collarType.findIndex( s => s.id === props.collar_type )].style]"/>
+            {{ collarType[collarType.findIndex(s => s.id === props.collar_type)].name }}
           </t-badge>
         </template>
       </t-table>
@@ -50,54 +81,51 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
-import TTable from "@/Components/Table/TTable";
-import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
-import TInputGroup from "@/Components/Form/TInputGroup";
-import TInputText from "@/Components/Form/Inputs/TInputText";
-import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import GridSection from "@/Layouts/GridSection";
+import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
 import TBadge from "@/Components/Badge/TBadge";
-import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
-import TCheckCircleIcon from "@/Components/Icon/TCheckCircleIcon";
-import TAvatar from "@/Components/Avatar/TAvatar";
+import TBlueCollarIcon from "@/Components/Icon/TBlueCollarIcon";
+import TInputGroup from "@/Components/Form/TInputGroup";
+import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
+import TInputText from "@/Components/Form/Inputs/TInputText";
+import TTable from "@/Components/Table/TTable";
+import TWhiteCollarIcon from "@/Components/Icon/TWhiteCollarIcon";
 import {StaffConsts} from "@/Mixins/SectionConsts/StaffConsts";
 
 export default {
   name: "Index",
   components: {
-    TAvatar,
-    TCheckCircleIcon,
-    TXCircleIcon,
-    TBadge,
+    AppLayout,
     GridSection,
-    TInputSelectItem,
+    TActionButtonsIndex,
+    TBadge,
+    TBlueCollarIcon,
+    TInputGroup,
     TInputSelect,
     TInputText,
-    TInputGroup,
-    TActionButtonsIndex,
     TTable,
-    AppLayout
+    TWhiteCollarIcon,
   },
   mixins: [StaffConsts],
   props: {
     tableData: {
       type: Object
     },
-    searchDataManager: {
+    searchDataDepartment: {
       type: Array
     }
   },
   data() {
     return {
       tableHeaders: [
-        {label: 'Person Name', key: 'name', align: 'left'},
-        {label: 'Department', key: 'department_name', align: 'left'},
-        {label: 'Job Description', key: 'job_description_name', align: 'left'},
-        {label: 'Status', key: 'status', align: 'center'},
+        {label: 'Title', key: 'name', align: 'left'},
+        {label: 'Collar Type', key: 'collar_type', align: 'center'},
+        {label: 'Related Department', key: 'department_name', align: 'left'},
       ],
       searchData: {
         name: '',
+        collar_type: null,
+        department_id: null,
       }
     }
   },
@@ -106,6 +134,8 @@ export default {
       this.$inertia.reload({
         data: {
           name: this.searchData.name,
+          collar_type: this.searchData.collar_type,
+          department_id: this.searchData.department_id,
         },
         only: ['tableData'],
       })
