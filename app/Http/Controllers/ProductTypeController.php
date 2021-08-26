@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\ProductType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class ProductTypeController extends Controller
@@ -44,7 +45,7 @@ class ProductTypeController extends Controller
     public function create(Request $request)
     {
         return Inertia::render('Modules/Product/Type/Create',[
-            'departments'=>Department::all(['id','name']),
+            'departments'=>Department::where('is_production',1)->get(['id','name']),
         ]);
     }
 
@@ -57,16 +58,11 @@ class ProductTypeController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->all();
-        $attributes['department_id'] = $request->department_id['id'];
         $attributes['creator_id'] = Auth::id();
         ProductType::create($attributes);
 
-        $message = [];
-        $message['type'] = "success";
-        $message['content'] = 'The product type has been successfully created. The product type created: '.$request->name ;
-
-        return redirect()->route('product-type.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The product type has been successfully created.</b><br><b>Type: </b>'.$request['name']]);
+        return redirect()->route('product-type.index') ;
     }
 
     /**

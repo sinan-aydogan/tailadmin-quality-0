@@ -1,8 +1,8 @@
 <template>
   <app-layout>
     <!--Header-->
-    <template #header>Products</template>
-    <template #subHeader>All of products in your company</template>
+    <template #header>Raw Materials</template>
+    <template #subHeader>All of raw materials in your company</template>
     <!--Content-->
     <template #default>
       <t-table
@@ -102,7 +102,7 @@
           </grid-section>
         </template>
         <template #right>
-          <t-action-buttons-index model="product"/>
+          <t-action-buttons-index model="raw-material"/>
         </template>
 
         <!--Code-->

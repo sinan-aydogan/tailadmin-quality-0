@@ -48,7 +48,7 @@
                   options-label-key="name"
                   options-value-key="id"
                   place-holder="Select a department"
-                  @input="departmentChange"
+                  @input="departmentChange();form.product_type_id = null;form.standard_id=null"
               />
             </t-input-group>
 

@@ -2,7 +2,7 @@
   <div v-click-outside="outside" class="relative select-none min-w-3">
     <!--Container-->
     <div
-        :class="['select-container', disabled && 'bg-gray-100' ,radiusStyle]"
+        :class="['select-container', disabled ? 'bg-gray-100' : 'bg-white' ,radiusStyle]"
         @click="changeShowOptions"
     >
 

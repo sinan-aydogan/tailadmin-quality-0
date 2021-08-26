@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductQualityPlan extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+      'code',
+      'product_id',
+    ];
 }

@@ -178,7 +178,7 @@
                   options-value-key="id"
                   :clear-button="true"
                   place-holder="Select a collar type"
-                  @input="jobDescriptionChange"
+                  @input="jobDescriptionChange();form.job_description_id = null"
               >
                 <template #label="{props}">
                   <div class="flex flex-row items-center">

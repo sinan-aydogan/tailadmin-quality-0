@@ -10,7 +10,7 @@ class ProductType extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name','description','creator_id','updater_id'];
+    protected $fillable = ['name','department_id','description','creator_id','updater_id'];
 
     //RELATED DEPARTMENT
     public function department()

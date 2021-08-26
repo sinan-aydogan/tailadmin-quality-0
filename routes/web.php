@@ -81,15 +81,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     //Product Type
     Route::resource('product-type', \App\Http\Controllers\ProductTypeController::class);
     Route::get('product-type/trash', [\App\Http\Controllers\ProductTypeController::class, 'trash'])->name('product-type.trash');
-
-    //Product Variation
-    Route::resource('product-variation', \App\Http\Controllers\ProductVariationController::class);
     //Product Quality Plan
     Route::resource('product-quality-plan', \App\Http\Controllers\ProductQualityPlanController::class);
+    Route::get('product-quality-plan/trash', [\App\Http\Controllers\ProductQualityPlanController::class, 'trash'])->name('product-quality-plan.trash');
     //Recipe
     Route::resource('recipe', \App\Http\Controllers\RecipeController::class);
     //Raw Material
     Route::resource('raw-material', \App\Http\Controllers\RawMaterialController::class);
+    Route::get('raw-material/trash', [\App\Http\Controllers\RawMaterialController::class, 'trash'])->name('raw-material.trash');
     //Raw Material Type
     Route::resource('raw-material-type', \App\Http\Controllers\RawMaterialTypeController::class);
     //Raw Material Quality Plan

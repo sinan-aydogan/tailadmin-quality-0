@@ -7,7 +7,6 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Standard;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +72,7 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $department_id = $request->department_id;
-        $departments = Department::where('is_production','=', 2)->get(['id','name']);
+        $departments = Department::where('is_production','=', 1)->get(['id','name']);
         $standards = Standard::where('department_id',$department_id)->get(['id','code']);
         $productTypes = ProductType::where('department_id',$department_id)->get(['id','name']);
 

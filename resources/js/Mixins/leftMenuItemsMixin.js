@@ -119,13 +119,6 @@ export const leftMenuItemsMixin = {
                             type:'standard',
                         },
                         {
-                            label: 'Products Variations',
-                            icon:'tags',
-                            link:'product-variation.index',
-                            linkType:'route',
-                            type:'standard',
-                        },
-                        {
                             label: 'Products Quality Plans',
                             icon:'clipboard-check',
                             link:'product-quality-plan.index',

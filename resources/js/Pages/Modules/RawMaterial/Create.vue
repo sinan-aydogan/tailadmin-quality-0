@@ -1,11 +1,11 @@
 <template>
   <app-layout :action-buttons="true">
     <!--Header-->
-    <template #header>Create New Product</template>
-    <template #subHeader>You can new product for your company</template>
+    <template #header>Create New Raw Material</template>
+    <template #subHeader>You can new raw material for your company</template>
     <!--Action Buttons-->
     <template #action-buttons>
-      <t-action-buttons-create model="product"/>
+      <t-action-buttons-create model="raw-material"/>
     </template>
     <template #default>
       <t-form-content @reset="reset" @submitted="save()">
@@ -15,133 +15,42 @@
             title="Product Infos"
         >
           <grid-section :col-tablet="2">
-
-            <!--Product Name-->
-            <t-input-group
-                :error="error.name"
-                label="Product Name"
-            >
-              <t-input-text id="name" v-model="form.name"/>
-            </t-input-group>
-
-            <!--Product Code-->
+            <!--Code-->
             <t-input-group
                 :error="error.code"
-                label="Product Code"
+                label="Raw Material Code"
             >
-              <t-input-text id="code" v-model="form.code">
-                <t-finger-print-icon slot="icon" class="w-6 h-6"/>
+              <t-input-text
+                  id="code"
+                  v-model="form.code"
+              >
+                <t-finger-print-icon slot="icon" class="w-5 h-5"/>
               </t-input-text>
             </t-input-group>
 
-            <!--Related Department-->
+            <!--Name-->
             <t-input-group
-                :error="error.department_id"
-                label="Related Department"
+                :error="error.name"
+                label="Raw Material Name"
             >
-              <t-input-select
-                  id="department_id"
-                  v-model="form.department_id"
-                  :clear-button="true"
-                  :options="departments"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a department"
-                  @input="departmentChange();form.product_type_id = null;form.standard_id=null"
+              <t-input-text
+                  id="name"
+                  v-model="form.name"
               />
             </t-input-group>
 
-            <!--Product Type-->
+            <!--Supplier-->
             <t-input-group
-                :error="
-                form.department_id === null ?
-                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
-                    error.product_type_id
-                "
-                label="Product Type"
-            >
-              <t-input-select
-                  id="product_type_id"
-                  v-model="form.product_type_id"
-                  :clear-button="true"
-                  :disabled="form.department_id === null"
-                  :options="productTypes"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a type"
-
-              />
-            </t-input-group>
-
-            <!--Related Standard-->
-            <t-input-group
-                :error="
-                    form.department_id === null ?
-                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
-                    error.standard_id"
-                label="Related Standard"
-            >
-              <t-input-select
-                  id="standard_id"
-                  v-model="form.standard_id"
-                  :clear-button="true"
-                  :disabled="form.department_id === null"
-                  :options="standards"
-                  :search="true"
-                  options-label-key="code"
-                  options-value-key="id"
-                  place-holder="Select a standard"
-              />
-            </t-input-group>
-
-            <!--Certification Status-->
-            <t-input-group
-                :error="error.is_certified"
-                label="Certification Status"
-            >
-              <t-input-select
-                  id="is_certified"
-                  v-model="form.is_certified"
-                  :clear-button="true"
-                  :options="is_certified"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  place-holder="Select a certification status"
+              :error="error.supplier_id"
+              label="Supplier"
               >
-                <template #label="{props}">
-                  <t-badge :color="props.color">
-                    {{ props.name }}
-                  </t-badge>
-                </template>
-              </t-input-select>
-            </t-input-group>
-
-            <!--Photo-->
-            <t-input-group
-                :error="error.photo"
-                label="Product Photo"
-            >
-              <t-input-file
-                  v-model="form.photo"
-                  placeholder="Select a photo"
-                  :preview="true"
-              />
-            </t-input-group>
-
-            <!--Description-->
-            <t-input-group
-                :error="error.description"
-                label="Description"
-                class="col-span-full"
-            >
-              <t-input-text-area
-                  id="description"
-                  v-model="form.description"
-                  :clear-button="true"
-              />
+              <t-input-select
+                v-model="form.supplier_id"
+                id="supplier_id"
+                :options="suppliers"
+                options-value-key="id"
+                options-label-key="name"
+                />
             </t-input-group>
 
           </grid-section>
@@ -197,7 +106,7 @@ export default {
     productTypes: {
       type: Array
     },
-    standards: {
+    suppliers: {
       type: Array
     },
   },
@@ -207,27 +116,22 @@ export default {
       error: {},
       form: this.$inertia.form({
         _method: 'POST',
-        name: null,
         code: null,
-        department_id: null,
-        product_type_id: null,
-        standard_id: null,
-        is_certified: 4,
+        name: null,
+        model: null,
+        manufacturer: null,
         description: null,
-        photo: null,
+        supplier_id: null,
+        department_id: null,
+        raw_material_type_id: null,
+        package_type: null,
+        stock_rules: null,
       }),
     }
   },
   methods: {
-    reset: function () {
-      this.form.name = null;
-      this.form.code = null;
-      this.form.department_id = null;
-      this.form.product_type_id = null;
-      this.form.standard_id = null;
-      this.form.is_certified = null;
-      this.form.description = null;
-      this.form.photo= null;
+    reset(){
+      this.form.reset()
     },
     save() {
       this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');
