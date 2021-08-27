@@ -17,6 +17,7 @@ class CreateMeasurementToolsTable extends Migration
             $table->id();
             $table->string('code',100);
             $table->string('serial_no',100);
+            $table->foreignId('measurement_tool_type_id')->nullable();
             $table->string('model',100)->nullable();
             $table->string('manufacturer',100)->nullable();
             $table->date('manufactured_date')->nullable();
