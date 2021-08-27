@@ -24,8 +24,9 @@ class CreateProductsTable extends Migration
             $table->foreignId('standard_id')->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
-            $table->timestamps();
+            $table->foreignId('deleter_id')->nullable();
             $table->softDeletes('deleted_at', 0);
+            $table->timestamps();
         });
     }
 

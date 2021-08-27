@@ -44,30 +44,55 @@ class MeasurementTool extends Model
     ];
 
     //MEASUREMENT TOOL TYPE
+    /**
+     * Get the measurement tool type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function type()
     {
         return $this->belongsTo(MeasurementToolType::class,'measurement_tool_type_id','id')->withDefault(['name' => 'Undefined']);
     }
 
     //SUPPLIER
+    /**
+     * Get the supplier.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function supplier()
     {
         return $this->belongsTo(Supplier::class,'supplier_id','id')->withDefault(['name' => 'Undefined']);
     }
 
     //DEPARTMENT
+    /**
+     * Get the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function department()
     {
         return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => '']);
     }
 
     //OPERATOR
+    /**
+     * Get the operator.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function operator()
     {
         return $this->belongsTo(User::class,'operator_id','id')->withDefault(['name' => 'Undefined']);
     }
 
     //ACTION MANAGER
+    /**
+     * Get the action manager.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function actionManager()
     {
         return $this->belongsTo(User::class,'action_manager_id','id')->withDefault(['name' => 'Undefined']);

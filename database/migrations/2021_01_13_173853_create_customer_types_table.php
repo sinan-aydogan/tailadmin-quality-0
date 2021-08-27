@@ -15,6 +15,10 @@ class CreateCustomerTypesTable extends Migration
     {
         Schema::create('customer_types', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
+            $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });
     }

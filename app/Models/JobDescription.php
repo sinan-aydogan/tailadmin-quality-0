@@ -4,11 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobDescription extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
         'summary',
@@ -24,6 +31,11 @@ class JobDescription extends Model
         'creator_id'
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'job_responsibility'=>'array',
         'job_requirement'=>'array',
@@ -34,7 +46,14 @@ class JobDescription extends Model
         'kpi'=>'array',
     ];
 
+    /*Relations*/
+
     //RELATED DEPARTMENT
+    /**
+     * Get the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function department()
     {
         return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Independent']);

@@ -21,8 +21,9 @@ class CreateSuppliersTable extends Migration
             $table->string('email',75)->nullable();
             $table->string('address',250)->nullable();
             $table->tinyInteger('status')->default(1);
-            $table->foreignId('creator_id')->references('id')->on('users');
-            $table->foreignId('updater_id')->nullable()->references('id')->on('users');
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
             $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });
