@@ -17,6 +17,8 @@ class CreateMachinesTable extends Migration
             $table->id();
             $table->string('code',100)->nullable();
             $table->string('name',255);
+            $table->string('model',100)->nullable();
+            $table->string('manufacturer',100)->nullable();
             $table->foreignId('machine_type_id')->nullable();
             $table->foreignId('department_id')->nullable();
             $table->foreignId('machine_id')->nullable();

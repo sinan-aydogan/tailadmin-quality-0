@@ -65,6 +65,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
 
     //Machine
     Route::resource('machine', \App\Http\Controllers\MachineController::class);
+    Route::get('machine/trash', [\App\Http\Controllers\MachineController::class, 'trash'])->name
+    ('machine.trash');
     //Machine Type
     Route::resource('machine-type', \App\Http\Controllers\MachineTypeController::class);
     //Maintenance
