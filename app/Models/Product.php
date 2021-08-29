@@ -21,7 +21,7 @@ class Product extends Model  implements HasMedia
      *
      * @var array
      */
-    protected $fillable = ['name','code','department_id','product_type_id','description','is_certified','standard_id','creator_id','updater_id'];
+    protected $fillable = ['name','code','department_id','product_type_id','description','is_certified','standard_id','creator_id','updater_id','deleter_id'];
 
     /*Relations*/
 
