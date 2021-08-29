@@ -29,6 +29,17 @@ Route::get('/', function () {
     ], 'Dashboard');
 });
 
+Route::get('/test', function () {
+
+    \DB::enableQueryLog();
+    $types = \App\Models\MachineType::whereHas('machines')->get(['id', 'name']);
+    return \DB::getQueryLog();
+    // return $types;
+    /*$machines = \App\Models\Machine::with('machineType:id,name')
+        ->get(['id']);
+    return $machines;*/
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::get('/', function () {
         return Inertia::render('Dashboard',[
@@ -65,6 +76,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
 
     //Machine
     Route::resource('machine', \App\Http\Controllers\MachineController::class);
+    Route::get('machine/trash', [\App\Http\Controllers\MachineController::class, 'trash'])->name
+    ('machine.trash');
     //Machine Type
     Route::resource('machine-type', \App\Http\Controllers\MachineTypeController::class);
     //Maintenance

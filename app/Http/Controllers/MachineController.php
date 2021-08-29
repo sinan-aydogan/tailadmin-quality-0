@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MachineResource;
 use App\Models\Department;
 use App\Models\Machine;
 use App\Models\MachineType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Session;
 
 class MachineController extends Controller
 {
@@ -16,11 +18,24 @@ class MachineController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Machine/Index',[
-            'machines'=>Machine::with('department:id,name','machine:id,name','machineType:id,name')->get(['id','code','name','department_id','machine_type_id','machine_id']),
-            'departments'=>Department::all(['id','name'])
+        $machines = Machine::query()->when($request->code, fn($query, $code) => $query->where('code', 'like', "%{$code}%"))
+            ->when($request->name, fn($query, $name) => $query->where('name', 'like', "%{$name}%"))
+            ->when($request->model, fn($query, $model) => $query->where('model', 'like', "%{$model}%"))
+            ->when($request->manufacturer, fn($query, $manufacturer) => $query->where('manufacturer', 'like', "%{$manufacturer}%"))
+            ->when($request->machine_type_id, fn($query, $machine_type_id) => $query->where('machine_type_id',
+                $machine_type_id))
+            ->when($request->department_id, fn($query, $department_id) => $query->where('department_id', $department_id))
+            ->when($request->machine_id, fn($query, $machine_id) => $query->where('machine_id', $machine_id))
+            ->orderBy('created_at')
+            ->get();
+
+        return Inertia::render('Modules/Machine/Index', [
+            'tableData' => MachineResource::collection($machines),
+            'searchDataMachineType' => MachineType::whereHasMachines()->get(),
+            'searchDataDepartment' => Department::whereHasMachines()->get(),
+            'searchDataMachine' => Machine::whereHasMachines()->get(),
         ]);
     }
 
@@ -31,40 +46,33 @@ class MachineController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Machine/Create',[
-            'machines'=>Machine::all(),
-            'machineTypes'=>MachineType::all(),
-            'departments'=>Department::all(),
+        return Inertia::render('Modules/Machine/Create', [
+            'machines' => Machine::all(['id', 'name']),
+            'machineTypes' => MachineType::all(['id', 'name']),
+            'departments' => Department::all(['id', 'name']),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $attributes = $request->all();
-        isset($request->machine_type_id) ? $attributes['machine_type_id'] = $request->machine_type_id['id'] : $attributes['machine_type_id'] = null;
-        isset($request->department_id) ? $attributes['department_id'] = $request->department_id['id'] : $attributes['department_id'] = null;
-        isset($request->machine_id) ? $attributes['machine_id'] = $request->machine_id['id'] : $attributes['machine_id'] = null;
-        isset($request->department_id) ? $attributes['department_id'] = $request->department_id['id'] : $attributes['department_id'] = null;
         $attributes['creator_id'] = Auth::id();
         Machine::create($attributes);
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The machine has been successfully created. The machine created: '.$request->name ;
 
-        return redirect()->route('machine.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb', 'content' => '<b>The machine has been successfully created.</b><br><b>Machine: </b>' . $request['name']]);
+        return redirect()->route('machine.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -75,7 +83,7 @@ class MachineController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -86,8 +94,8 @@ class MachineController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -98,7 +106,7 @@ class MachineController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
