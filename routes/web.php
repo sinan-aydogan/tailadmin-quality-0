@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\LockAuthController;
 use App\Http\Controllers\Settings\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -27,17 +26,6 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ], 'Dashboard');
-});
-
-Route::get('/test', function () {
-
-    \DB::enableQueryLog();
-    $types = \App\Models\MachineType::whereHas('machines')->get(['id', 'name']);
-    return \DB::getQueryLog();
-    // return $types;
-    /*$machines = \App\Models\Machine::with('machineType:id,name')
-        ->get(['id']);
-    return $machines;*/
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function (){
