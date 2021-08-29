@@ -16,11 +16,13 @@ class CreateQualitySpectsTable extends Migration
         Schema::create('quality_spects', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
-            $table->tinyInteger('spect_type')->default(1);
-            $table->foreignId('department_id')->nullable();
-            $table->foreignId('standard_id')->nullable();
+            $table->json('spect_type');
+            $table->string('unit',100)->nullable();
+            $table->json('department_id')->nullable();
+            $table->json('standard_id')->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
             $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });

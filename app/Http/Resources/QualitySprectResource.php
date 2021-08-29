@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductQualityPlanResource extends JsonResource
+class QualitySprectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +16,14 @@ class ProductQualityPlanResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
+            'name' => $this->name,
+            'spect_type' => $this->spect_type,
+            'unit' => $this->unit,
             'department_id' => $this->department_id,
             'department_name' => $this->department->name,
-            'product_id' => $this->product_id,
-            'product_name' => $this->product->name,
-            'spects' => $this->spects
+            'standard_id' => $this->standard_id,
+            'standard_name' => $this->standard->name,
         ];
-        /* return parent::toArray($request); */
+        /*return parent::toArray($request);*/
     }
 }

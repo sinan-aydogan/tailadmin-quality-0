@@ -16,12 +16,47 @@ class QualitySpect extends Model
      *
      * @var array
      */
-    /*protected $fillable = [];*/
+    protected $fillable = [
+        'name',
+        'spect_type',
+        'unit',
+        'department_id',
+        'standard_id',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    /*protected $casts = [];*/
+    protected $casts = [
+        'department_id' => 'array',
+        'standard_id' => 'array',
+        'spect_type' => 'array',
+    ];
+
+    //DEPARTMENT
+    /**
+     * Get the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Undefined']);
+    }
+
+    //STANDARD
+    /**
+     * Get the standard.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function standard()
+    {
+        return $this->belongsTo(Standard::class,'standard_id','id')->withDefault(['name' => 'Undefined']);
+    }
 }

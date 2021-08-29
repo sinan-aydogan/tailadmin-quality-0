@@ -93,6 +93,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::resource('raw-material-type', \App\Http\Controllers\RawMaterialTypeController::class);
     //Raw Material Quality Plan
     Route::resource('raw-material-quality-plan', \App\Http\Controllers\RawMaterialQaulityPlanController::class);
+    //Quality Spect
+    Route::resource('quality-spect', \App\Http\Controllers\QualitySpectController::class);
+    Route::get('quality-spect/trash', [\App\Http\Controllers\QualitySpectController::class, 'trash'])->name('quality-spect.trash');
     //Suppliers
     Route::resource('supplier', \App\Http\Controllers\SupplierController::class);
     //Audit

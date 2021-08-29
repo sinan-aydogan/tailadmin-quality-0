@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductQualityPlansTable extends Migration
+class CreateSpectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateProductQualityPlansTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_quality_plans', function (Blueprint $table) {
+        Schema::create('spects', function (Blueprint $table) {
             $table->id();
-            $table->string('code',100);
-            $table->foreignId('department_id');
-            $table->foreignId('product_id');
+            $table->foreignId('spect_id');
+            $table->unsignedTinyInteger('limit_type_id');
+            $table->unsignedTinyInteger('rule_id');
+            $table->string('value',100);
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();
@@ -33,6 +34,6 @@ class CreateProductQualityPlansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_quality_plans');
+        Schema::dropIfExists('spects');
     }
 }
