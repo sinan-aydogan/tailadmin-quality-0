@@ -24,8 +24,9 @@ class CreateStandardsTable extends Migration
             $table->boolean('status')->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
-            $table->timestamps();
+            $table->foreignId('deleter_id')->nullable();
             $table->softDeletes('deleted_at', 0);
+            $table->timestamps();
         });
     }
 

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductQualityPlanResource;
+use App\Http\Resources\QualitySprectResource;
 use App\Models\Department;
 use App\Models\Product;
 use App\Models\ProductQualityPlan;
 use App\Models\QualitySpect;
+use App\Models\Standard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,7 +28,9 @@ class ProductQualityPlanController extends Controller
         $qualityPlans = ProductQualityPlan::all();
 
         return Inertia::render('Modules/Product/QualityPlan/Index', [
-            'tableData' => ProductQualityPlanResource::collection($qualityPlans)
+            'tableData' => ProductQualityPlanResource::collection($qualityPlans),
+            'searchDataDepartment' => Department::where('is_production', 1)->get(),
+            'searchDataProduct' => Product::where('department_id', $request->department_id)->get()
         ]);
     }
 
@@ -46,11 +52,19 @@ class ProductQualityPlanController extends Controller
         });
         $departments = Department::find($productDepartment, ['id', 'name']);
 
+        /*General Department List*/
+        $generalDepartments = Department::where('is_production', 1)->get();
+
+        /*Standards*/
+        $standards = Standard::all(['id', 'name']);
+
         /*Quality Spects*/
-        $spects = QualitySpect::where('spect_type', 1)->get(['id', 'name']);
+        $spects = QualitySprectResource::collection(QualitySpect::all());
 
         return Inertia::render('Modules/Product/QualityPlan/Create', [
             'departments' => $departments,
+            'generalDepartments' => $generalDepartments,
+            'standards' => $standards,
             'products' => $products,
             'spects' => $spects
         ]);
@@ -60,11 +74,29 @@ class ProductQualityPlanController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        /*Creator ID Adding*/
+        $request['creator_id'] = Auth::id();
+
+        /*Create Record*/
+        $item = ProductQualityPlan::create($request->except('spects'));
+
+        /*Spect Conversion*/
+        $spects = collect($request->spects)->map(function($item){
+            $item['creator_id'] = Auth::id();
+
+            return $item;
+        });
+
+        /*Create Spects*/
+        $item->spects()->createMany($spects);
+
+        /*Feedback Message*/
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The department has been successfully created.</b><br><b>Quality Plan: </b>'.$request['code']]);
+        return redirect()->route('product-quality-plan.index') ;
     }
 
     /**

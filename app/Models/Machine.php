@@ -41,6 +41,9 @@ class Machine extends Model
         'deleted_at' => 'datetime',
     ];
 
+
+    /*Relations*/
+  
     //MACHINE TYPE
     /**
      * Get the machine type.
@@ -49,11 +52,10 @@ class Machine extends Model
      */
     public function machineType()
     {
-        return $this->belongsTo(MachineType::class,'machine_type_id','id')->withDefault(['name'
-        => 'Undefined Machine Type']);
+        return $this->belongsTo(MachineType::class,'machine_type_id','id')->withDefault(['name' => 'Undefined Machine Type']);
     }
-    //DEPARTMENT
 
+    //MACHINE
     /**
      * Get the machine.
      *
@@ -64,6 +66,7 @@ class Machine extends Model
         return $this->belongsTo(Machine::class, 'machine_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
+    //DEPARTMENT
     /**
      * Get the department.
      *

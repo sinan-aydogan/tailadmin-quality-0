@@ -26,10 +26,11 @@ class CreateJobDescriptionsTable extends Migration
             $table->json('working_conditions')->nullable();
             $table->json('working_equipments')->nullable();
             $table->json('kpi')->nullable();
-            $table->foreignId('creator_id')->references('id')->on('users');
-            $table->foreignId('updater_id')->nullable()->references('id')->on('users');
-            $table->timestamps();
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
             $table->softDeletes('deleted_at', 0);
+            $table->timestamps();
         });
     }
 

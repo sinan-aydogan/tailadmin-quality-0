@@ -17,6 +17,10 @@ class CreateComplaintTypeComplaintsTable extends Migration
             $table->id();
             $table->foreignId('complaint_id');
             $table->foreignId('complaint_type_id');
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
+            $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });
     }

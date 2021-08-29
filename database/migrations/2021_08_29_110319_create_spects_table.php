@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMachinesTable extends Migration
+class CreateSpectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateMachinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('machines', function (Blueprint $table) {
+        Schema::create('spects', function (Blueprint $table) {
             $table->id();
-            $table->string('code',100)->nullable();
-            $table->string('name',255);
-            $table->string('model',100)->nullable();
-            $table->string('manufacturer',100)->nullable();
-            $table->foreignId('machine_type_id')->nullable();
-            $table->foreignId('department_id')->nullable();
-            $table->foreignId('machine_id')->nullable();
+            $table->foreignId('spect_id');
+            $table->unsignedTinyInteger('limit_type_id');
+            $table->unsignedTinyInteger('rule_id');
+            $table->string('value',100);
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();
@@ -37,6 +34,6 @@ class CreateMachinesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('machines');
+        Schema::dropIfExists('spects');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRecipesTable extends Migration
+class CreateProductQualityPlanSpectTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateRecipesTable extends Migration
      */
     public function up()
     {
-        Schema::create('recipes', function (Blueprint $table) {
+        Schema::create('product_quality_plan_spect', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('creator_id');
-            $table->foreignId('updater_id')->nullable();
-            $table->foreignId('deleter_id')->nullable();
-            $table->softDeletes('deleted_at', 0);
+            $table->foreignId('product_quality_plan_id');
+            $table->foreignId('spect_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateRecipesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recipes');
+        Schema::dropIfExists('product_quality_plan_spect');
     }
 }

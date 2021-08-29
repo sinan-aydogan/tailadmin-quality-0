@@ -15,6 +15,12 @@ class CreateMeasurementToolTypesTable extends Migration
     {
         Schema::create('measurement_tool_types', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('description',750)->nullable();
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
+            $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });
     }

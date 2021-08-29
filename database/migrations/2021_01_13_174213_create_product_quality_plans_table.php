@@ -15,6 +15,13 @@ class CreateProductQualityPlansTable extends Migration
     {
         Schema::create('product_quality_plans', function (Blueprint $table) {
             $table->id();
+            $table->string('code',100);
+            $table->foreignId('department_id');
+            $table->foreignId('product_id');
+            $table->foreignId('creator_id');
+            $table->foreignId('updater_id')->nullable();
+            $table->foreignId('deleter_id')->nullable();
+            $table->softDeletes('deleted_at', 0);
             $table->timestamps();
         });
     }

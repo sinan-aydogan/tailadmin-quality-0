@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\QualitySpect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 class QualitySpectController extends Controller
 {
@@ -30,12 +34,17 @@ class QualitySpectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse|\Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $attributes = $request->all();
+        $attributes['creator_id'] = Auth::id();
+        QualitySpect::create($attributes);
+
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The department has been successfully created.</b><br><b>Department: </b>'.$request['name']]);
+        return redirect()->back()->with('spectLoaading',false) ;
     }
 
     /**
