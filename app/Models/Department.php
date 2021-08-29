@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Relations\HasMachines;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +15,7 @@ class Department extends Model
 {
     use HasFactory;
     use Notifiable;
+    use HasMachines;
 
     protected $fillable = ['name','manager_id','department_type','department_id','is_complaint','is_production','creator_id','updater_id'];
 

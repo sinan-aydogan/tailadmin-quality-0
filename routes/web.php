@@ -29,6 +29,17 @@ Route::get('/', function () {
     ], 'Dashboard');
 });
 
+Route::get('/test', function () {
+
+    \DB::enableQueryLog();
+    $types = \App\Models\MachineType::whereHas('machines')->get(['id', 'name']);
+    return \DB::getQueryLog();
+    // return $types;
+    /*$machines = \App\Models\Machine::with('machineType:id,name')
+        ->get(['id']);
+    return $machines;*/
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::get('/', function () {
         return Inertia::render('Dashboard',[

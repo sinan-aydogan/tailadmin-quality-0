@@ -72,7 +72,7 @@
               <t-input-select
                 v-model="searchData.machine_type_id"
                 :clear-button="true"
-                :options="searchDataType"
+                :options="searchDataMachineType"
                 :search="true"
                 options-label-key="name"
                 options-value-key="id"
@@ -87,7 +87,7 @@
               <t-input-select
                 v-model="searchData.machine_id"
                 :clear-button="true"
-                :options="searchDataMainMachines"
+                :options="searchDataMachine"
                 :search="true"
                 options-label-key="name"
                 options-value-key="id"
@@ -138,13 +138,13 @@ export default {
     tableData: {
       type: Object
     },
-    searchDataType: {
+    searchDataMachineType: {
       type: Array
     },
     searchDataDepartment: {
       type: Array
     },
-    searchDataMainMachines: {
+    searchDataMachine: {
       type: Array
     }
   },
@@ -155,9 +155,6 @@ export default {
         {label: 'Name', key: 'name', align: 'left'},
         {label: 'Model', key: 'model', align: 'left'},
         {label: 'Manufacturer', key: 'manufacturer', align: 'left'},
-        {label: 'Department', key: 'department', align: 'left'},
-        {label: 'Machine Type', key: 'machineType', align: 'left'},
-        {label: 'Main Machine', key: 'mainMachine', align: 'left'},
       ],
       searchData: {
         name: '',

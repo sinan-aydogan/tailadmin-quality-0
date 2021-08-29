@@ -96,8 +96,6 @@
                 place-holder="Select a main machine"
               />
             </t-input-group>
-
-
           </grid-section>
         </t-form-section>
       </t-form-content>
@@ -183,8 +181,6 @@ export default {
       this.form.machine_type_id === null ? this.$set(this.error, 'machine_type_id',
         'You should select a machine type') : this.$delete(this.error, 'machine_type_id');
       this.form.department_id === null ? this.$set(this.error, 'department_id', 'You should select a department') : this.$delete(this.error, 'department_id');
-      this.form.machine_id === null ? this.$set(this.error, 'machine_id',
-        'You should select a main machine') : this.$delete(this.error, 'machine_id');
 
       if (Object.keys(this.error).length === 0) {
         this.form.post(route('machine.store'), {
