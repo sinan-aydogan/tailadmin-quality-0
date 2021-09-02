@@ -12,13 +12,13 @@ class MachineType extends Model
     use HasFactory;
     use SoftDeletes;
     use HasMachines;
-  
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','description','creator_id','updater_id'];
-  
+    protected $fillable = ['name','description','creator_id','updater_id', 'deleter_id'];
+
 }
 
