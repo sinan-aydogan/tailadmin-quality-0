@@ -173,7 +173,7 @@
               :content="spects.data"
               :header="spectHeader"
               :pagination="true"
-              :searchable="['name']"
+              :searchable-keys="['name']"
               :shadow="false"
               :zebra="false"
               color="solid-gray"
@@ -414,6 +414,7 @@ export default {
       this.spectForm.reset()
     },
     save() {
+      //TODO Multi field validation for Spects
       this.form.code === null ? this.$set(this.error, 'code', 'Code is required') : this.$delete(this.error, 'code');
       this.form.department_id === null ? this.$set(this.error, 'department_id', 'Department is required') : this.$delete(this.error, 'department_id');
       this.form.product_id === null ? this.$set(this.error, 'product_id', 'Product is required') : this.$delete(this.error, 'product_id');

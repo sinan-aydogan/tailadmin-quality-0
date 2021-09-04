@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Relations\GetSearchData;
 use App\Relations\HasMachines;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,7 @@ class Department extends Model
     use Notifiable;
     use SoftDeletes;
     use HasMachines;
+    use GetSearchData;
 
     /**
      * The attributes that are mass assignable.

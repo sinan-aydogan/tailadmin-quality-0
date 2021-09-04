@@ -89,7 +89,27 @@ export const tableStyleMixin = {
                 'light-pink': 'border border-pink-500',
                 'light-purple': 'border border-purple-500',
                 'light-gray': 'border border-gray-500'
-            }
+            },
+            noContentColors: {
+                'solid-red': 'bg-red-100 text-red-600 text-center p-3',
+                'solid-blue': 'bg-blue-100 text-blue-600 text-center p-3',
+                'solid-green': 'bg-green-100 text-green-600 text-center p-3',
+                'solid-yellow': 'bg-yellow-100 text-gray-600 text-center p-3',
+                'solid-indigo': 'bg-indigo-100 text-indigo-600 text-center p-3',
+                'solid-pink': 'bg-pink-100 text-pink-600 text-center p-3',
+                'solid-purple': 'bg-purple-100 text-purple-600 text-center p-3',
+                'solid-gray': 'bg-gray-100 text-gray-600 text-center p-3',
+                'solid-black': 'bg-black text-gray-100',
+                'solid-white': 'bg-white text-gray-600',
+                'light-red': 'bg-red-50 text-red-600 text-center p-3',
+                'light-blue': 'bg-blue-50 text-blue-600 text-center p-3',
+                'light-green': 'bg-green-50 text-green-600 text-center p-3',
+                'light-yellow': 'bg-yellow-50 text-yellow-600 text-center p-3',
+                'light-indigo': 'bg-indigo-50 text-indigo-600 text-center p-3',
+                'light-pink': 'bg-pink-50 text-pink-600 text-center p-3',
+                'light-purple': 'bg-purple-50 text-purple-600 text-center p-3',
+                'light-gray': 'bg-gray-50 text-gray-600 text-center p-3'
+            },
         }
     },
     computed: {

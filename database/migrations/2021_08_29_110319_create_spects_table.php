@@ -18,7 +18,7 @@ class CreateSpectsTable extends Migration
             $table->foreignId('spect_id');
             $table->unsignedTinyInteger('limit_type_id');
             $table->unsignedTinyInteger('rule_id');
-            $table->string('value',100);
+            $table->string('value',100)->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();

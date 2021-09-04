@@ -9,7 +9,7 @@
         :content="tableData.data"
         :header="tableHeaders"
         :pagination="true"
-        :searchable="['name']"
+        :searchable-keys="['name']"
         color="solid-blue"
       >
         <!--Search Area-->
