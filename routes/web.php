@@ -28,9 +28,9 @@ Route::get('/', function () {
     ], 'Dashboard');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function (){
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Dashboard',[
+        return Inertia::render('Dashboard', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
@@ -40,15 +40,23 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
 
     /*They are the required pages for the system, don't delete it*/
     Route::prefix('settings')->group(function () {
-       Route::get('/', function () {return Inertia::render('Settings/Index',[
-           'users_count' => count(User::all('id')),
-           'roles_count' => count(Role::all()),
-           'permissions_count' => count(Permission::all())
-       ]);})->name('settings');
-       Route::resource('settings-user', UserController::class);
-       Route::get('role', function () {return Inertia::render('Settings/Role');})->name('settings-role');
-       Route::get('permission', function () {return Inertia::render('Settings/Permission');})->name('settings-permission');
-       Route::get('system', function () {return Inertia::render('Settings/System');})->name('settings-system');
+        Route::get('/', function () {
+            return Inertia::render('Settings/Index', [
+                'users_count' => count(User::all('id')),
+                'roles_count' => count(Role::all()),
+                'permissions_count' => count(Permission::all())
+            ]);
+        })->name('settings');
+        Route::resource('settings-user', UserController::class);
+        Route::get('role', function () {
+            return Inertia::render('Settings/Role');
+        })->name('settings-role');
+        Route::get('permission', function () {
+            return Inertia::render('Settings/Permission');
+        })->name('settings-permission');
+        Route::get('system', function () {
+            return Inertia::render('Settings/System');
+        })->name('settings-system');
     });
 
     /*Tailadmin Quality Routes*/
@@ -61,16 +69,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     //Job Description
     Route::resource('job-description', \App\Http\Controllers\JobDescriptionController::class);
     Route::get('job-description/trash', [\App\Http\Controllers\JobDescriptionController::class, 'trash'])->name('job-description.trash');
-
     //Machine
     Route::resource('machine', \App\Http\Controllers\MachineController::class);
-    Route::get('machine/trash', [\App\Http\Controllers\MachineController::class, 'trash'])->name
-    ('machine.trash');
+    Route::get('machine/trash', [\App\Http\Controllers\MachineController::class, 'trash'])->name('machine.trash');
     //Machine Type
     Route::resource('machine-type', \App\Http\Controllers\MachineTypeController::class);
     Route::get('machine-type/trash', [\App\Http\Controllers\MachineTypeController::class, 'trash'])
-        ->name
-    ('machine-type.trash');
+        ->name('machine-type.trash');
     //Maintenance
     Route::resource('maintenance', \App\Http\Controllers\MaintenanceController::class);
     //Maintenance Action
@@ -139,8 +144,4 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::resource('measurement-tool-action', \App\Http\Controllers\MeasurementToolActionController::class);
     //Measurement Tool Property
     Route::resource('measurement-tool-property', \App\Http\Controllers\MeasurementToolPropertyController::class);
-
 });
-
-
-
