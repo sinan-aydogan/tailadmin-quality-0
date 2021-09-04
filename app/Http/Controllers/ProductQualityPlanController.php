@@ -25,12 +25,17 @@ class ProductQualityPlanController extends Controller
     public function index(Request $request)
     {
         /*Quality Plans List*/
-        $qualityPlans = ProductQualityPlan::all();
+        $qualityPlans = ProductQualityPlan::query()
+        ->with(['product_spects:id,spect_id,limit_type_id,rule_id,value','product_spects.quality_spect:id,name'])
+        ->when($request->code, fn($query,$code)=>$query->where('code','like',"%{$code}%"))
+        ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+        ->when($request->product_id, fn($query,$product_id)=>$query->where('product_id',$product_id))
+        ->get();
 
         return Inertia::render('Modules/Product/QualityPlan/Index', [
             'tableData' => ProductQualityPlanResource::collection($qualityPlans),
-            'searchDataDepartment' => Department::where('is_production', 1)->get(),
-            'searchDataProduct' => Product::where('department_id', $request->department_id)->get()
+            'searchDataDepartment' => Department::searchData('department_id','product_quality_plans')->get(),
+            'searchDataProduct' => Product::searchData('product_id','product_quality_plans')->get()
         ]);
     }
 
@@ -92,7 +97,7 @@ class ProductQualityPlanController extends Controller
         });
 
         /*Create Spects*/
-        $item->spects()->createMany($spects);
+        $item->product_spects()->createMany($spects);
 
         /*Feedback Message*/
         Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The department has been successfully created.</b><br><b>Quality Plan: </b>'.$request['code']]);
