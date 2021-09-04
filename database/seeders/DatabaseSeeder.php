@@ -52,6 +52,9 @@ class DatabaseSeeder extends Seeder
         /*Complaint Type Seeder*/
         $this->call(ComplaintTypeSeeder::class);
 
+        /*Quality Spect Seeder*/
+        $this->call(QualitySpectSeeder::class);
+
 
 
         /* if(App::environment('local')){

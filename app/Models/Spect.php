@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Relations\GetSearchData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ class Spect extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use GetSearchData;
 
     /**
      * The attributes that are mass assignable.
@@ -32,4 +34,17 @@ class Spect extends Model
      * @var array
      */
     /*protected $casts = [];*/
+
+    protected $hidden = ['pivot'];
+
+    //SPECT
+    /**
+     * Get the spect.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function quality_spect()
+    {
+        return $this->belongsTo(QualitySpect::class,'spect_id','id');
+    }
 }

@@ -14,6 +14,8 @@ export const QualitySpectConsts = {
                 {id:6, name: 'Not Equal !='},
                 {id:7, name: 'To Be'},
                 {id:8, name: 'Not to Be'},
+                {id:9, name: '<Between<'},
+                {id:10, name: '<=Between=<'},
             ],
             rule: [
                 {id:1, name: 'Required'},
