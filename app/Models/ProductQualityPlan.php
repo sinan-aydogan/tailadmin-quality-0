@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Relations\GetSearchData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,7 @@ class ProductQualityPlan extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use GetSearchData;
 
     /**
      * The attributes that are mass assignable.
@@ -21,19 +23,9 @@ class ProductQualityPlan extends Model
         'code',
         'department_id',
         'product_id',
-        'spects',
         'creator_id',
         'updater_id',
         'deleter_id'
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'spects' => 'array',
     ];
 
     /*Relations*/
@@ -64,8 +56,8 @@ class ProductQualityPlan extends Model
     /**
      * The roles that belong to the user.
      */
-    public function spects()
+    public function product_spects()
     {
-        return $this->belongsToMany(Spect::class)->withPivot('creator_id',Auth::id());
+        return $this->belongsToMany(Spect::class);
     }
 }
