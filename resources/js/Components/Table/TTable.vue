@@ -2,35 +2,43 @@
   <div class="table-container">
     <!--Top Bar-->
     <div
-        v-if="$slots.search || searchable.length>0 || $slots.right"
+        v-if="$slots.search || searchableKeys.length>0 || $slots.right"
         class="table-bar">
       <!--Top Bar Main Area-->
       <div
           class="table-top-container">
         <!--Left Area-->
-        <div v-if="searchable.length>0" class="table-top-left">
+        <div v-if="searchableKeys.length>0" class="table-top-left">
           <t-search-icon class="table-top-search-icon"/>
           <!--Search Box-->
-          <input v-model="search"
-                 id="search"
+          <input id="search"
+                 v-model="search"
                  placeholder="Simple Search"
                  type="text"
                  @change="filteredContent">
           <!--PagedItem Count Selector-->
           <div v-if="pagination"
-               class="table-top-pagination"
+               :class="[
+                   'table-top-pagination',
+                   $slots.search ? 'right-11' : 'right-1 rounded-r-full'
+                   ]"
                title="Paginated item count"
                @click="showPagedItemChooser = !showPagedItemChooser">
             {{ pagedItem }}
           </div>
-          <div v-if="showPagedItemChooser"
-               class="table-top-pagination-ul">
-            <ul>
-              <li v-for="i in 5" class="table-top-pagination-li"
-                  @click="pagedItem = i*5; showPagedItemChooser=false">{{ i * 5 }}
-              </li>
-            </ul>
-          </div>
+          <transition name="fade">
+            <div v-if="showPagedItemChooser"
+                 :class="[
+                   'table-top-pagination-ul',
+                   $slots.search ? 'right-11' : 'right-2'
+                   ]">
+              <ul>
+                <li v-for="i in 5" class="table-top-pagination-li"
+                    @click="pagedItem = i*5; showPagedItemChooser=false">{{ i * 5 }}
+                </li>
+              </ul>
+            </div>
+          </transition>
           <!--Advanced Search Trigger-->
           <div
               v-if="$slots.search"
@@ -45,11 +53,9 @@
         </div>
       </div>
       <!--Advanced Search Area-->
-      <transition v-if="$slots.search" name="search">
-        <div v-if="showSearch" class="table-advanced-search-area">
-          <div class="whitespace-normal pb-2">
+      <transition name="fade">
+        <div v-if="showSearch && $slots.search" class="table-advanced-search-area">
             <slot name="search"/>
-          </div>
         </div>
       </transition>
     </div>
@@ -83,8 +89,8 @@
         <!--Content-->
         <tbody class="bg-white">
         <tr v-if="paginatedContent.length === 0">
-          <td :class="noContentStyle" :colspan="header.length">
-            <div class="noContentStyle">
+          <td :class="noContentColors[color]" :colspan="header.length">
+            <div>
               <font-awesome-icon icon="info-circle"/>
               Any record not found
             </div>
@@ -134,26 +140,33 @@
 </template>
 
 <script>
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {faInfoCircle} from '@fortawesome/free-solid-svg-icons'
-import TSearchCircle from "@/Components/Icon/TSearchCircleIcon";
-import TInputGroup from "@/Components/Form/TInputGroup";
-import InputText from "@/Components/Form/Inputs/TInputText";
+import InputText from "@/Components/Form/Inputs/TInputText"
+import TAdjustments from "@/Components/Icon/TAdjustmentsIcon"
+import TCollection from "@/Components/Icon/TCollectionIcon";
 import TInputDropdown from "@/Components/Form/Inputs/TInputSelect";
 import TInputDropdownItem from "@/Components/Form/Inputs/TInputSelectItem";
-import TCollection from "@/Components/Icon/TCollectionIcon";
+import TInputGroup from "@/Components/Form/TInputGroup";
 import TPaginate from "@/Components/Paginate/TPaginate";
-import TAdjustments from "@/Components/Icon/TAdjustmentsIcon";
+import TSearchCircle from "@/Components/Icon/TSearchCircleIcon";
 import TSearchIcon from "@/Components/Icon/TSearchIcon";
+import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import {library} from '@fortawesome/fontawesome-svg-core';
 import {tableStyleMixin} from "@/Mixins/Styles/tableStyleMixin";
+
 library.add(faInfoCircle)
 
 export default {
   name: "TTable",
   components: {
-    TSearchIcon,
+    InputText,
     TAdjustments,
-    TPaginate, TCollection, TInputDropdownItem, TInputDropdown, InputText, TInputGroup, TSearchCircle
+    TCollection,
+    TInputDropdown,
+    TInputDropdownItem,
+    TInputGroup,
+    TPaginate,
+    TSearchCircle,
+    TSearchIcon
   },
   mixins: [tableStyleMixin],
   props: {
@@ -170,7 +183,7 @@ export default {
       type: Boolean,
       default: false
     },
-    searchable: {
+    searchableKeys: {
       type: Array,
       default: Array
     },
@@ -204,17 +217,6 @@ export default {
         return this.paginationColor
       }
     },
-    noContentStyle() {
-      let noContentStyle;
-      if (this.color === 'white') {
-        noContentStyle = 'bg-red-200 text-gray-600 text-center p-3'
-      } else if (this.color === 'black') {
-        noContentStyle = 'bg-gray-500 text-gray-200 text-center p-3'
-      } else {
-        noContentStyle = 'bg-' + this.color + '-50  text-' + this.color + '-500 text-center p-3'
-      }
-      return noContentStyle
-    },
     paginatedContent() {
       let content = [...this.finalContent]
       return content.slice((this.page - 1) * this.pagedItem, this.pagedItem * this.page)
@@ -222,16 +224,25 @@ export default {
     filteredContent() {
       return this.content.filter((item) => {
         let query;
-        for (let i = 0; this.searchable.length > i; i++) {
-          query = item[this.searchable[i]].toLowerCase().includes(this.search.toLowerCase()) || query
-
+        if (this.searchableKeys.length > 0) {
+          for (let searchKey of this.searchableKeys) {
+            if (typeof searchKey === 'string') {
+              query = item[searchKey].toString().toLowerCase().includes(this.search.toLowerCase()) || query
+            } else {
+              let result = item;
+              for (let key of searchKey) {
+                result = result[key];
+              }
+              query = result.toString().toLowerCase().includes(this.search.toLowerCase()) || query
+            }
+          }
         }
 
         return query
       })
     },
     finalContent() {
-      if (this.searchable.length > 0 && this.searchable) {
+      if (this.searchableKeys.length > 0 && this.searchableKeys) {
         return this.filteredContent
       } else {
         return this.content
@@ -240,19 +251,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.search-enter-active, .search-leave-active {
-  transition: all .75s;
-}
-
-.search-enter, .search-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.search-enter-to, .search-leave {
-  opacity: 1;
-  max-height: 500px;
-}
-</style>

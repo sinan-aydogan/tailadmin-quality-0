@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Relations\GetSearchData;
 use App\Relations\HasMachines;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class Machine extends Model
     use HasFactory;
     use SoftDeletes;
     use HasMachines;
+    use GetSearchData;
 
     /**
      * The attributes that are mass assignable.
@@ -43,7 +45,7 @@ class Machine extends Model
 
 
     /*Relations*/
-  
+
     //MACHINE TYPE
     /**
      * Get the machine type.
