@@ -25,15 +25,9 @@ class ProductTypeController extends Controller
             ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
             ->get();
 
-        /*Product Type Department List*/
-        $typeDepartment = ProductType::where('department_id', '!=', null)->get()->map(function ($type) {
-            return $type->department_id;
-        });
-        $departments = Department::find($typeDepartment,['id','name']);
-
         return Inertia::render('Modules/Product/Type/Index',[
             'tableData'=>ProductTypeResource::collection($types),
-            'searchDataDepartment'=>$departments
+            'searchDataDepartment'=>Department::relatedData('department_id','product_types')->get()
         ]);
     }
 

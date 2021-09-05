@@ -34,8 +34,8 @@ class ProductQualityPlanController extends Controller
 
         return Inertia::render('Modules/Product/QualityPlan/Index', [
             'tableData' => ProductQualityPlanResource::collection($qualityPlans),
-            'searchDataDepartment' => Department::searchData('department_id','product_quality_plans')->get(),
-            'searchDataProduct' => Product::searchData('product_id','product_quality_plans')->get()
+            'searchDataDepartment' => Department::relatedData('department_id','product_quality_plans')->get(),
+            'searchDataProduct' => Product::relatedData('product_id','product_quality_plans')->get()
         ]);
     }
 
@@ -46,32 +46,12 @@ class ProductQualityPlanController extends Controller
      */
     public function create(Request $request)
     {
-        $department_id = $request->department_id;
-
-        /*Products List*/
-        $products = Product::where('department_id', $department_id)->get();
-
-        /*Product Department List*/
-        $productDepartment = Product::where('department_id', '!=', null)->get()->map(function ($product) {
-            return $product->department_id;
-        });
-        $departments = Department::find($productDepartment, ['id', 'name']);
-
-        /*General Department List*/
-        $generalDepartments = Department::where('is_production', 1)->get();
-
-        /*Standards*/
-        $standards = Standard::all(['id', 'name']);
-
-        /*Quality Spects*/
-        $spects = QualitySprectResource::collection(QualitySpect::all());
-
         return Inertia::render('Modules/Product/QualityPlan/Create', [
-            'departments' => $departments,
-            'generalDepartments' => $generalDepartments,
-            'standards' => $standards,
-            'products' => $products,
-            'spects' => $spects
+            'departments' => Department::relatedData('department_id','products')->get(),
+            'generalDepartments' => Department::where('is_production', 1)->get(),
+            'standards' => Standard::all(['id', 'name']),
+            'products' => Product::where('department_id', $request->department_id)->get(),
+            'spects' => QualitySprectResource::collection(QualitySpect::all())
         ]);
     }
 

@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
-use App\Relations\HasMachines;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,8 +12,7 @@ class Machine extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasMachines;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
@@ -54,7 +52,7 @@ class Machine extends Model
      */
     public function machineType()
     {
-        return $this->belongsTo(MachineType::class,'machine_type_id','id')->withDefault(['name' => 'Undefined Machine Type']);
+        return $this->belongsTo(MachineType::class, 'machine_type_id', 'id')->withDefault(['name' => 'Undefined Machine Type']);
     }
 
     //MACHINE

@@ -8,8 +8,8 @@ use App\Models\Machine;
 use App\Models\MachineType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
-use Session;
 
 class MachineController extends Controller
 {
@@ -20,22 +20,22 @@ class MachineController extends Controller
      */
     public function index(Request $request)
     {
-        $machines = Machine::query()->when($request->code, fn($query, $code) => $query->where('code', 'like', "%{$code}%"))
-            ->when($request->name, fn($query, $name) => $query->where('name', 'like', "%{$name}%"))
-            ->when($request->model, fn($query, $model) => $query->where('model', 'like', "%{$model}%"))
-            ->when($request->manufacturer, fn($query, $manufacturer) => $query->where('manufacturer', 'like', "%{$manufacturer}%"))
-            ->when($request->machine_type_id, fn($query, $machine_type_id) => $query->where('machine_type_id',
-                $machine_type_id))
-            ->when($request->department_id, fn($query, $department_id) => $query->where('department_id', $department_id))
-            ->when($request->machine_id, fn($query, $machine_id) => $query->where('machine_id', $machine_id))
+        /*Machines List*/
+        $machines = Machine::query()->when($request->code, fn ($query, $code) => $query->where('code', 'like', "%{$code}%"))
+            ->when($request->name, fn ($query, $name) => $query->where('name', 'like', "%{$name}%"))
+            ->when($request->model, fn ($query, $model) => $query->where('model', 'like', "%{$model}%"))
+            ->when($request->manufacturer, fn ($query, $manufacturer) => $query->where('manufacturer', 'like', "%{$manufacturer}%"))
+            ->when($request->machine_type_id, fn ($query, $machine_type_id) => $query->where('machine_type_id', $machine_type_id))
+            ->when($request->department_id, fn ($query, $department_id) => $query->where('department_id', $department_id))
+            ->when($request->machine_id, fn ($query, $machine_id) => $query->where('machine_id', $machine_id))
             ->orderBy('created_at')
             ->get();
 
         return Inertia::render('Modules/Machine/Index', [
             'tableData' => MachineResource::collection($machines),
-            'searchDataMachineType' => MachineType::whereHasMachines()->get(),
-            'searchDataDepartment' => Department::whereHasMachines()->get(),
-            'searchDataMachine' => Machine::whereHasMachines()->get(),
+            'searchDataMachineType' => MachineType::relatedData('machine_type_id', 'machines')->get(),
+            'searchDataDepartment' => Department::relatedData('department_id', 'machines')->get(),
+            'searchDataMachine' => Machine::relatedData('machine_id', 'machines')->get(),
         ]);
     }
 

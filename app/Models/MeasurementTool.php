@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +11,7 @@ class MeasurementTool extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +31,10 @@ class MeasurementTool extends Model
         'operator_id',
         'action_manager_id',
         'status',
-        'description'
+        'description',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
     ];
 
     /**
@@ -53,7 +56,7 @@ class MeasurementTool extends Model
      */
     public function type()
     {
-        return $this->belongsTo(MeasurementToolType::class,'measurement_tool_type_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(MeasurementToolType::class, 'measurement_tool_type_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //SUPPLIER
@@ -64,7 +67,7 @@ class MeasurementTool extends Model
      */
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class,'supplier_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //DEPARTMENT
@@ -75,7 +78,7 @@ class MeasurementTool extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => '']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => '']);
     }
 
     //OPERATOR
@@ -86,7 +89,7 @@ class MeasurementTool extends Model
      */
     public function operator()
     {
-        return $this->belongsTo(User::class,'operator_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(User::class, 'operator_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //ACTION MANAGER
@@ -97,6 +100,6 @@ class MeasurementTool extends Model
      */
     public function actionManager()
     {
-        return $this->belongsTo(User::class,'action_manager_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(User::class, 'action_manager_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 }

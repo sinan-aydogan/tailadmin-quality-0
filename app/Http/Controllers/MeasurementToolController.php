@@ -22,7 +22,7 @@ class MeasurementToolController extends Controller
      */
     public function index(Request $request)
     {
-        /*Tool List*/
+        /*Measurement Tools List*/
         $tools = MeasurementTool::query()
             ->when($request->code, fn($query, $code) => $query->where('code', 'like', "%{$code}%"))
             ->when($request->serial_no, fn($query, $serial_no) => $query->where('serial_no', 'like', "%{$serial_no}%"))
@@ -37,43 +37,13 @@ class MeasurementToolController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        /*Tool Types List*/
-        $toolType = MeasurementTool::where('measurement_tool_type_id', '!=', null)->get()->map(function ($tool) {
-            return $tool->measurement_tool_type_id;
-        });
-        $types = MeasurementToolType::find($toolType, ['id', 'name']);
-
-        /*Supplier List*/
-        $toolSupplier = MeasurementTool::where('supplier_id', '!=', null)->get()->map(function ($tool) {
-            return $tool->supplier_id;
-        });
-        $suppliers = Supplier::find($toolSupplier, ['id', 'name']);
-
-        /*Department List*/
-        $toolDepartment = MeasurementTool::where('department_id', '!=', null)->get()->map(function ($tool) {
-            return $tool->department_id;
-        });
-        $departments = Department::find($toolDepartment, ['id', 'name']);
-
-        /*Operator List*/
-        $toolOperator = MeasurementTool::where('operator_id', '!=', null)->get()->map(function ($tool) {
-            return $tool->operator_id;
-        });
-        $operators = User::find($toolOperator, ['id', 'name']);
-
-        /*Tool Types List*/
-        $toolActionManager = MeasurementTool::where('action_manager_id', '!=', null)->get()->map(function ($tool) {
-            return $tool->action_manager_id;
-        });
-        $actionManagers = User::find($toolActionManager, ['id', 'name']);
-
         return Inertia::render('Modules/MeasurementTool/Index', [
             'tableData' => MeasurementToolResource::collection($tools),
-            'searchDataType' => $types,
-            'searchDataSupplier' => $suppliers,
-            'searchDataDepartment' => $departments,
-            'searchDataOperator' => $operators,
-            'searchDataActionManager' => $actionManagers
+            'searchDataType' => MeasurementToolType::relatedData('measurement_tool_type_id','measurement_tools')->get(),
+            'searchDataSupplier' => Supplier::relatedData('supplier_id','measurement_tools')->get(),
+            'searchDataDepartment' => Department::relatedData('department_id','measurement_tools')->get(),
+            'searchDataOperator' => User::relatedData('operator_id','measurement_tools')->get(),
+            'searchDataActionManager' =>  User::relatedData('action_manager_id','measurement_tools')->get()
         ]);
     }
 
@@ -84,17 +54,11 @@ class MeasurementToolController extends Controller
      */
     public function create()
     {
-        $types = MeasurementToolType::all(['id', 'name']);
-        $suppliers = Supplier::all(['id', 'name']);
-        $departments = Department::all(['id', 'name']);
-        $users = User::all(['id', 'name', 'profile_photo_path']);
-
-
         return Inertia::render('Modules/MeasurementTool/Create', [
-            'types' => $types,
-            'suppliers' => $suppliers,
-            'departments' => $departments,
-            'users' => $users,
+            'types' => MeasurementToolType::all(['id', 'name']),
+            'suppliers' => Supplier::all(['id', 'name']),
+            'departments' => Department::all(['id', 'name']),
+            'users' => User::all(['id', 'name', 'profile_photo_path'])
         ]);
     }
 

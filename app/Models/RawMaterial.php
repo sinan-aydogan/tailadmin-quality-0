@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,14 +11,28 @@ class RawMaterial extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['code','name','model','description','manufacturer','department_id','raw_material_type_id','package_type','supplier_id','stock_rules','creator_id','updater_id'];
+    protected $fillable = [
+        'code',
+        'name',
+        'model',
+        'description',
+        'manufacturer',
+        'department_id',
+        'raw_material_type_id',
+        'package_type',
+        'supplier_id',
+        'stock_rules',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,8 +40,8 @@ class RawMaterial extends Model
      * @var array
      */
     protected $casts = [
-        'storage_condition'=>'array',
-        'package_type'=>'array',
+        'storage_condition' => 'array',
+        'package_type' => 'array',
     ];
 
     /*Relations*/
@@ -40,7 +54,7 @@ class RawMaterial extends Model
      */
     public function rawMaterialType()
     {
-        return $this->belongsTo(RawMaterialType::class,'raw_material_type_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(RawMaterialType::class, 'raw_material_type_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //RELATED DEPARTMENT
@@ -51,6 +65,6 @@ class RawMaterial extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => '']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => '']);
     }
 }

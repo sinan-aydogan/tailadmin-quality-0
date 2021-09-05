@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
-use App\Relations\HasMachines;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,15 +11,25 @@ class MachineType extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasMachines;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','description','creator_id','updater_id', 'deleter_id'];
+    protected $fillable = [
+        'name',
+        'description',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    /*protected $casts = [];*/
 }
-
