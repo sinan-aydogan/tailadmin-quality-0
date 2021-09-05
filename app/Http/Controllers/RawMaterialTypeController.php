@@ -17,9 +17,10 @@ class RawMaterialTypeController extends Controller
      */
     public function index()
     {
+        /* Raw Material Types List */
         return Inertia::render('RawMaterial/RawMaterialType/Index',[
             'rawMaterialTypes' => RawMaterialType::with('department:id,name')->get(['id','name','department_id','description']),
-            'departments' => Department::where('is_production',1)->get(['id','name'])
+            'searchDataDepartment' => Department::relatedData('department_id','raw_material_types')->get()
         ]);
     }
 

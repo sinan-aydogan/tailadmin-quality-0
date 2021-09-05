@@ -35,29 +35,11 @@ class StaffController extends Controller
             ->when($request->status, fn($query,$status)=>$query->where('status',$status))
             ->get();
 
-        /*Staff Department List*/
-        $staffDepartment = User::where('department_id', '!=', null)->get()->map(function ($staff) {
-            return $staff->department_id;
-        });
-        $departments = Department::find($staffDepartment,['id','name']);
-
-        /*Staff Manager List*/
-        $staffManager = User::where('manager_id', '!=', null)->get()->map(function ($staff) {
-            return $staff->manager_id;
-        });
-        $managers = User::find($staffManager,['id','name','profile_photo_path']);
-
-        /*Staff Job Description List*/
-        $staffJobDescription = User::where('job_description_id', '!=', null)->get()->map(function ($staff) {
-            return $staff->job_description_id;
-        });
-        $jobDescriptions = JobDescription::find($staffJobDescription,['id','name']);
-
         return Inertia::render('Modules/Staff/Index', [
             'tableData' => StaffResource::collection($staff),
-            'searchDataManager' => $managers,
-            'searchDataDepartment' => $departments,
-            'searchDataJobDescription' => $jobDescriptions
+            'searchDataManager' => User::relatedData('manager_id','users')->get(),
+            'searchDataDepartment' => Department::relatedData('department_id','users')->get(),
+            'searchDataJobDescription' => JobDescription::relatedData('job_description_id','users')->get()
         ]);
     }
 
@@ -68,18 +50,11 @@ class StaffController extends Controller
      */
     public function create(Request $request)
     {
-        $collar_type = $request->collar_type;
-        $manager_id = $request->manager_id;
-        $departments = Department::all(['id', 'name']);
-        $jobDescriptions = JobDescription::where('collar_type', '=',$collar_type)->get(['id', 'name']);
-        $managers = User::where('collar_type', 1)->get(['id', 'name', 'profile_photo_path']);
-        $staff = User::where('id','!=', $manager_id)->get(['id', 'name', 'profile_photo_path']);
-
         return Inertia::render('Modules/Staff/Create', [
-            'departments' => $departments,
-            'jobDescriptions' => $jobDescriptions,
-            'managers' => $managers,
-            'staff' => $staff,
+            'departments' => Department::all(['id', 'name']),
+            'jobDescriptions' => JobDescription::where('collar_type', '=',$request->collar_type)->get(['id', 'name']),
+            'managers' => User::all(['id', 'name', 'profile_photo_path']),
+            'staff' => User::where('id','!=', $request->manager_id)->get(['id', 'name', 'profile_photo_path']),
         ]);
     }
 

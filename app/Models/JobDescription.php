@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +11,7 @@ class JobDescription extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
@@ -30,7 +30,9 @@ class JobDescription extends Model
         'working_conditions',
         'working_equipments',
         'kpi',
-        'creator_id'
+        'creator_id',
+        'updater_id',
+        'deleter_id'
     ];
 
     /**
@@ -39,13 +41,13 @@ class JobDescription extends Model
      * @var array
      */
     protected $casts = [
-        'job_responsibility'=>'array',
-        'job_requirement'=>'array',
-        'report_to'=>'array',
-        'working_together'=>'array',
-        'working_conditions'=>'array',
-        'working_equipments'=>'array',
-        'kpi'=>'array',
+        'job_responsibility' => 'array',
+        'job_requirement' => 'array',
+        'report_to' => 'array',
+        'working_together' => 'array',
+        'working_conditions' => 'array',
+        'working_equipments' => 'array',
+        'kpi' => 'array',
     ];
 
     /*Relations*/
@@ -58,6 +60,6 @@ class JobDescription extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Independent']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Independent']);
     }
 }

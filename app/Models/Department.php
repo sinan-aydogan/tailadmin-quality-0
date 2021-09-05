@@ -2,31 +2,35 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
-use App\Relations\HasMachines;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
-use Laravel\Sanctum\HasApiTokens;
 
 class Department extends Model
 {
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
-    use HasMachines;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','manager_id','department_type','department_id','is_complaint','is_production','creator_id','updater_id'];
+    protected $fillable = [
+        'name',
+        'manager_id',
+        'department_type',
+        'department_id',
+        'is_complaint',
+        'is_production',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -47,7 +51,7 @@ class Department extends Model
      */
     public function manager()
     {
-        return $this->belongsTo(User::class,'manager_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(User::class, 'manager_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //MAIN DEPARTMENT
@@ -58,7 +62,6 @@ class Department extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Main Department']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Main Department']);
     }
-
 }

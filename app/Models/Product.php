@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,14 +16,25 @@ class Product extends Model  implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','code','department_id','product_type_id','description','is_certified','standard_id','creator_id','updater_id','deleter_id'];
+    protected $fillable = [
+        'name',
+        'code',
+        'department_id',
+        'product_type_id',
+        'description',
+        'is_certified',
+        'standard_id',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /*Relations*/
 
@@ -35,7 +46,7 @@ class Product extends Model  implements HasMedia
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //STANDARD
@@ -46,7 +57,7 @@ class Product extends Model  implements HasMedia
      */
     public function standard()
     {
-        return $this->belongsTo(Standard::class,'standard_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Standard::class, 'standard_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //PRODUCT TYPE
@@ -57,7 +68,7 @@ class Product extends Model  implements HasMedia
      */
     public function productType()
     {
-        return $this->belongsTo(ProductType::class,'product_type_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(ProductType::class, 'product_type_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     /*Prodyct Photo Linking*/

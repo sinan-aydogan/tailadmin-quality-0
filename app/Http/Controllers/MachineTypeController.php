@@ -20,11 +20,13 @@ class MachineTypeController extends Controller
      */
     public function index(Request $request)
     {
+        /*Machine Types List*/
         $machineTypes = MachineType::query()
             ->when($request->name, fn($query, $name) => $query->where('name', 'like', "%{$name}%"))
             ->when($request->description, fn($query, $description) => $query->where('description', 'like', "%{$description}%"))
             ->orderBy('created_at')
             ->get();
+
         return Inertia::render('Modules/Machine/MachineType/Index', [
             'tableData' => MachineTypeResource::collection($machineTypes)
         ]);

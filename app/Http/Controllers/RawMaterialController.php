@@ -20,12 +20,23 @@ class RawMaterialController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        /* Raw Materials List */
+        $rawMaterials = RawMaterial::query()
+            ->when($request->code, fn ($query, $code) => $query->where('code', 'like', "%{$code}%"))
+            ->when($request->name, fn ($query, $name) => $query->where('name', 'like', "%{$name}%"))
+            ->when($request->department_id, fn ($query, $department_id) => $query->where('department_id', $department_id))
+            ->when($request->raw_material_type_id, fn ($query, $raw_material_type_id) => $query->where('raw_material_type_id', $raw_material_type_id))
+            ->when($request->supplier_id, fn ($query, $supplier_id) => $query->where('supplier_id', $supplier_id))
+            ->orderBy('created_at')
+            ->get();
+
         return Inertia::render('Modules/RawMaterial/Index',[
-            'tableData' => RawMaterialResource::collection(RawMaterial::all()),
-            'departments' => Department::all(['id','name']),
-            'rawMaterialTypes' => RawMaterial::all(['id','name'])
+            'tableData' => RawMaterialResource::collection($rawMaterials),
+            'searchDataDepartment' => Department::relatedData('department_id','raw_materials')->get(),
+            'searchDataType' => RawMaterialType::relatedData('raw_material_type_id','raw_materials')->get(),
+            'searchDataSupplier' => Supplier::relatedData('supplier_id','raw_materials')->get()
         ]);
     }
 
@@ -37,9 +48,8 @@ class RawMaterialController extends Controller
     public function create(Request $request)
     {
         return Inertia::render('Modules/RawMaterial/Create',[
-            'products'=> Product::all(['id','name']),
             'departments'=> Department::where('is_production',1)->get(['id','name']),
-            'rawMaterialTypes'=> RawMaterialType::where('department_id', $request->departmentId)->get(['id','name']),
+            'rawMaterialTypes'=> RawMaterialType::all(['id','name']),
             'suppliers' => Supplier::all(['id','name'])
         ]);
     }

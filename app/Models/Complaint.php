@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,14 +11,23 @@ class Complaint extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['register_date','customer_id','department_id','product_id','description'];
+    protected $fillable = [
+        'register_date',
+        'customer_id',
+        'department_id',
+        'product_id',
+        'description',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,7 +35,7 @@ class Complaint extends Model
      * @var array
      */
     protected $casts = [
-        'register_date'=>'datetime'
+        'register_date' => 'datetime'
     ];
 
     /**
@@ -35,7 +44,8 @@ class Complaint extends Model
     protected $appends = ['date'];
 
     /*Date format correction*/
-    public function getDateAttribute(){
+    public function getDateAttribute()
+    {
         return $this->register_date->format('d-M-Y');
     }
 
@@ -47,8 +57,9 @@ class Complaint extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function complaintTypes(){
-        return $this->belongsToMany(ComplaintType::class,'complaint_type_complaints','complaint_id','complaint_type_id');
+    public function complaintTypes()
+    {
+        return $this->belongsToMany(ComplaintType::class, 'complaint_type_complaints', 'complaint_id', 'complaint_type_id');
     }
 
     //RELATED DEPARTMENT
@@ -59,7 +70,7 @@ class Complaint extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class,'department_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //RELATED CUSTOMER
@@ -70,7 +81,7 @@ class Complaint extends Model
      */
     public function customer()
     {
-        return $this->belongsTo(Customer::class,'customer_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Customer::class, 'customer_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
     //RELATED PRODUCT
@@ -81,6 +92,6 @@ class Complaint extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class,'product_id','id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Product::class, 'product_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 }

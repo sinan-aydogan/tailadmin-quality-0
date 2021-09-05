@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Models\User;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,15 +29,10 @@ class DepartmentController extends Controller
             ->when($request->is_complaint, fn($query,$is_complaint)=>$query->where('is_complaint',$is_complaint))
             ->when($request->is_production, fn($query,$is_production)=>$query->where('is_production',$is_production))
             ->get();
-        /*Department Managers List*/
-        $departmentManagers = Department::where('manager_id', '!=', null)->get()->map(function ($department) {
-            return $department->manager_id;
-        });
-        $managers = User::find($departmentManagers,['id','name','profile_photo_path']);
 
         return Inertia::render('Modules/Department/Index', [
             'tableData' => DepartmentResource::collection($departments),
-            'searchDataManager' => $managers,
+            'searchDataManager' => User::relatedData('manager_id','departments')->get(),
         ]);
     }
 
@@ -49,12 +43,9 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        $users = User::all(['id','name','profile_photo_path']);
-        $departments = Department::where('department_type', 1)->get(['id','name']);
-
         return Inertia::render('Modules/Department/Create', [
-            'users' => $users,
-            'departments' => $departments,
+            'users' => User::all(['id','name','profile_photo_path']),
+            'departments' => Department::where('department_type', 1)->get(['id','name']),
         ]);
     }
 

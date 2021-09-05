@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,7 +27,7 @@ class User extends Authenticatable
     use SoftDeletes;
     /*Spatie Permissions Package*/
     use HasRoles;
-    use GetSearchData;
+    use GetRelatedData;
     /**
      * The attributes that are mass assignable.
      *
@@ -55,7 +55,9 @@ class User extends Authenticatable
         'education_info',
         'skill_info',
         'additional_task',
-        'creator_id'
+        'creator_id',
+        'updater_id',
+        'deleter_id'
     ];
 
     /**

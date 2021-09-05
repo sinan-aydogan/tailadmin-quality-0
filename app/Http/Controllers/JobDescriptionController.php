@@ -27,15 +27,9 @@ class JobDescriptionController extends Controller
             ->when($request->status, fn($query,$status)=>$query->where('status',$status))
             ->get();
 
-        /*Job Description Department List*/
-        $jobDescriptionDepartment = JobDescription::where('department_id', '!=', null)->get()->map(function ($jobDescription) {
-            return $jobDescription->department_id;
-        });
-        $departments = Department::find($jobDescriptionDepartment,['id','name']);
-
         return Inertia::render('Modules/Staff/JobDescription/Index',[
             'tableData'=> JobDescriptionResource::collection($jobDescription),
-            'searchDataDepartment'=> $departments
+            'searchDataDepartment'=> Department::relatedData('department_id','job_descriptions')->get()
         ]);
     }
 

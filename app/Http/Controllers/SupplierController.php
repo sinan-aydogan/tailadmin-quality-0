@@ -16,7 +16,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Supplier/Index',[
+        /* Suppliers List */
+        return Inertia::render('Modules/Supplier/Index',[
             'suppliers' => Supplier::all(['id','name','phone','status']),
         ]);
     }
@@ -28,7 +29,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Supplier/Create');
+        return Inertia::render('Modules/Supplier/Create');
     }
 
     /**

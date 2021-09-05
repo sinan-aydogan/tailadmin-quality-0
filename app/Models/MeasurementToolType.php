@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Relations\GetSearchData;
+use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +11,7 @@ class MeasurementToolType extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use GetSearchData;
+    use GetRelatedData;
 
     /**
      * The attributes that are mass assignable.
@@ -22,4 +22,11 @@ class MeasurementToolType extends Model
         'name',
         'description'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    /*protected $casts = [];*/
 }

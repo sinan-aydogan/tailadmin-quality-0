@@ -18,11 +18,11 @@ class MeasurementToolTypeController extends Controller
      */
     public function index()
     {
-        /*Type List*/
+        /*Measurement Tool Types List*/
         $types = MeasurementToolType::all();
 
         return Inertia::render('Modules/MeasurementTool/Type/Index', [
-            'tableData' => MeasurementToolTypeResource::collection($types)
+            'tableData' => MeasurementToolTypeResource::collection($types),
         ]);
     }
 
