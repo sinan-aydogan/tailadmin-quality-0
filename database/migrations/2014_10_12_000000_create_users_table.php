@@ -43,7 +43,8 @@ class CreateUsersTable extends Migration
             $table->json('additional_task')->nullable();
             $table->foreignId('creator_id')->nullable();
             $table->foreignId('updater_id')->nullable();
-            $table->softDeletes('deleted_at', 0);
+            $table->foreignId('deleter_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
