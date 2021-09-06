@@ -19,6 +19,12 @@ class MachineResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
+            'machine_type_id' => $this->machine_type_id,
+            'machine_type_name' => $this->machineType->name,
+            'department_id' => $this->department_id,
+            'department_name' => $this->department->name,
+            'machine_id' => $this->machine_id,
+            'machine_name' => $this->machine->name,
             'model' => $this->model,
             'manufacturer' => $this->manufacturer,
         ];
