@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
         /*Raw Material Type Seeder*/
         $this->call(RawMaterialTypeSeeder::class);
 
+        /*Machine Seeder*/
+        $this->call(MachineSeeder::class);
+
         /*Machine Type Seeder*/
         $this->call(MachineTypeSeeder::class);
 
