@@ -14,7 +14,7 @@
           title="Machine Type Infos"
         >
           <grid-section :col-tablet="2">
-            <!--Machine Code-->
+            <!--Machine Type Name-->
             <t-input-group
               :error="error.name"
               label="Machine Type Name"
@@ -22,7 +22,7 @@
               <t-input-text id="name" v-model="form.name"/>
             </t-input-group>
 
-            <!--Machine Name-->
+            <!--Machine Type Description-->
             <t-input-group
               :error="error.description"
               label="Machine Type Description"
