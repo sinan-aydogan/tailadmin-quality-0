@@ -61,5 +61,9 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "storage":  [
+        "mkdir storage",
+        "mkdir storage/framework storage/framework/cache storage/framework/sessions storage/framework/testing storage/framework/views"
+    ]
 }
