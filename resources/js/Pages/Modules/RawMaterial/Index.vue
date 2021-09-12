@@ -1,150 +1,185 @@
 <template>
-  <app-layout>
-    <!--Header-->
-    <template #header>Raw Materials</template>
-    <template #subHeader>All of raw materials in your company</template>
-    <!--Content-->
-    <template #default>
-      <t-table
-          :content="tableData.data"
-          :header="tableHeaders"
-          :pagination="true"
-          :searchable-keys="['name']"
-          color="solid-blue"
-      >
-        <!--Search Area-->
-        <template #search>
-          <grid-section :col-tablet="3">
-
-            <!--Product Code-->
-            <t-input-group
-                label="Product Code"
+    <app-layout>
+        <!--Header-->
+        <template #header>Raw Materials</template>
+        <template #subHeader>All of raw materials in your company</template>
+        <!--Content-->
+        <template #default>
+            <t-table
+                :content="tableData.data"
+                :header="tableHeaders"
+                :pagination="true"
+                :searchable-keys="['name']"
+                color="solid-blue"
             >
-              <t-input-text
-                  v-model="searchData.code"
-                  @input="search"
-              />
-            </t-input-group>
+                <!--Search Area-->
+                <template #search>
+                    <grid-section :col-tablet="3">
 
-            <!--Product Name-->
-            <t-input-group
-                label="Product Name"
-            >
-              <t-input-text
-                  v-model="searchData.name"
-                  @input="search"
-              />
-            </t-input-group>
+                        <!--Product Code-->
+                        <t-input-group
+                            label="Raw Material Code"
+                        >
+                            <t-input-text
+                                v-model="searchData.code"
+                                @input="search"
+                            />
+                        </t-input-group>
 
-            <!--Product Type-->
-            <t-input-group
-                label="Product Type"
-            >
-              <t-input-select
-                  v-model="searchData.product_type_id"
-                  :clear-button="true"
-                  :options="searchDataType"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  @input="search"
-              />
-            </t-input-group>
+                        <!--Product Name-->
+                        <t-input-group
+                            label="Raw Material Name"
+                        >
+                            <t-input-text
+                                v-model="searchData.name"
+                                @input="search"
+                            />
+                        </t-input-group>
 
-            <!--Department-->
-            <t-input-group
-                label="Department"
-            >
-              <t-input-select
-                  v-model="searchData.department_id"
-                  :clear-button="true"
-                  :options="searchDataDepartment"
-                  :search="true"
-                  options-label-key="name"
-                  options-value-key="id"
-                  @input="search"
-              />
-            </t-input-group>
+                        <!--Product Type-->
+                        <t-input-group
+                            label="Raw Material Type"
+                        >
+                            <t-input-select
+                                v-model="searchData.raw_material_type_id"
+                                :clear-button="true"
+                                :options="searchDataType"
+                                :search="true"
+                                options-label-key="name"
+                                options-value-key="id"
+                                @input="search"
+                            />
+                        </t-input-group>
 
-            <!--Standard-->
-            <t-input-group
-                label="Standard"
-            >
-              <t-input-select
-                  v-model="searchData.standard_id"
-                  :clear-button="true"
-                  :options="searchDataStandard"
-                  options-label-key="name"
-                  options-value-key="id"
-                  @input="search"
-              />
-            </t-input-group>
+                        <!--Model-->
+                        <t-input-group
+                            label="Model"
+                        >
+                            <t-input-text
+                                v-model="searchData.model"
+                                @input="search"
+                            />
+                        </t-input-group>
 
-            <!--Certification-->
-            <t-input-group
-                label="Certification"
-            >
-              <t-input-select
-                  v-model="searchData.is_certified"
-                  :clear-button="true"
-                  :options="is_certified"
-                  options-label-key="name"
-                  options-value-key="id"
-                  @input="search"
-              >
-                <template #label="{props}">
-                  <t-badge :color="props.color">
-                    {{ props.name }}
-                  </t-badge>
+                        <!--Manufacturer-->
+                        <t-input-group
+                            label="Manufacturer"
+                        >
+                            <t-input-text
+                                v-model="searchData.manufacturer"
+                                @input="search"
+                            />
+                        </t-input-group>
+
+                        <!--Supplier-->
+                        <t-input-group
+                            label="Supplier"
+                        >
+                            <t-input-select
+                                v-model="searchData.supplier_id"
+                                :clear-button="true"
+                                :options="searchDataSupplier"
+                                :search="true"
+                                options-label-key="name"
+                                options-value-key="id"
+                                @input="search"
+                            />
+                        </t-input-group>
+
+                        <!--Department-->
+                        <t-input-group
+                            label="Department"
+                        >
+                            <t-input-select
+                                v-model="searchData.department_id"
+                                :clear-button="true"
+                                :options="searchDataDepartment"
+                                :search="true"
+                                options-label-key="name"
+                                options-value-key="id"
+                                @input="search"
+                            />
+                        </t-input-group>
+                    </grid-section>
                 </template>
-              </t-input-select>
-            </t-input-group>
-          </grid-section>
-        </template>
-        <template #right>
-          <t-action-buttons-index model="raw-material"/>
-        </template>
+                <template #right>
+                    <t-action-buttons-index model="raw-material"/>
+                </template>
 
-        <!--Code-->
-        <template #code="{props}">
-          <div class="inline-flex whitespace-nowrap items-center gap-1">
-            {{ props.code }}
-          </div>
+                <template #details="{props}">
+                    <div class="flex flex-col cursor-pointer" @click="detailsModalController(props)">
+                        <t-clipboard-icon class="w-6 h-6 text-blue-400 hover:text-gray-700"/>
+                    </div>
+                </template>
+            </t-table>
+            <!--Details Modal-->
+            <t-modal :show="showDetailsModal" @close="showDetailsModal=false">
+                <template #header>
+                    Raw Material Details
+                </template>
+                <template #content>
+                    <div v-if="selectedRawMaterial" class="flex flex-col -mt-6 gap-2">
+                        <!--Supplier-->
+                        <div class="border p-2 rounded bg-gray-50">
+                            <span class="font-bold text-xl">Supplier</span>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                            <span
+                                v-for="item in selectedRawMaterial.suppliers"
+                            >
+                                <t-badge>
+                                    {{ item.name }}
+                                </t-badge>
+                            </span>
+                            </div>
+                        </div>
+                        <!--Properties-->
+                        <div v-for="propertyType in propertyTypes">
+                            <div v-if="selectedRawMaterial.properties.find(item=>item.property_type_id === propertyType.id)" class="border p-2 rounded bg-gray-50">
+                            <span class="font-bold text-xl">
+                                {{ propertyType.name }}
+                            </span>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                            <span
+                                v-for="property in selectedRawMaterial.properties"
+                                v-if="propertyType.id === property.property_type_id"
+                            >
+                                <t-badge>
+                                    {{ property.name }}
+                                </t-badge>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Files-->
+                        <div v-if="selectedRawMaterial.files.length!==0" class="border p-2 rounded bg-gray-50">
+                            <span class="font-bold text-xl">
+                                Files
+                            </span>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <t-list class="w-full" :radius="3">
+                                    <t-list-item v-for="(file,index) in selectedRawMaterial.files" :key="index">
+                                        <template #default>
+                                            <a :href="file.original_url" target="_blank" class="flex justify-between w-full overflow-hidden">
+                                                <span>
+                                                    {{ file.name }}
+                                                </span>
+
+                                                <div>
+                                                    <t-badge>
+                                                        {{ file.size | sizeCalculator }} - {{ file.extension }}
+                                                    </t-badge>
+                                                </div>
+                                            </a>
+                                        </template>
+                                    </t-list-item>
+                                </t-list>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </t-modal>
         </template>
-
-        <!--Name-->
-        <template #name="{props}">
-          <div class="flex flex-row whitespace-nowrap items-center gap-2">
-            <div v-if="props.photo" class="flex items-center justify-center rounded-lg overflow-hidden w-12 h-12 gap-2 bg-gray-200 bg-opacity-50">
-              <img :src="props.photo" class="cover-image"/>
-            </div>
-
-            {{ props.name }}
-          </div>
-        </template>
-
-        <!--Standard-->
-        <template #standard_code="{props}">
-
-          <t-tooltip position="top">
-            <template #mainContent>
-              {{ props.standard_code }}
-            </template>
-            <template #secondContent>
-              {{ props.standard_name }}
-            </template>
-          </t-tooltip>
-        </template>
-
-        <!--Certification-->
-        <template #is_certified="{props}">
-          <t-badge :color="is_certified[is_certified.findIndex( s => s.id === props.is_certified )].color">
-            {{ is_certified[is_certified.findIndex(s => s.id === props.is_certified)].name }}
-          </t-badge>
-        </template>
-      </t-table>
-    </template>
-  </app-layout>
+    </app-layout>
 </template>
 
 <script>
@@ -158,69 +193,99 @@ import TInputText from "@/Components/Form/Inputs/TInputText";
 import TTable from "@/Components/Table/TTable";
 import {ProductConsts} from "@/Mixins/SectionConsts/ProductConsts";
 import TTooltip from "@/Components/Tooltip/TTooltip";
+import TClipboardIcon from "@/Components/Icon/TClipboardIcon";
+import TModal from "@/Components/Modal/TModal";
+import TList from "@/Components/List/TList";
+import TListItem from "@/Components/List/TListItem";
 
 export default {
-  name: "Index",
-  components: {
-    TTooltip,
-    AppLayout,
-    GridSection,
-    TActionButtonsIndex,
-    TBadge,
-    TInputGroup,
-    TInputSelect,
-    TInputText,
-    TTable
-  },
-  mixins: [ProductConsts],
-  props: {
-    tableData: {
-      type: Object
+    name: "Index",
+    components: {
+        TListItem,
+        TList,
+        TModal,
+        TClipboardIcon,
+        TTooltip,
+        AppLayout,
+        GridSection,
+        TActionButtonsIndex,
+        TBadge,
+        TInputGroup,
+        TInputSelect,
+        TInputText,
+        TTable
     },
-    searchDataDepartment: {
-      type: Array
-    },
-    searchDataType: {
-      type: Array
-    },
-    searchDataStandard: {
-      type: Array
-    }
-  },
-  data() {
-    return {
-      tableHeaders: [
-        {label: 'Product Code', key: 'code', align: 'left'},
-        {label: 'Product Name', key: 'name', align: 'left'},
-        {label: 'Product Type', key: 'job_description_name', align: 'left'},
-        {label: 'Department', key: 'department_name', align: 'left'},
-        {label: 'Production Standard', key: 'standard_code', align: 'left'},
-        {label: 'Certification', key: 'is_certified', align: 'center'},
-      ],
-      searchData: {
-        name: '',
-        code: '',
-        department_id: null,
-        product_type_id: null,
-        standard_id: null,
-        is_certified: null,
-      }
-    }
-  },
-  methods: {
-    search() {
-      this.$inertia.reload({
-        data: {
-          name: this.searchData.name,
-          code: this.searchData.code,
-          department_id: this.searchData.department_id,
-          product_type_id: this.searchData.product_type_id,
-          standard_id: this.searchData.standard_id,
-          is_certified: this.searchData.is_certified
+    mixins: [ProductConsts],
+    props: {
+        tableData: {
+            type: Object
         },
-        only: ['tableData'],
-      })
+        propertyTypes: {
+            type: Array
+        },
+        searchDataDepartment: {
+            type: Array
+        },
+        searchDataType: {
+            type: Array
+        },
+        searchDataSupplier: {
+            type: Array
+        }
+    },
+    data() {
+        return {
+            selectedRawMaterial: null,
+            showDetailsModal: false,
+            tableHeaders: [
+                {label: 'Code', key: 'code', align: 'left'},
+                {label: 'Name', key: 'name', align: 'left'},
+                {label: 'Type', key: 'raw_material_type_name', align: 'left'},
+                {label: 'Model', key: 'model', align: 'left'},
+                {label: 'Manufacturer', key: 'manufacturer', align: 'left'},
+                {label: 'Department', key: 'department_name', align: 'left'},
+                {label: 'Details', key: 'details', align: 'center'},
+            ],
+            searchData: {
+                code: '',
+                name: '',
+                raw_material_type_id: null,
+                model: '',
+                manufacturer: '',
+                supplier_id: null,
+                department_id: null,
+                stock_rules: null,
+                package_type: null,
+            }
+        }
+    },
+    methods: {
+        search() {
+            this.$inertia.reload({
+                data: {
+                    code: this.searchData.code,
+                    name: this.searchData.name,
+                    department_id: this.searchData.department_id,
+                    raw_material_type_id: this.searchData.raw_material_type_id,
+                    model: this.searchData.model,
+                    manufacturer: this.searchData.manufacturer,
+                    supplier_id: this.searchData.supplier_id
+                },
+                only: ['tableData'],
+            })
+        },
+        detailsModalController(rawMaterial) {
+            this.selectedRawMaterial = rawMaterial;
+            this.showDetailsModal = !this.showDetailsModal;
+        }
+    },
+    filters: {
+        sizeCalculator(value) {
+            let sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+            if (value === 0) return "0 Byte";
+            let i = parseInt(Math.floor(Math.log(value) / Math.log(1024)));
+            return Math.round(value / Math.pow(1024, i), 2) + " " + sizes[i];
+        },
     }
-  }
 }
 </script>
