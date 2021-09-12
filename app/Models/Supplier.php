@@ -29,4 +29,13 @@ class Supplier extends Model
         'updater_id',
         'deleter_id'
     ];
+
+    /*Raw Materials*/
+    /**
+     * The raw materials that belong to the supplier.
+     */
+    public function rawMaterials()
+    {
+        return $this->belongsToMany(RawMaterial::class);
+    }
 }
