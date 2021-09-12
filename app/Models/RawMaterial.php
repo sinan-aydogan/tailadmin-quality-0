@@ -3,15 +3,22 @@
 namespace App\Models;
 
 use App\Relations\GetRelatedData;
+use App\Relations\HasProperties;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class RawMaterial extends Model
+class RawMaterial extends Model implements HasMedia
 {
     use HasFactory;
     use SoftDeletes;
     use GetRelatedData;
+    use InteractsWithMedia;
+    use HasProperties;
 
     /**
      * The attributes that are mass assignable.
@@ -26,9 +33,6 @@ class RawMaterial extends Model
         'manufacturer',
         'department_id',
         'raw_material_type_id',
-        'package_type',
-        'supplier_id',
-        'stock_rules',
         'creator_id',
         'updater_id',
         'deleter_id'
@@ -39,10 +43,7 @@ class RawMaterial extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'storage_condition' => 'array',
-        'package_type' => 'array',
-    ];
+    /*protected $casts = [];*/
 
     /*Relations*/
 
@@ -66,5 +67,29 @@ class RawMaterial extends Model
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => '']);
+    }
+
+    //SUPPLIERS FOR RAW MATERIAL
+    /**
+     * The suppliers that belong to the raw material.
+     */
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class);
+    }
+
+
+
+    /*Raw Material File Linking*/
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('file')
+            ->registerMediaConversions(function (Media $media) {
+                $this
+                    ->addMediaConversion('thumbnail')
+                    ->format(Manipulations::FORMAT_PNG)
+                    ->fit(Manipulations::FIT_CROP, 250, 250);
+            });
     }
 }
