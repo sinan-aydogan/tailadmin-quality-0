@@ -35,6 +35,14 @@ export const settingsMenuMixin = {
                     activeKey: ["settings-permission"],
                 },
                 {
+                    label: "Properties",
+                    icon: "",
+                    link: "settings-property.index",
+                    linkType: "route",
+                    type: "standard",
+                    activeKey: ["settings-property"],
+                },
+                {
                     label: "System",
                     icon: "",
                     link: "settings-system",
