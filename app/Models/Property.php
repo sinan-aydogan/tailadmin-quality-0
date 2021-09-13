@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Supplier extends Model
+class Property extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -20,22 +20,27 @@ class Supplier extends Model
      */
     protected $fillable = [
         'name',
-        'tax_id',
-        'email',
-        'phone',
-        'address',
-        'status',
+        'property_type_id',
         'creator_id',
         'updater_id',
         'deleter_id'
     ];
 
-    /*Raw Materials*/
     /**
-     * The raw materials that belong to the supplier.
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
-    public function rawMaterials()
+    /*protected $casts = [];*/
+
+    //PROPERTY TYPE
+    /**
+     * Get the property type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function propertyType()
     {
-        return $this->belongsToMany(RawMaterial::class);
+        return $this->belongsTo(PropertyType::class)->withDefault(['name' => 'Undefined']);
     }
 }

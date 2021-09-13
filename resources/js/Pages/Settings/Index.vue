@@ -43,6 +43,18 @@
           </template>
         </t-content-card>
       </inertia-link>
+      <!--Content Properties-->
+      <inertia-link :href="route('settings-property.index')">
+        <t-content-card color="light-green" class="hover:bg-white">
+          <template #title>Content Properties</template>
+          <template #icon>
+            <t-adjustments-icon class="w-12 h-12"/>
+          </template>
+          <template #content>
+            {{ properties_count }} property/ies
+          </template>
+        </t-content-card>
+      </inertia-link>
       <!--Settings-->
       <inertia-link :href="route('settings-system')">
         <t-content-card color="light-blue" class="hover:bg-white">
@@ -76,6 +88,6 @@ export default {
     TChevronDoubleDownIcon,
     TAdjustmentsIcon, TCogIcon, TStatisticWidget, TContentCard, GridSection, AppLayout
   },
-  props: ['users_count', 'roles_count','permissions_count']
+  props: ['users_count', 'roles_count','permissions_count','properties_count']
 }
 </script>

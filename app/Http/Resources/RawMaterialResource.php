@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Property;
+use App\Models\Supplier;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RawMaterialResource extends JsonResource
@@ -18,12 +20,15 @@ class RawMaterialResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
-            'department' => $this->department->name,
+            'department_name' => $this->department->name,
             'department_id' => $this->department_id,
             'model' => $this->model,
             'manufacturer' => $this->manufacturer,
-            'raw_material_type' => $this->rawMaterialType->name,
-            'raw_material_type_id' => $this->raw_material_type_id
+            'raw_material_type_name' => $this->rawMaterialType->name,
+            'raw_material_type_id' => $this->raw_material_type_id,
+            'suppliers' => $this->suppliers,
+            'properties' => $this->properties,
+            'files' => $this->getMedia('file')
         ];
         /*return parent::toArray($request);*/
     }

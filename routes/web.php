@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Settings\UserController;
+use App\Http\Controllers\Settings\PropertyController;
+use App\Http\Controllers\Settings\PropertyTypeController;
 use App\Models\User;
+use App\Models\Property;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,16 +47,24 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             return Inertia::render('Settings/Index', [
                 'users_count' => count(User::all('id')),
                 'roles_count' => count(Role::all()),
+                'properties_count' => count(Property::all()),
                 'permissions_count' => count(Permission::all())
             ]);
         })->name('settings');
+        /*User Management*/
         Route::resource('settings-user', UserController::class);
+        /*Role Management*/
         Route::get('role', function () {
             return Inertia::render('Settings/Role');
         })->name('settings-role');
+        /*Permission Management*/
         Route::get('permission', function () {
             return Inertia::render('Settings/Permission');
         })->name('settings-permission');
+        /*Property Management*/
+        Route::resource('settings-property', PropertyController::class);
+        Route::resource('settings-property-type', PropertyTypeController::class);
+        /*System Management*/
         Route::get('system', function () {
             return Inertia::render('Settings/System');
         })->name('settings-system');

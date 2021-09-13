@@ -58,6 +58,12 @@ class DatabaseSeeder extends Seeder
         /*Quality Spect Seeder*/
         $this->call(QualitySpectSeeder::class);
 
+        /*Property Type Seeder*/
+        $this->call(PropertyTypeSeeder::class);
+
+        /*Property Seeder*/
+        $this->call(PropertySeeder::class);
+
 
 
         /* if(App::environment('local')){
