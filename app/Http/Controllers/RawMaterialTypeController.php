@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RawMaterialTypeResource;
 use App\Models\Department;
 use App\Models\RawMaterialType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class RawMaterialTypeController extends Controller
@@ -15,11 +17,17 @@ class RawMaterialTypeController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        /*Raw Material Type List*/
+        $types = RawMaterialType::query()
+            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
+            ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
+            ->get();
+
         /* Raw Material Types List */
-        return Inertia::render('RawMaterial/RawMaterialType/Index',[
-            'rawMaterialTypes' => RawMaterialType::with('department:id,name')->get(['id','name','department_id','description']),
+        return Inertia::render('Modules/RawMaterial/Type/Index',[
+            'tableData' => RawMaterialTypeResource::collection($types),
             'searchDataDepartment' => Department::relatedData('department_id','raw_material_types')->get()
         ]);
     }
@@ -31,7 +39,7 @@ class RawMaterialTypeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('RawMaterial/RawMaterialType/Create',[
+        return Inertia::render('Modules/RawMaterial/Type/Create',[
             'departments' => Department::where('is_production',1)->get(['id','name'])
         ]);
     }
@@ -45,15 +53,11 @@ class RawMaterialTypeController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->all();
-        isset($request->department_id) ? $attributes['department_id'] = $request->department_id['id'] : $attributes['department_id'] = null;
         $attributes['creator_id'] = Auth::id();
         RawMaterialType::create($attributes);
-        $message = [];
-        $message['type'] = 'success' ;
-        $message['content'] = 'The raw material type has been successfully created. The department created: '.$request->name ;
 
-        return redirect()->route('raw-material-type.index')
-            ->with('message', $message);
+        Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The raw material type has been successfully created.</b><br><b>Type: </b>'.$request['name']]);
+        return redirect()->route('raw-material-type.index') ;
     }
 
     /**
