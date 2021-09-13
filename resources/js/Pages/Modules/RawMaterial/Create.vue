@@ -82,23 +82,6 @@
                     title="Releated Definitions"
                 >
                     <grid-section :col-tablet="3">
-                        <!--Raw Material Type-->
-                        <t-input-group
-                            :error="error.raw_material_type_id"
-                            label="Raw Material Type"
-                        >
-                            <t-input-select
-                                id="raw_material_type_id"
-                                v-model="form.raw_material_type_id"
-                                :options="types"
-                                options-value-key="id"
-                                options-label-key="name"
-                                place-holder="Select a type"
-                                :clear-button="true"
-                                :search="true"
-                            />
-                        </t-input-group>
-
                         <!--Related Department-->
                         <t-input-group
                             :error="error.department_id"
@@ -113,6 +96,27 @@
                                 place-holder="Select a department"
                                 :clear-button="true"
                                 :search="true"
+                                @input="departmentChange; form.raw_material_type_id = null"
+                            />
+                        </t-input-group>
+
+                        <!--Raw Material Type-->
+                        <t-input-group
+                            :error="form.department_id === null ?
+                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
+                    error.raw_material_type_id"
+                            label="Raw Material Type"
+                        >
+                            <t-input-select
+                                id="raw_material_type_id"
+                                v-model="form.raw_material_type_id"
+                                :options="types"
+                                options-value-key="id"
+                                options-label-key="name"
+                                place-holder="Select a type"
+                                :clear-button="true"
+                                :search="true"
+                                :disabled="form.department_id === null"
                             />
                         </t-input-group>
 
@@ -133,27 +137,25 @@
                             />
                         </t-input-group>
                     </grid-section>
-
-                    <grid-section :col-tablet="2">
-                        <!--Raw Material Properties-->
-                        <t-input-group
-                            :error="error['propertyType'+propertyType.id]"
-                            :label="propertyType.name"
-                            v-for="(propertyType,index) in propertyTypes"
-                            :key="index"
-                        >
-                            <t-input-multi-select
-                                :id="'property_'+propertyType.id"
-                                v-model="form['propertyType'+propertyType.id]"
-                                :options="propertyType.properties"
-                                options-value-key="id"
-                                options-label-key="name"
-                                place-holder="Select"
-                                :clear-button="true"
-                                :search="true"
-                            />
-                        </t-input-group>
-                    </grid-section>
+                    <!--Raw Material Properties-->
+                    <t-input-group
+                        :error="error['propertyType'+propertyType.id]"
+                        :label="propertyType.name"
+                        v-for="(propertyType,index) in propertyTypes"
+                        :key="index"
+                        class="col-span-full"
+                    >
+                        <t-input-multi-select
+                            :id="'property_'+propertyType.id"
+                            v-model="form['propertyType'+propertyType.id]"
+                            :options="propertyType.properties"
+                            options-value-key="id"
+                            options-label-key="name"
+                            place-holder="Select"
+                            :clear-button="true"
+                            :search="true"
+                        />
+                    </t-input-group>
                 </t-form-section>
                 <!--Raw Material Files-->
                 <t-form-section>
@@ -189,11 +191,7 @@ import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
 import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputTextArea from "@/Components/Form/Inputs/TInputTextArea";
 import TLoadingScreen from "@/Components/Misc/TLoadingScreen";
-import TButton from "@/Components/Button/TButton";
-import TCollectionIcon from "@/Components/Icon/TCollectionIcon";
-import TModal from "@/Components/Modal/TModal";
 import TTable from "@/Components/Table/TTable";
-import TPlusIcon from "@/Components/Icon/TPlusIcon";
 import TInputMultiSelect from "@/Components/Form/Inputs/TInputMultiSelect";
 import TInputFile from "@/Components/Form/Inputs/TInputFile";
 
@@ -203,11 +201,7 @@ export default {
     components: {
         TInputFile,
         TInputMultiSelect,
-        TPlusIcon,
         TTable,
-        TModal,
-        TCollectionIcon,
-        TButton,
         AppLayout,
         GridSection,
         TActionButtonsCreate,
@@ -276,7 +270,7 @@ export default {
                 let x = [];
                 /*Merge different properties*/
                 this.propertyTypes.forEach((propertyType) => {
-                        this.form.properties.push([].concat(this.form['propertyType' + propertyType.id]))
+                    this.form.properties.push([].concat(this.form['propertyType' + propertyType.id]))
                 })
 
                 this.form.post(route('raw-material.store'), {
@@ -287,6 +281,18 @@ export default {
                 this.loading = true;
             }
         },
+        departmentChange() {
+            this.$inertia.reload({
+                method: 'get',
+                data: {
+                    department_id: this.form.department_id,
+                },
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                only: ['types'],
+            })
+        }
     },
 }
 </script>
