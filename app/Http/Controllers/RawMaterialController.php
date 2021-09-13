@@ -58,8 +58,8 @@ class RawMaterialController extends Controller
     public function create(Request $request)
     {
         return Inertia::render('Modules/RawMaterial/Create', [
-            'departments' => Department::relatedData('department_id','raw_material_types')->get(),
-            'types' => RawMaterialType::where('department_id', $request->department_id)->get(['id', 'name']),
+            'departments' => Department::where('is_production', 1)->get(['id', 'name']),
+            'types' => RawMaterialType::all(['id', 'name']),
             'suppliers' => Supplier::all(['id', 'name']),
             'propertyTypes' => PropertyType::where('module_id',2)->with('properties:id,name,property_type_id')->get(['id','name'])
         ]);
