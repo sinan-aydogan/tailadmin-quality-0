@@ -193,7 +193,6 @@ import TButton from "@/Components/Button/TButton";
 import TCollectionIcon from "@/Components/Icon/TCollectionIcon";
 import TModal from "@/Components/Modal/TModal";
 import TTable from "@/Components/Table/TTable";
-import {RawMaterialConsts} from "@/Mixins/SectionConsts/RawMaterialConsts";
 import TPlusIcon from "@/Components/Icon/TPlusIcon";
 import TInputMultiSelect from "@/Components/Form/Inputs/TInputMultiSelect";
 import TInputFile from "@/Components/Form/Inputs/TInputFile";
@@ -221,7 +220,6 @@ export default {
         TLoadingScreen,
         TFingerPrintIcon
     },
-    mixins: [RawMaterialConsts],
     props: {
         managers: {
             type: Array
