@@ -37,6 +37,6 @@ class RawMaterialType extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => '']);
+        return $this->belongsTo(Department::class)->withDefault(['name' => '']);
     }
 }
