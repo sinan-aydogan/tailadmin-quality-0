@@ -15,6 +15,9 @@ class CreateRawMaterialQualityPlansTable extends Migration
     {
         Schema::create('raw_material_quality_plans', function (Blueprint $table) {
             $table->id();
+            $table->string('code',100);
+            $table->foreignId('department_id');
+            $table->foreignId('raw_material_id');
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();
