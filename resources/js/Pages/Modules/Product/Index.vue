@@ -192,7 +192,7 @@ export default {
       tableHeaders: [
         {label: 'Product Code', key: 'code', align: 'left'},
         {label: 'Product Name', key: 'name', align: 'left'},
-        {label: 'Product Type', key: 'job_description_name', align: 'left'},
+        {label: 'Product Type', key: 'productType', align: 'left'},
         {label: 'Department', key: 'department_name', align: 'left'},
         {label: 'Production Standard', key: 'standard_code', align: 'left'},
         {label: 'Certification', key: 'is_certified', align: 'center'},
