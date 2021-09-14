@@ -120,7 +120,7 @@
                 <template #content>
                     <div v-if="selectedRawMaterial" class="flex flex-col -mt-6 gap-2">
                         <!--Supplier-->
-                        <div class="border p-2 rounded bg-gray-50">
+                        <div v-if="selectedRawMaterial.suppliers.length>0" class="border p-2 rounded bg-gray-50">
                             <span class="font-bold text-xl">Supplier</span>
                             <div class="flex flex-wrap gap-2 mt-2">
                             <span
