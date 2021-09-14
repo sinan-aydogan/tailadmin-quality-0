@@ -18,6 +18,5 @@ class MeasurementToolTypeResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description
         ];
-        /*return parent::toArray($request);*/
     }
 }

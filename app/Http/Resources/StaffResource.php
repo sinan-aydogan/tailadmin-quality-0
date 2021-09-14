@@ -2,9 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Department;
-use App\Models\JobDescription;
-use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StaffResource extends JsonResource
@@ -28,7 +25,5 @@ class StaffResource extends JsonResource
             'manager_name' => $this->manager->name,
             'status' => $this->status
         ];
-
-        /*return parent::toArray($request);*/
     }
 }

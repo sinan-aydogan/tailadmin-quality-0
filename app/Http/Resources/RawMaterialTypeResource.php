@@ -21,6 +21,5 @@ class RawMaterialTypeResource extends JsonResource
             'department_name' => $this->department->name,
             'description' => $this->description
         ];
-        /*return parent::toArray($request);*/
     }
 }

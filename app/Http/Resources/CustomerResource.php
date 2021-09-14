@@ -22,6 +22,5 @@ class CustomerResource extends JsonResource
             'phone' => $this->phone,
             'status' => $this->status,
         ];
-        /*return parent::toArray($request);*/
     }
 }

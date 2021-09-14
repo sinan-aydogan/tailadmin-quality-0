@@ -13,12 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
 class ProductController extends Controller
 {
-    use InteractsWithMedia;
     /**
      * Display a listing of the resource.
      *
