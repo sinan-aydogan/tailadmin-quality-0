@@ -114,6 +114,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('raw-material-type/trash', [\App\Http\Controllers\RawMaterialController::class, 'trash'])->name('raw-material-type.trash');
     //Raw Material Quality Plan
     Route::resource('raw-material-quality-plan', \App\Http\Controllers\RawMaterialQaulityPlanController::class);
+    Route::get('raw-material-quality-plan/trash', [\App\Http\Controllers\RawMaterialQaulityPlanController::class, 'trash'])->name('raw-material-quality-plan.trash');
     //Quality Spect
     Route::resource('quality-spect', \App\Http\Controllers\QualitySpectController::class);
     Route::get('quality-spect/trash', [\App\Http\Controllers\QualitySpectController::class, 'trash'])->name('quality-spect.trash');
