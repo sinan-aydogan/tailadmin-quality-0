@@ -24,6 +24,5 @@ class QualitySprectResource extends JsonResource
             'standard_id' => $this->standard_id,
             'standard_name' => $this->standard->name,
         ];
-        /*return parent::toArray($request);*/
     }
 }

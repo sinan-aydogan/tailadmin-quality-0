@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\QualitySpect;
-use App\Models\Spect;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RawMaterialQualityPlanResource extends JsonResource
@@ -25,6 +23,5 @@ class RawMaterialQualityPlanResource extends JsonResource
             'raw_material_name' => $this->rawMaterial->name,
             'raw_material_spects' => $this->spects,
         ];
-        /* return parent::toArray($request); */
     }
 }

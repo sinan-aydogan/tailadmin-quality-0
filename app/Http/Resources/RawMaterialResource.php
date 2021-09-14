@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Property;
-use App\Models\Supplier;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RawMaterialResource extends JsonResource
@@ -30,6 +28,5 @@ class RawMaterialResource extends JsonResource
             'properties' => $this->properties,
             'files' => $this->getMedia('file')
         ];
-        /*return parent::toArray($request);*/
     }
 }

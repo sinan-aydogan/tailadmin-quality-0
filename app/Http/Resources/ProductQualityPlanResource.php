@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\QualitySpect;
-use App\Models\Spect;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductQualityPlanResource extends JsonResource
@@ -25,6 +23,5 @@ class ProductQualityPlanResource extends JsonResource
             'product_name' => $this->product->name,
             'product_spects' => $this->product_spects,
         ];
-        /* return parent::toArray($request); */
     }
 }

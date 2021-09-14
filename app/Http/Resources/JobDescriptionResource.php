@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Department;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class JobDescriptionResource extends JsonResource
@@ -22,7 +21,5 @@ class JobDescriptionResource extends JsonResource
             'department_id' => $this->department_id,
             'department_name' => $this->department->name,
         ];
-
-        /*return parent::toArray($request);*/
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Department;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\Supplier;
-use App\Models\Product;
 use App\Models\RawMaterial;
 use App\Models\RawMaterialType;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,9 +63,6 @@ class RawMaterialController extends Controller
             'propertyTypes' => PropertyType::where('module_id',2)->with('properties:id,name,property_type_id')->get(['id','name'])
         ]);
     }
-
-/*Property::whereHas('propertyType', function (Builder $query){ $query->where('module_id',  2);
-})->get(['id', 'name', 'property_type_id']),*/
 
     /**
      * Store a newly created resource in storage.

@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Department;
-use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DepartmentResource extends JsonResource
@@ -28,6 +26,5 @@ class DepartmentResource extends JsonResource
             'manager_name' => $this->manager->name,
             'manager_photo' => $this->manager->profile_photo_path
         ];
-        /*return parent::toArray($request);*/
     }
 }
