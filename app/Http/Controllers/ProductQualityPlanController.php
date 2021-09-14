@@ -26,7 +26,7 @@ class ProductQualityPlanController extends Controller
     {
         /*Quality Plans List*/
         $qualityPlans = ProductQualityPlan::query()
-        ->with(['product_spects:id,spect_id,limit_type_id,rule_id,value','product_spects.quality_spect:id,name'])
+        ->with(['spects:id,spect_id,limit_type_id,rule_id,value','spects.quality_spect:id,name'])
         ->when($request->code, fn($query,$code)=>$query->where('code','like',"%{$code}%"))
         ->when($request->department_id, fn($query,$department_id)=>$query->where('department_id',$department_id))
         ->when($request->product_id, fn($query,$product_id)=>$query->where('product_id',$product_id))
@@ -51,7 +51,7 @@ class ProductQualityPlanController extends Controller
             'generalDepartments' => Department::where('is_production', 1)->get(),
             'standards' => Standard::all(['id', 'name']),
             'products' => Product::where('department_id', $request->department_id)->get(),
-            'spects' => QualitySprectResource::collection(QualitySpect::all())
+            'spects' => QualitySprectResource::collection(QualitySpect::whereJsonContains('spect_type',1)->get())
         ]);
     }
 
@@ -77,7 +77,7 @@ class ProductQualityPlanController extends Controller
         });
 
         /*Create Spects*/
-        $item->product_spects()->createMany($spects);
+        $item->spects()->createMany($spects);
 
         /*Feedback Message*/
         Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb','content' => '<b>The department has been successfully created.</b><br><b>Quality Plan: </b>'.$request['code']]);

@@ -72,7 +72,7 @@
       <!--Quality Spects List Modal-->
       <t-modal :show="showSpectModal" @close="showSpectModal = $event ">
         <template #header>
-          {{ selectedProduct.product_name }}
+          {{ selectedProduct.product_name + ' (' +selectedProduct.code + ')' }}
           <br>
           <span class="text-base">Quality Spects</span>
         </template>

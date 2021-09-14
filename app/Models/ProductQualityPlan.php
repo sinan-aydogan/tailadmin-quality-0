@@ -55,7 +55,7 @@ class ProductQualityPlan extends Model
     /**
      * The roles that belong to the user.
      */
-    public function product_spects()
+    public function spects()
     {
         return $this->belongsToMany(Spect::class);
     }

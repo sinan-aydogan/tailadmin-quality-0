@@ -21,7 +21,7 @@ class ProductQualityPlanResource extends JsonResource
             'department_name' => $this->department->name,
             'product_id' => $this->product_id,
             'product_name' => $this->product->name,
-            'product_spects' => $this->product_spects,
+            'product_spects' => $this->spects,
         ];
     }
 }
