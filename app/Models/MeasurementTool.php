@@ -22,6 +22,7 @@ class MeasurementTool extends Model
         'code',
         'serial_no',
         'model',
+        'measurement_tool_type_id',
         'manufacturer',
         'manufactured_date',
         'purchase_price',
@@ -67,7 +68,7 @@ class MeasurementTool extends Model
      */
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(Supplier::class)->withDefault(['name' => '']);
     }
 
     //DEPARTMENT
@@ -78,7 +79,7 @@ class MeasurementTool extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => '']);
+        return $this->belongsTo(Department::class)->withDefault(['name' => '']);
     }
 
     //OPERATOR
@@ -89,7 +90,7 @@ class MeasurementTool extends Model
      */
     public function operator()
     {
-        return $this->belongsTo(User::class, 'operator_id', 'id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(User::class, 'operator_id', 'id')->withDefault(['name' => '']);
     }
 
     //ACTION MANAGER
@@ -100,6 +101,6 @@ class MeasurementTool extends Model
      */
     public function actionManager()
     {
-        return $this->belongsTo(User::class, 'action_manager_id', 'id')->withDefault(['name' => 'Undefined']);
+        return $this->belongsTo(User::class, 'action_manager_id', 'id')->withDefault(['name' => '']);
     }
 }
