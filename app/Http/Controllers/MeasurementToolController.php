@@ -74,6 +74,7 @@ class MeasurementToolController extends Controller
         $attributes = $request->all();
         $toolType = MeasurementToolType::find($request->measurement_tool_type_id)->name;
         $attributes['creator_id'] = Auth::id();
+
         MeasurementTool::create($attributes);
 
         Session::flash('toastr', ['type' => 'solid-green', 'position' => 'rb', 'content' => '<b>The measurement tool has been successfully created.</b><br><b>Tool: </b>' . $request['code'] . ' (' . $toolType . ')']);

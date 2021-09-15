@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\PropertyController;
 use App\Http\Controllers\Settings\PropertyTypeController;
-use App\Models\User;
+use App\Http\Controllers\Settings\UserController;
 use App\Models\Property;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -151,6 +151,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('customer/trash', [\App\Http\Controllers\CustomerController::class, 'trash'])->name('customer.trash');
     //Measurement Tool
     Route::resource('measurement-tool', \App\Http\Controllers\MeasurementToolController::class);
+    Route::get('measurement-tool/trash', [\App\Http\Controllers\MeasurementToolController::class, 'trash'])->name('measurement-tool.trash');
     //Measurement Tool Type
     Route::resource('measurement-tool-type', \App\Http\Controllers\MeasurementToolTypeController::class);
     //Measurement Tool Action
