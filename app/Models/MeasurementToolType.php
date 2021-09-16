@@ -20,7 +20,10 @@ class MeasurementToolType extends Model
      */
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
     ];
 
     /**

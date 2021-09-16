@@ -154,6 +154,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('measurement-tool/trash', [\App\Http\Controllers\MeasurementToolController::class, 'trash'])->name('measurement-tool.trash');
     //Measurement Tool Type
     Route::resource('measurement-tool-type', \App\Http\Controllers\MeasurementToolTypeController::class);
+    Route::get('measurement-tool-type/trash', [\App\Http\Controllers\MeasurementToolTypeController::class, 'trash'])->name('measurement-tool-type.trash');
     //Measurement Tool Action
     Route::resource('measurement-tool-action', \App\Http\Controllers\MeasurementToolActionController::class);
     //Measurement Tool Property
