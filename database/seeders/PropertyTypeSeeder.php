@@ -17,6 +17,7 @@ class PropertyTypeSeeder extends Seeder
         /*Packaging Type*/
         PropertyType::create([
             'name' => 'Packaging Type',
+            'default' => true,
             'module_id' => 2,
             'creator_id' => 1
         ]);
@@ -24,7 +25,16 @@ class PropertyTypeSeeder extends Seeder
         /*Stocking Rules*/
         PropertyType::create([
             'name' => 'Stocking Type',
+            'default' => true,
             'module_id' => 2,
+            'creator_id' => 1
+        ]);
+
+        /*Recipe Amounts*/
+        PropertyType::create([
+            'name' => 'Recipe Amounts',
+            'default' => true,
+            'module_id' => 4,
             'creator_id' => 1
         ]);
     }

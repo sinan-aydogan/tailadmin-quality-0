@@ -18,7 +18,15 @@ class Recipe extends Model
      *
      * @var array
      */
-    /*protected $fillable = [];*/
+    protected $fillable = [
+        'code',
+        'recipe_amount',
+        'product_id',
+        'department_id',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,4 +34,35 @@ class Recipe extends Model
      * @var array
      */
     /*protected $casts = [];*/
+
+    //PRODUCT
+    /**
+     * Get the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withDefault(['name' => '']);
+    }
+
+    //DEPARTMENT
+    /**
+     * Get the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class)->withDefault(['name' => '']);
+    }
+
+    //RAW MATERIALS FOR RECIPE
+    /**
+     * The raw materials that belong to the recipe.
+     */
+    public function recipeItems()
+    {
+        return $this->belongsToMany(RecipeItem::class);
+    }
 }

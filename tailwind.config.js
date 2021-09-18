@@ -116,10 +116,10 @@ module.exports = {
         extend: {
             opacity: ['disabled'],
             textColor: ['hover', 'active'],
-            backgroundColor: ['active'],
+            backgroundColor: ['active','even','odd'],
             fontWeight: ['hover', 'active', 'focus'],
-            borderWidth: ['first', 'last', 'hover'],
-            borderRadius: ['first', 'last'],
+            borderWidth: ['first', 'last', 'hover','even','odd'],
+            borderRadius: ['first', 'last','even','odd'],
             padding: ['focus'],
             zIndex: ['hover'],
             brightness: ['hover', 'focus'],

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePropertyTypesTable extends Migration
+class CreateRecipeItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreatePropertyTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('property_types', function (Blueprint $table) {
+        Schema::create('recipe_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
-            $table->unsignedTinyInteger('module_id');
-            $table->boolean('default')->default(false);
+            $table->foreignId('raw_material_id');
+            $table->string('amount',100)->nullable();
+            $table->unsignedTinyInteger('unit');
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();
@@ -33,6 +33,6 @@ class CreatePropertyTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('property_types');
+        Schema::dropIfExists('recipe_items');
     }
 }

@@ -106,6 +106,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('product-quality-plan/trash', [\App\Http\Controllers\ProductQualityPlanController::class, 'trash'])->name('product-quality-plan.trash');
     //Recipe
     Route::resource('recipe', \App\Http\Controllers\RecipeController::class);
+    Route::get('recipe/trash', [\App\Http\Controllers\RecipeController::class, 'trash'])->name('recipe.trash');
     //Raw Material
     Route::resource('raw-material', \App\Http\Controllers\RawMaterialController::class);
     Route::get('raw-material/trash', [\App\Http\Controllers\RawMaterialController::class, 'trash'])->name('raw-material.trash');
