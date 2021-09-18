@@ -59,5 +59,27 @@ class PropertySeeder extends Seeder
             'property_type_id' => 2,
             'creator_id' => 1
         ]);
+
+
+        /*Recipe Amount: gram*/
+        Property::create([
+            'name' => 'gram',
+            'property_type_id' => 3,
+            'creator_id' => 1
+        ]);
+
+        /*Recipe Amount: liter*/
+        Property::create([
+            'name' => 'liter',
+            'property_type_id' => 3,
+            'creator_id' => 1
+        ]);
+
+        /*Recipe Amount: kg*/
+        Property::create([
+            'name' => 'kg',
+            'property_type_id' => 3,
+            'creator_id' => 1
+        ]);
     }
 }

@@ -48,7 +48,7 @@ class Recipe extends Model
 
     //DEPARTMENT
     /**
-     * Get the product.
+     * Get the department.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
