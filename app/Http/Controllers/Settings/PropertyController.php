@@ -32,7 +32,7 @@ class PropertyController extends Controller
 
         return Inertia::render('Settings/Property',[
             'tableData'=> $properties,
-            'propertyTypes'=> PropertyType::orderByDesc('id')->get(['id','name','module_id']),
+            'propertyTypes'=> PropertyType::orderByDesc('id')->get(['id','name','module_id','default']),
             'newPropertyTypes' => PropertyType::where('module_id',$request->new_module_id)->get(['id','name']),
             'newPropertyModules' => PropertyType::whereNotNull('module_id')->select('module_id')->distinct()->get()->map(function($item){return $item->module_id;})
         ]);

@@ -4,7 +4,8 @@ export const PropertyConsts = {
             modules:[
                 {id: 1,name:'Product'},
                 {id: 2,name:'Raw Material'},
-                {id: 3,name:'Measurement Tool'}
+                {id: 3,name:'Measurement Tool'},
+                {id: 4,name:'Recipe'},
             ]
         }
     }

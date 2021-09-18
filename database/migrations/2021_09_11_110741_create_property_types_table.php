@@ -17,6 +17,7 @@ class CreatePropertyTypesTable extends Migration
             $table->id();
             $table->string('name',100);
             $table->unsignedTinyInteger('module_id');
+            $table->boolean('default')->default(false);
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();

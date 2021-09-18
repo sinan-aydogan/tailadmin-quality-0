@@ -81,15 +81,19 @@
                     </template>
                     <!--Delete User-->
                     <t-list :radius="3">
-                        <t-list-item class="hover:bg-red-100 hover:text-red-500 cursor-pointer"
-                                     @click.native="showDeleteModal(selectedItem.itemType = 'property',selectedItem.id = props.id)">
+                        <t-list-item
+                            class="hover:bg-red-100 hover:text-red-500 cursor-pointer"
+                            @click.native="showDeleteModal(selectedItem.itemType = 'property',selectedItem.id = props.id)"
+                        >
                             <div class="inline-flex items-center">
                                 <t-trash-icon class="w-5 h-5"/>
                                 Delete
                             </div>
                         </t-list-item>
-                        <t-list-item class="hover:bg-blue-100 hover:text-blue-500 cursor-pointer"
-                                     @click.native="editProperty(selectedProperty = props.id)">
+                        <t-list-item
+                            class="hover:bg-blue-100 hover:text-blue-500 cursor-pointer"
+                            @click.native="editProperty(selectedProperty = props.id)"
+                        >
                             <div class="inline-flex items-center">
                                 <t-pencil-alt-icon class="w-5 h-5"/>
                                 Edit
@@ -99,10 +103,12 @@
                 </t-dropdown>
             </template>
             <template #property_type_id="{props}">
-                {{propertyTypes.find(pt=>pt.id === props.property_type_id).name}}
+                {{ propertyTypes.find(pt => pt.id === props.property_type_id).name }}
             </template>
             <template #module_id="{props}">
-                {{modules.find(m=>m.id === propertyTypes.find(pt=>pt.id === props.property_type_id).module_id).name}}
+                {{
+                    modules.find(m => m.id === propertyTypes.find(pt => pt.id === props.property_type_id).module_id).name
+                }}
             </template>
         </t-table>
         <!--Content Delete Modal-->
@@ -164,12 +170,6 @@
                     </grid-section>
                 </form>
             </template>
-            <template #footer-left>
-                <t-button class="mt-2 col-span-full" size="sm">
-                    <t-plus-icon class="w-5 h-5"/>
-                    Save
-                </t-button>
-            </template>
         </t-modal>
         <!--Property Type List-->
         <t-modal
@@ -197,15 +197,20 @@
                             </template>
                             <!--Delete User-->
                             <t-list :radius="3">
-                                <t-list-item class="hover:bg-red-100 hover:text-red-500 cursor-pointer"
-                                             @click.native="showDeleteModal(selectedItem.itemType='propertyType',selectedItem.id = props.id)">
+                                <t-list-item
+                                    class="hover:bg-red-100 hover:text-red-500 cursor-pointer"
+                                    @click.native="showDeleteModal(selectedItem.itemType='propertyType',selectedItem.id = props.id)"
+                                    v-if="!props.default"
+                                >
                                     <div class="inline-flex items-center">
                                         <t-trash-icon class="w-5 h-5"/>
                                         Delete
                                     </div>
                                 </t-list-item>
-                                <t-list-item class="hover:bg-blue-100 hover:text-blue-500 cursor-pointer"
-                                             @click.native="editProperty(selectedPropertyType = props.id)">
+                                <t-list-item
+                                    class="hover:bg-blue-100 hover:text-blue-500 cursor-pointer"
+                                    @click.native="editProperty(selectedPropertyType = props.id)"
+                                >
                                     <div class="inline-flex items-center">
                                         <t-pencil-alt-icon class="w-5 h-5"/>
                                         Edit
@@ -215,10 +220,11 @@
                         </t-dropdown>
                     </template>
                     <template #module_id="{props}">
-                        {{modules.find(m=>m.id === propertyTypes.find(pt=>pt.id === props.id).module_id).name}}
+                        {{ modules.find(m => m.id === propertyTypes.find(pt => pt.id === props.id).module_id).name }}
                     </template>
                 </t-table>
-                <t-button class="mt-2 w-full" size="sm" @click.native="showPropertyTypeList=false;showPropertyTypeForm=true">
+                <t-button class="mt-2 w-full" size="sm"
+                          @click.native="showPropertyTypeList=false;showPropertyTypeForm=true">
                     <t-plus-icon class="w-5 h-5"/>
                     Add New Property Type
                 </t-button>
@@ -280,12 +286,6 @@
                         <t-button color="solid-green" type="submit">Submit</t-button>
                     </grid-section>
                 </form>
-            </template>
-            <template #footer-left>
-                <t-button class="mt-2 col-span-full" size="sm">
-                    <t-plus-icon class="w-5 h-5"/>
-                    Save
-                </t-button>
             </template>
         </t-modal>
 
@@ -356,8 +356,8 @@ export default {
         return {
             /*Property Type*/
             showPropertyTypeForm: false,
-            showPropertyTypeList:false,
-            propertyTypeError : {},
+            showPropertyTypeList: false,
+            propertyTypeError: {},
             propertyTypeHeaders: [
                 {key: 'name', label: 'Name', align: 'left'},
                 {key: 'module_id', label: 'Module', align: 'left'},
@@ -373,7 +373,7 @@ export default {
             }),
             /*Property*/
             showPropertyForm: false,
-            propertyError : {},
+            propertyError: {},
             propertyHeaders: [
                 {key: 'name', label: 'Name', align: 'left'},
                 {key: 'property_type_id', label: 'Type', align: 'center'},
@@ -448,21 +448,21 @@ export default {
                 replace: true,
                 preserveState: true,
                 preserveScroll: true,
-                only: ['newPropertyTypes','newPropertyModules'],
+                only: ['newPropertyTypes', 'newPropertyModules'],
             })
         },
         /*General*/
         showDeleteModal() {
             let property;
             let propertyType;
-            if(this.selectedItem.itemType === 'property'){
+            if (this.selectedItem.itemType === 'property') {
                 this.tableData.forEach(item => {
                     if (item.id === this.selectedItem.id) {
                         property = item
                     }
                 })
                 this.modalContent = 'You are going to delete <b>' + property.name + '</b>, Are you sure ?'
-            }else{
+            } else {
                 this.propertyTypes.forEach(item => {
                     if (item.id === this.selectedItem.id) {
                         propertyType = item
@@ -474,13 +474,13 @@ export default {
             this.showModal = true
         },
         deleteItem() {
-            if(this.selectedItem.itemType === 'property'){
+            if (this.selectedItem.itemType === 'property') {
                 this.propertyDeleteForm.id = this.selectedItem.id;
                 this.propertyDeleteForm.delete(route('settings-property.destroy', this.selectedItem.id), {
                     preserveScroll: true,
                     onSuccess: () => this.showModal = false,
                 })
-            }else{
+            } else {
                 this.propertyTypeDeleteForm.id = this.selectedItem.id;
                 this.propertyTypeDeleteForm.delete(route('settings-property-type.destroy', this.selectedItem.id), {
                     preserveScroll: true,
@@ -502,8 +502,8 @@ export default {
             })
         }
     },
-    computed:{
-        calculatedModules(){
+    computed: {
+        calculatedModules() {
             return this.modules.filter(m => this.newPropertyModules.includes(m.id));
         }
     }
