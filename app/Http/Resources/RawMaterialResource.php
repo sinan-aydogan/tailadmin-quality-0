@@ -26,6 +26,7 @@ class RawMaterialResource extends JsonResource
             'raw_material_type_id' => $this->raw_material_type_id,
             'suppliers' => $this->suppliers,
             'properties' => $this->properties,
+            'standards' => $this->standards,
             'files' => $this->getMedia('file')
         ];
     }
