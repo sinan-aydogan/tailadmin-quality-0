@@ -14,6 +14,7 @@ class StandardSeeder extends Seeder
      */
     public function run()
     {
+        /*TS 1466*/
         Standard::create(
             [
                 'code' => 'TS 1466',
@@ -24,6 +25,18 @@ class StandardSeeder extends Seeder
                 'status' => 1,
                 'creator_id' => 1
                 ]
+        );
+
+        Standard::create(
+            [
+                'code' => 'TS 7896',
+                'name' => 'Paprika Paste',
+                'standard_type' => 1,
+                'department_id' => 2,
+                'scope' => 'This standard applies to paprika paste.',
+                'status' => 1,
+                'creator_id' => 1
+            ]
         );
     }
 }
