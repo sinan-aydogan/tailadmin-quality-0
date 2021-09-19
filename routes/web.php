@@ -133,6 +133,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('auditor', \App\Http\Controllers\AuditorController::class);
     //Standard
     Route::resource('standard', \App\Http\Controllers\StandardController::class);
+    Route::get('standard/trash', [\App\Http\Controllers\StandardController::class, 'trash'])->name('standard.trash');
     //Document
     Route::resource('document', \App\Http\Controllers\DocumentTypeController::class);
     //Document Type
