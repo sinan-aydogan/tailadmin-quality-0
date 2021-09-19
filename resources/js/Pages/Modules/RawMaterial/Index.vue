@@ -71,6 +71,21 @@
                             />
                         </t-input-group>
 
+                        <!--Department-->
+                        <t-input-group
+                            label="Department"
+                        >
+                            <t-input-select
+                                v-model="searchData.department_id"
+                                :clear-button="true"
+                                :options="searchDataDepartment"
+                                :search="true"
+                                options-label-key="name"
+                                options-value-key="id"
+                                @input="search"
+                            />
+                        </t-input-group>
+
                         <!--Supplier-->
                         <t-input-group
                             label="Supplier"
@@ -86,15 +101,14 @@
                             />
                         </t-input-group>
 
-                        <!--Department-->
+                        <!--Standard-->
                         <t-input-group
-                            label="Department"
+                            label="Standard"
                         >
                             <t-input-select
-                                v-model="searchData.department_id"
+                                v-model="searchData.standard_id"
                                 :clear-button="true"
-                                :options="searchDataDepartment"
-                                :search="true"
+                                :options="searchDataStandard"
                                 options-label-key="name"
                                 options-value-key="id"
                                 @input="search"
@@ -128,6 +142,19 @@
                             >
                                 <t-badge>
                                     {{ item.name }}
+                                </t-badge>
+                            </span>
+                            </div>
+                        </div>
+                        <!--Standards-->
+                        <div v-if="selectedRawMaterial.standards.length>0" class="border p-2 rounded bg-gray-50">
+                            <span class="font-bold text-xl">Related Standards</span>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                            <span
+                                v-for="item in selectedRawMaterial.standards"
+                            >
+                                <t-badge>
+                                    {{ item.code }} - {{ item.name }}
                                 </t-badge>
                             </span>
                             </div>
@@ -231,6 +258,9 @@ export default {
         },
         searchDataSupplier: {
             type: Array
+        },
+        searchDataStandard: {
+            type: Array
         }
     },
     data() {
@@ -256,6 +286,7 @@ export default {
                 department_id: null,
                 stock_rules: null,
                 package_type: null,
+                standard_id: null,
             }
         }
     },
@@ -269,7 +300,8 @@ export default {
                     raw_material_type_id: this.searchData.raw_material_type_id,
                     model: this.searchData.model,
                     manufacturer: this.searchData.manufacturer,
-                    supplier_id: this.searchData.supplier_id
+                    supplier_id: this.searchData.supplier_id,
+                    standard_id: this.searchData.standard_id
                 },
                 only: ['tableData'],
             })

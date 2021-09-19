@@ -81,7 +81,7 @@
                     description="Linked other infos for raw material"
                     title="Releated Definitions"
                 >
-                    <grid-section :col-tablet="3">
+                    <grid-section :col-tablet="2">
                         <!--Raw Material Type-->
                         <t-input-group
                             :error="error.raw_material_type_id"
@@ -113,6 +113,28 @@
                                 place-holder="Select a department"
                                 :clear-button="true"
                                 :search="true"
+                                @input="departmentChange();form.standards=[]"
+                            />
+                        </t-input-group>
+
+                        <!--Related Standard-->
+                        <t-input-group
+                            :error="
+                    form.department_id === null ?
+                    '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
+                    error.standards"
+                            label="Related Standard"
+                        >
+                            <t-input-multi-select
+                                id="standards"
+                                v-model="form.standards"
+                                :clear-button="true"
+                                :disabled="form.department_id === null"
+                                :options="standards"
+                                :search="true"
+                                options-label-key="code"
+                                options-value-key="id"
+                                place-holder="Select a standard"
                             />
                         </t-input-group>
 
@@ -236,6 +258,9 @@ export default {
         propertyTypes: {
             type: Array
         },
+        standards: {
+            type: Array
+        }
     },
     data() {
         return {
@@ -252,7 +277,8 @@ export default {
                 department_id: null,
                 raw_material_type_id: null,
                 properties: [],
-                files: []
+                files: [],
+                standards: []
             }),
         }
     },
@@ -287,6 +313,18 @@ export default {
                 this.loading = true;
             }
         },
+        departmentChange() {
+            this.$inertia.reload({
+                method: 'get',
+                data: {
+                    department_id: this.form.department_id,
+                },
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                only: ['standards'],
+            })
+        }
     },
 }
 </script>
