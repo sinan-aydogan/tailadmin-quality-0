@@ -21,7 +21,6 @@ class CreateProductsTable extends Migration
             $table->foreignId('product_type_id')->nullable();
             $table->string('description',750)->nullable();
             $table->boolean('is_certified')->default(4);
-            $table->foreignId('standard_id')->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();

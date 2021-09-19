@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Standard;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,20 +26,23 @@ class ProductController extends Controller
     {
         /* Products List */
         $products = Product::query()
+            ->with(['standards:id,name,code'])
             ->when($request->code, fn ($query, $code) => $query->where('code', 'like', "%{$code}%"))
             ->when($request->name, fn ($query, $name) => $query->where('name', 'like', "%{$name}%"))
             ->when($request->product_type_id, fn ($query, $product_type_id) => $query->where('product_type_id', $product_type_id))
             ->when($request->department_id, fn ($query, $department_id) => $query->where('department_id', $department_id))
-            ->when($request->standard_id, fn ($query, $standard_id) => $query->where('standard_id', $standard_id))
+            ->when($request->standard_id, fn($query, $standard_id) => $query->whereHas('standards', function (Builder $query)use($standard_id) {
+                $query->where('standard_id', $standard_id);
+            }))
             ->when($request->is_certified, fn ($query, $is_certified) => $query->where('is_certified', $is_certified))
-            ->orderBy('created_at')
+            ->orderByDesc('created_at')
             ->get();
 
         return Inertia::render('Modules/Product/Index', [
             'tableData' => ProductResource::collection($products),
-            'searchDataDepartment' => Department::relatedData('department_id', 'products')->get(),
-            'searchDataType' => ProductType::relatedData('product_type_id', 'products')->get(),
-            'searchDataStandard' => Standard::relatedData('standard_id', 'products')->get()
+            'searchDataDepartment' => Department::relatedData('department_id', 'products')->get(['id','name']),
+            'searchDataType' => ProductType::relatedData('product_type_id', 'products')->get(['id','name']),
+            'searchDataStandard' => Standard::whereHas('products')->get(['id','code','name']),
         ]);
     }
 
@@ -64,9 +68,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = new Product($request->all());
-        $attributes['creator_id'] = Auth::id();
-        $attributes->save();
+        /*Creator ID Adding*/
+        $request['creator_id'] = Auth::id();
+        $standards = $request['standards'];
+
+        /*Create Record*/
+        $item = Product::create($request->except('standards'));
+
+        /*Attach Standards*/
+        foreach ($standards as $standard) {
+            $item->standards()->attach($standard);
+        }
 
         /*Product Photo*/
         if ($request->hasFile('photo')) {
