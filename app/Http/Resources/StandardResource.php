@@ -18,12 +18,14 @@ class StandardResource extends JsonResource
             'id' => $this->id,
             'name'=> $this->name,
             'code'=> $this->code,
-            'department_id'=> $this->department_id,
-            'department_name'=> $this->department->name,
+            'standard_type'=> $this->standard_type,
             'scope'=> $this->scope,
-            'refered_standards'=> $this->refered_standards,
             'status'=> $this->status,
-            'related_items'=> $this->related_items,
+            'departments'=> $this->departments,
+            'products'=> $this->products,
+            'rawMaterials'=> $this->rawMaterials,
+            'machines'=> $this->machines,
+            'measurementTools'=> $this->measurementTools
         ];
     }
 }

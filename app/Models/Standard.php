@@ -22,9 +22,7 @@ class Standard extends Model
         'name',
         'code',
         'standard_type',
-        'department_id',
         'scope',
-        'referred_standards',
         'status',
         'creator_id',
         'updater_id',
@@ -36,22 +34,20 @@ class Standard extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'referred_standards' => 'array'
-    ];
-
-    //DEPARTMENT
-    /**
-     * Get the department.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function department()
-    {
-        return $this->belongsTo(Department::class)->withDefault(['name' => '']);
-    }
+    /*protected $casts = [];*/
 
     //RELATED ITEMS WITH STANDARD
+    /**
+     * The related items that belong to the standard.
+     */
+    /**
+     * Get all of the departments that are assigned this standard.
+     */
+    public function departments()
+    {
+        return $this->morphedByMany(Department::class, 'standardables');
+    }
+
     /**
      * The related items that belong to the standard.
      */
@@ -69,5 +65,27 @@ class Standard extends Model
     public function rawMaterials()
     {
         return $this->morphedByMany(RawMaterial::class, 'standardables');
+    }
+
+    /**
+     * The related items that belong to the standard.
+     */
+    /**
+     * Get all of the machines that are assigned this standard.
+     */
+    public function machines()
+    {
+        return $this->morphedByMany(Machine::class, 'standardables');
+    }
+
+    /**
+     * The related items that belong to the standard.
+     */
+    /**
+     * Get all of the measurement tools that are assigned this standard.
+     */
+    public function measurementTools()
+    {
+        return $this->morphedByMany(MeasurementTool::class, 'standardables');
     }
 }

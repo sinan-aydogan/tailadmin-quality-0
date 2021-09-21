@@ -103,4 +103,13 @@ class MeasurementTool extends Model
     {
         return $this->belongsTo(User::class, 'action_manager_id', 'id')->withDefault(['name' => '']);
     }
+
+    //RELATED STANDARDS
+    /**
+     * Get all of the standards for the raw material.
+     */
+    public function standards()
+    {
+        return $this->morphToMany(Standard::class, 'standardables');
+    }
 }
