@@ -6,9 +6,10 @@ use App\Http\Resources\RawMaterialResource;
 use App\Models\Department;
 use App\Models\Property;
 use App\Models\PropertyType;
-use App\Models\Supplier;
 use App\Models\RawMaterial;
 use App\Models\RawMaterialType;
+use App\Models\Standard;
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,26 +27,31 @@ class RawMaterialController extends Controller
     {
         /* Raw Materials List */
         $rawMaterials = RawMaterial::query()
+            ->with(['standards:id,name,code'])
             ->when($request->code, fn($query, $code) => $query->where('code', 'like', "%{$code}%"))
             ->when($request->name, fn($query, $name) => $query->where('name', 'like', "%{$name}%"))
             ->when($request->manufacturer, fn($query, $manufacturer) => $query->where('manufacturer', 'like', "%{$manufacturer}%"))
             ->when($request->model, fn($query, $model) => $query->where('model', 'like', "%{$model}%"))
             ->when($request->department_id, fn($query, $department_id) => $query->where('department_id', $department_id))
             ->when($request->raw_material_type_id, fn($query, $raw_material_type_id) => $query->where('raw_material_type_id', $raw_material_type_id))
-            ->when($request->supplier_id, fn($query, $supplier_id) => $query->whereHas('suppliers', function (Builder $query)use($supplier_id) {
+            ->when($request->supplier_id, fn($query, $supplier_id) => $query->whereHas('suppliers', function (Builder $query) use ($supplier_id) {
                 $query->where('supplier_id', $supplier_id);
             }))
-            ->orderByDesc('id')
+            ->when($request->standard_id, fn($query, $standard_id) => $query->whereHas('standards', function (Builder $query) use ($standard_id) {
+                $query->where('standard_id', $standard_id);
+            }))
+            ->orderByDesc('created_at')
             ->get();
 
         return Inertia::render('Modules/RawMaterial/Index', [
             'tableData' => RawMaterialResource::collection($rawMaterials),
-            'propertyTypes' => PropertyType::where('module_id',2)->get(['id','name']),
+            'propertyTypes' => PropertyType::where('module_id', 2)->get(['id', 'name']),
             'searchDataDepartment' => Department::relatedData('department_id', 'raw_materials')->get(),
             'searchDataType' => RawMaterialType::relatedData('raw_material_type_id', 'raw_materials')->get(),
             'searchDataSupplier' => Supplier::whereHas('rawMaterials')->get(),
             'searchDataPackage' => Property::where('property_type_id', 1)->get(['id', 'name', 'property_type_id']),
-            'searchDataStocking' => Property::where('property_type_id', 2)->get(['id', 'name', 'property_type_id'])
+            'searchDataStocking' => Property::where('property_type_id', 2)->get(['id', 'name', 'property_type_id']),
+            'searchDataStandard' => Standard::whereHas('rawMaterials')->get(['id', 'code', 'name']),
         ]);
     }
 
@@ -60,7 +66,8 @@ class RawMaterialController extends Controller
             'departments' => Department::where('is_production', 1)->get(['id', 'name']),
             'types' => RawMaterialType::all(['id', 'name']),
             'suppliers' => Supplier::all(['id', 'name']),
-            'propertyTypes' => PropertyType::where('module_id',2)->with('properties:id,name,property_type_id')->get(['id','name'])
+            'standards' => Standard::where('department_id', $request->department_id)->get(['id', 'code']),
+            'propertyTypes' => PropertyType::where('module_id', 2)->with('properties:id,name,property_type_id')->get(['id', 'name'])
         ]);
     }
 
@@ -75,9 +82,10 @@ class RawMaterialController extends Controller
         /*Creator ID Adding*/
         $request['creator_id'] = Auth::id();
         $suppliers = $request['suppliers'];
+        $standards = $request['standards'];
 
         /*Create Record*/
-        $item = RawMaterial::create($request->except(['suppliers','stock_rules','package_types']));
+        $item = RawMaterial::create($request->except(['suppliers', 'stock_rules', 'package_types']));
 
         /*Attach Suppliers*/
         foreach ($suppliers as $supplier) {
@@ -88,12 +96,17 @@ class RawMaterialController extends Controller
             $item->properties()->attach($property);
         }
 
+        /*Attach Standards*/
+        foreach ($standards as $standard) {
+            $item->standards()->attach($standard);
+        }
+
         /*Raw Material Files*/
         if ($request->hasFile('files')) {
-            foreach ($request['files'] as $file){
+            foreach ($request['files'] as $file) {
                 $item
                     ->addMedia($file)
-                    ->sanitizingFileName(function($fileName) {
+                    ->sanitizingFileName(function ($fileName) {
                         return strtolower(str_replace(['#', '/', '\\', ' '], '-', $fileName));
                     })
                     ->toMediaCollection('file');

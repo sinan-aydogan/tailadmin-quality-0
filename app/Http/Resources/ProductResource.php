@@ -22,9 +22,7 @@ class ProductResource extends JsonResource
             'department_id' => $this->department_id,
             'productType' => $this->productType->name,
             'is_certified' => $this->is_certified,
-            'standard_id' => $this->standard_id,
-            'standard_code' => $this->standard->code,
-            'standard_name' => $this->standard->name,
+            'standards' => $this->standards,
             'photo' => $this->getFirstMediaUrl('photo'),
         ];
     }

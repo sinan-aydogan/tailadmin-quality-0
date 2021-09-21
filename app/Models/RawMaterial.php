@@ -78,7 +78,14 @@ class RawMaterial extends Model implements HasMedia
         return $this->belongsToMany(Supplier::class);
     }
 
-
+    //RELATED STANDARDS
+    /**
+     * Get all of the standards for the raw material.
+     */
+    public function standards()
+    {
+        return $this->morphToMany(Standard::class, 'standardables');
+    }
 
     /*Raw Material File Linking*/
     public function registerMediaCollections(): void

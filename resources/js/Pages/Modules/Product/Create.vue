@@ -48,7 +48,7 @@
                   options-label-key="name"
                   options-value-key="id"
                   place-holder="Select a department"
-                  @input="departmentChange();form.product_type_id = null;form.standard_id=null"
+                  @input="departmentChange();form.product_type_id = null;form.standards=[]"
               />
             </t-input-group>
 
@@ -80,12 +80,12 @@
                 :error="
                     form.department_id === null ?
                     '<span class=\'text-yellow-500\'>Please firstly select a department</span>' :
-                    error.standard_id"
+                    error.standards"
                 label="Related Standard"
             >
-              <t-input-select
-                  id="standard_id"
-                  v-model="form.standard_id"
+              <t-input-multi-select
+                  id="standards"
+                  v-model="form.standards"
                   :clear-button="true"
                   :disabled="form.department_id === null"
                   :options="standards"
@@ -167,11 +167,13 @@ import TInputTextArea from "@/Components/Form/Inputs/TInputTextArea";
 import TLoadingScreen from "@/Components/Misc/TLoadingScreen";
 import {ProductConsts} from "@/Mixins/SectionConsts/ProductConsts";
 import TInputFile from "@/Components/Form/Inputs/TInputFile";
+import TInputMultiSelect from "@/Components/Form/Inputs/TInputMultiSelect";
 
 
 export default {
   name: "Create",
   components: {
+      TInputMultiSelect,
     TInputFile,
     AppLayout,
     GridSection,
@@ -211,7 +213,7 @@ export default {
         code: null,
         department_id: null,
         product_type_id: null,
-        standard_id: null,
+        standards: [],
         is_certified: 4,
         description: null,
         photo: null,
@@ -220,14 +222,7 @@ export default {
   },
   methods: {
     reset: function () {
-      this.form.name = null;
-      this.form.code = null;
-      this.form.department_id = null;
-      this.form.product_type_id = null;
-      this.form.standard_id = null;
-      this.form.is_certified = null;
-      this.form.description = null;
-      this.form.photo= null;
+        this.form.reset()
     },
     save() {
       this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');

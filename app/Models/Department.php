@@ -64,4 +64,13 @@ class Department extends Model
     {
         return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Main Department']);
     }
+
+    //RELATED STANDARDS
+    /**
+     * Get all of the standards for the raw material.
+     */
+    public function standards()
+    {
+        return $this->morphToMany(Standard::class, 'standardables');
+    }
 }

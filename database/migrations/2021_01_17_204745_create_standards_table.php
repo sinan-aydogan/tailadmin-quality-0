@@ -18,9 +18,7 @@ class CreateStandardsTable extends Migration
             $table->string('name',255);
             $table->string('code',255);
             $table->tinyInteger('standard_type')->nullable();
-            $table->foreignId('department_id')->nullable();
             $table->string('scope',750)->nullable();
-            $table->json('referred_standards')->nullable();
             $table->boolean('status')->nullable();
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();

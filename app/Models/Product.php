@@ -6,10 +6,10 @@ use App\Relations\GetRelatedData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 
 class Product extends Model  implements HasMedia
 {
@@ -30,7 +30,6 @@ class Product extends Model  implements HasMedia
         'product_type_id',
         'description',
         'is_certified',
-        'standard_id',
         'creator_id',
         'updater_id',
         'deleter_id'
@@ -49,17 +48,6 @@ class Product extends Model  implements HasMedia
         return $this->belongsTo(Department::class, 'department_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
-    //STANDARD
-    /**
-     * Get the standard.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function standard()
-    {
-        return $this->belongsTo(Standard::class, 'standard_id', 'id')->withDefault(['name' => 'Undefined']);
-    }
-
     //PRODUCT TYPE
     /**
      * Get the product type.
@@ -71,7 +59,16 @@ class Product extends Model  implements HasMedia
         return $this->belongsTo(ProductType::class, 'product_type_id', 'id')->withDefault(['name' => 'Undefined']);
     }
 
-    /*Prodyct Photo Linking*/
+    //RELATED STANDARDS
+    /**
+     * Get all of the standards for the raw material.
+     */
+    public function standards()
+    {
+        return $this->morphToMany(Standard::class, 'standardables');
+    }
+
+    /*Product Photo Linking*/
     public function registerMediaCollections(): void
     {
         $this
