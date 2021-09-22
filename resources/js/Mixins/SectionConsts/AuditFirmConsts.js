@@ -6,7 +6,7 @@ export const AuditFirmConsts = {
                 {id: 2, name: 'Passive', color: 'solid-yellow'},
                 {id: 3, name: 'Blocked for Enter', color: 'solid-red'}
             ],
-            type : [
+            firm_type : [
                 {id: 1, name: 'Product Certification'},
                 {id: 2, name: 'System Certification'},
                 {id: 3, name: 'Government Agency'},
