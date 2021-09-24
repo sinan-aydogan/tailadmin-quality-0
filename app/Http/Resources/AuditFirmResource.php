@@ -23,6 +23,7 @@ class AuditFirmResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            'audit_types' => $this->auditTypes,
             'status' => $this->status
         ];
     }

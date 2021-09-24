@@ -41,4 +41,15 @@ class AuditFirm extends Model
         'audit_firm_type_id' => 'array',
         'local_accreditation_numbers' => 'array'
     ];
+
+    /*Relations*/
+
+    /*AUDIT TYPES*/
+    /**
+     * The audit types that belong to the audit firm.
+     */
+    public function auditTypes()
+    {
+        return $this->belongsToMany(AuditType::class);
+    }
 }
