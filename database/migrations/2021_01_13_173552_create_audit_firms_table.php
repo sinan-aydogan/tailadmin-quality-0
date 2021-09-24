@@ -18,7 +18,7 @@ class CreateAuditFirmsTable extends Migration
             $table->string('name');
             $table->string('notified_body_number',25);
             $table->json('local_accreditation_numbers');
-            $table->json('audit_firm_type_id');
+            $table->unsignedTinyInteger('audit_firm_type_id');
             $table->string('phone',25)->nullable();
             $table->string('email',75)->nullable();
             $table->string('address',250)->nullable();

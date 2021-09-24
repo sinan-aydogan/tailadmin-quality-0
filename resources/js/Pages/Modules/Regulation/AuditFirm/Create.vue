@@ -29,7 +29,7 @@
                             :error="error.audit_firm_type_id"
                             label="Firm Type"
                         >
-                            <t-input-multi-select
+                            <t-input-select
                                 id="audit_firm_type_id"
                                 v-model="form.audit_firm_type_id"
                                 :clear-button="true"
@@ -82,14 +82,18 @@
                             </t-input-text>
                         </t-input-group>
 
-                        <!--Address-->
+                        <!--Related Audit Types-->
                         <t-input-group
-                            :error="error.address"
-                            label="Address"
+                            :error="error.audit_types"
+                            label="Related Audit Types"
                         >
-                            <t-input-text-area
-                                id="address"
-                                v-model="form.address"
+                            <t-input-multi-select
+                                id="audit_types"
+                                v-model="form.audit_types"
+                                :clear-button="true"
+                                :options="auditTypes"
+                                options-label-key="name"
+                                options-value-key="id"
                             />
                         </t-input-group>
 
@@ -112,6 +116,18 @@
                                     </t-badge>
                                 </template>
                             </t-input-select>
+                        </t-input-group>
+
+                        <!--Address-->
+                        <t-input-group
+                            :error="error.address"
+                            label="Address"
+                            class="col-span-full"
+                        >
+                            <t-input-text-area
+                                id="address"
+                                v-model="form.address"
+                            />
                         </t-input-group>
                     </grid-section>
                 </t-form-section>
@@ -169,13 +185,19 @@ export default {
                 name: null,
                 notified_body_number: null,
                 local_accreditation_numbers: [],
-                audit_firm_type_id: [],
+                audit_firm_type_id: null,
                 phone: null,
                 email: null,
                 address: null,
+                audit_types: [],
                 status: 1,
             }),
         }
+    },
+    props: {
+      auditTypes: {
+          type: Array
+      }
     },
     methods: {
         reset: function () {
@@ -183,7 +205,7 @@ export default {
         },
         save() {
             this.form.name === null ? this.$set(this.error, 'name', 'Name is required') : this.$delete(this.error, 'name');
-            this.form.audit_firm_type_id.length === 0 ? this.$set(this.error, 'audit_firm_type_id', 'You should select a firm type') : this.$delete(this.error, 'audit_firm_type_id');
+            this.form.audit_firm_type_id === null ? this.$set(this.error, 'audit_firm_type_id', 'You should select a firm type') : this.$delete(this.error, 'audit_firm_type_id');
             this.form.phone === null ? this.$set(this.error, 'phone', 'Phone is required') : this.$delete(this.error, 'phone');
             this.form.email === null ? this.$set(this.error, 'email', 'Email is required') : this.$delete(this.error, 'email');
             this.form.status === null ? this.$set(this.error, 'status', 'You should select a status') : this.$delete(this.error, 'status');

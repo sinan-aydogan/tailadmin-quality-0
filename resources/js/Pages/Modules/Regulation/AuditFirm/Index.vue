@@ -59,6 +59,20 @@
                             />
                         </t-input-group>
 
+                        <!--Related Audit Types-->
+                        <t-input-group
+                            label="Related Audit Types"
+                        >
+                            <t-input-select
+                                v-model="searchData.audit_type_id"
+                                :clear-button="true"
+                                :options="searchDataAuditType"
+                                options-label-key="name"
+                                options-value-key="id"
+                                @input="search"
+                            />
+                        </t-input-group>
+
                         <!--Status-->
                         <t-input-group
                             label="Status"
@@ -83,11 +97,16 @@
                 <template #right>
                     <t-action-buttons-index model="audit-firm"/>
                 </template>
-                <!--Type-->
+                <!--Firm Type-->
                 <template #audit_firm_type_id="{props}">
+                        {{firm_type.find(ft=>ft.id === props.audit_firm_type_id).name}}
+                </template>
+
+                <!--Related Audit Types-->
+                <template #audit_types="{props}">
                         <div class="flex flex-col gap-2">
-                            <t-badge v-for="(item,index) in sortedTypes(props.audit_firm_type_id)" :key="index">
-                                {{ item }}
+                            <t-badge v-for="(item,index) in props.audit_types" :key="index">
+                                {{ item.name }}
                             </t-badge>
                         </div>
                 </template>
@@ -149,6 +168,9 @@ export default {
     props: {
         tableData: {
             type: Object
+        },
+        searchDataAuditType: {
+            type: Object
         }
     },
     data() {
@@ -158,8 +180,7 @@ export default {
                 {label: 'Type', key: 'audit_firm_type_id', align: 'left'},
                 {label: 'Notified Body Number', key: 'notified_body_number', align: 'center'},
                 {label: 'Accreditation Numbers', key: 'local_accreditation_numbers', align: 'left'},
-                {label: 'Email', key: 'email', align: 'left'},
-                {label: 'Phone', key: 'phone', align: 'left'},
+                {label: 'Related Audit Types', key: 'audit_types', align: 'left'},
                 {label: 'Status', key: 'status', align: 'center'},
             ],
             searchData: {
@@ -167,6 +188,7 @@ export default {
                 audit_firm_type_id: null,
                 phone: null,
                 email: null,
+                audit_type_id: null,
                 status: null
             }
         }
@@ -183,21 +205,6 @@ export default {
                 },
                 only: ['tableData'],
             })
-        },
-        sortedTypes(firmTypes){
-            let types = [];
-            firmTypes.forEach((type)=>{
-                types.push(this.firm_type.find(f=>f.id === type).name)
-            })
-            types.sort(function compare(a, b) {
-                if (a < b)
-                    return -1;
-                if (a > b)
-                    return 1;
-                return 0;
-            })
-
-            return types
         }
     }
 }

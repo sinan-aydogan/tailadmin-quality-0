@@ -7,11 +7,10 @@ export const AuditFirmConsts = {
                 {id: 3, name: 'Blocked for Enter', color: 'solid-red'}
             ],
             firm_type : [
-                {id: 1, name: 'Product Certification'},
-                {id: 2, name: 'System Certification'},
-                {id: 3, name: 'Government Agency'},
-                {id: 4, name: 'Customer Auditor Agency'},
-                {id: 5, name: 'Other'},
+                {id: 1, name: 'Private Auditor Agency'},
+                {id: 2, name: 'Government Agency'},
+                {id: 3, name: 'Customer Auditor Agency'},
+                {id: 4, name: 'Other'},
             ],
         }
     }
