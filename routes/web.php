@@ -129,6 +129,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('audit-plan', \App\Http\Controllers\AuditPlanController::class);
     //Audit Firm
     Route::resource('audit-firm', \App\Http\Controllers\AuditFirmController::class);
+    Route::get('audit-firm/trash', [\App\Http\Controllers\AuditFirmController::class, 'trash'])->name('audit-firm.trash');
     //Auditor
     Route::resource('auditor', \App\Http\Controllers\AuditorController::class);
     //Standard

@@ -15,6 +15,14 @@ class CreateAuditFirmsTable extends Migration
     {
         Schema::create('audit_firms', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('notified_body_number',25);
+            $table->json('local_accreditation_numbers');
+            $table->json('audit_firm_type_id');
+            $table->string('phone',25)->nullable();
+            $table->string('email',75)->nullable();
+            $table->string('address',250)->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
             $table->foreignId('creator_id');
             $table->foreignId('updater_id')->nullable();
             $table->foreignId('deleter_id')->nullable();
