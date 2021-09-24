@@ -18,7 +18,13 @@ class AuditType extends Model
      *
      * @var array
      */
-    /*protected $fillable = [];*/
+    protected $fillable = [
+        'name',
+        'description',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,4 +32,15 @@ class AuditType extends Model
      * @var array
      */
     /*protected $casts = [];*/
+
+    /*Relations*/
+
+    /*AUDIT FIRMS*/
+    /**
+     * The firms that belong to the audit type.
+     */
+    public function firms()
+    {
+        return $this->belongsToMany(AuditFirm::class);
+    }
 }
