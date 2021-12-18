@@ -18,7 +18,18 @@ class Auditor extends Model
      *
      * @var array
      */
-    /*protected $fillable = [];*/
+    protected $fillable = [
+        'name',
+        'title',
+        'audit_firm_id',
+        'email',
+        'phone',
+        'notes',
+        'status',
+        'creator_id',
+        'updater_id',
+        'deleter_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,4 +37,17 @@ class Auditor extends Model
      * @var array
      */
     /*protected $casts = [];*/
+
+    /*Relations*/
+
+    //AUDIT FIRM
+    /**
+     * Get the audit firm.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function firm()
+    {
+        return $this->belongsTo(AuditFirm::class)->withDefault(['name' => '']);
+    }
 }
