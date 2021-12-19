@@ -2,7 +2,7 @@
 <div class="inline-flex gap-1">
   <!--Add new button-->
   <t-button
-      color="solid-green"
+      color="green"
       :link="route(model+'.create')"
       type="link"
   >
@@ -11,7 +11,7 @@
   </t-button>
   <!--Deleted items button-->
   <t-button
-      color="solid-gray"
+      color="gray"
       :link="route(model+'.trash')"
       type="link"
   >

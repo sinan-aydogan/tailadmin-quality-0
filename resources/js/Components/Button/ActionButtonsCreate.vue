@@ -2,7 +2,7 @@
 <div class="inline-flex gap-1">
   <!--Back button-->
   <t-button
-      color="solid-blue"
+      color="blue"
       type="link"
       :link="route(model+'.index')"
   >

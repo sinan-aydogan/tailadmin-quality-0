@@ -47,7 +47,6 @@ import TFormContent from "@/Components/Form/TFormContent";
 import TFormSection from "@/Components/Form/TFormSection";
 import TInputGroup from "@/Components/Form/TInputGroup";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import TInputText from "@/Components/Form/Inputs/TInputText";
 import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
 
@@ -64,7 +63,6 @@ export default {
     TFormSection,
     TInputGroup,
     TInputSelect,
-    TInputSelectItem,
     TInputText,
     TXCircleIcon
   },

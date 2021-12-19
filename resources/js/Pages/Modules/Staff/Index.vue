@@ -128,7 +128,6 @@ import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
 import TInputGroup from "@/Components/Form/TInputGroup";
 import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import GridSection from "@/Layouts/GridSection";
 import TBadge from "@/Components/Badge/TBadge";
 import TXCircleIcon from "@/Components/Icon/TXCircleIcon";
@@ -144,7 +143,6 @@ export default {
     TXCircleIcon,
     TBadge,
     GridSection,
-    TInputSelectItem,
     TInputSelect,
     TInputText,
     TInputGroup,

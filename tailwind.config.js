@@ -1,15 +1,15 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-    purge: {
-        content: [
-            './vendor/laravel/jetstream/**/*.blade.php',
-            './storage/framework/views/*.php',
-            './resources/views/**/*.blade.php',
-            './resources/js/**/*.vue',
-            './resources/js/**/*.js'
-        ],
-    },
+    darkMode: 'class',
+
+    purge: [
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './vendor/laravel/jetstream/**/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.vue',
+    ],
 
     theme: {
         extend: {
@@ -39,17 +39,8 @@ module.exports = {
                 'max': 'max-content'
             },
             minHeight: {
-                '0': '0',
-                '3': '0.75rem',
-                '6': '1.5rem',
+                '0': '0px',
                 '10': '2.5rem',
-                '12': '3.0rem',
-                '18': '4.5rem',
-                '20': '10rem',
-                '22': '15rem',
-                '24': '20rem',
-                '26': '25rem',
-                '28': '30rem',
                 '1/4': '25%',
                 '1/2': '50%',
                 '3/4': '75%',
@@ -60,16 +51,6 @@ module.exports = {
             },
             maxHeight: {
                 '0': '0',
-                '3': '0.75rem',
-                '6': '1.5rem',
-                '10': '2.5rem',
-                '12': '3.0rem',
-                '18': '4.5rem',
-                '20': '10rem',
-                '22': '15rem',
-                '24': '20rem',
-                '26': '25rem',
-                '28': '30rem',
                 '1/4': '25%',
                 '1/2': '50%',
                 '3/4': '75%',
@@ -78,31 +59,9 @@ module.exports = {
                 'min': 'min-content',
                 'max': 'max-content',
             },
-            maxWidth: {
-                '0': '0',
-                '3': '0.75rem',
-                '6': '1.5rem',
-                '10': '2.5rem',
-                '12': '3.0rem',
-                '18': '4.5rem',
-                '20': '10rem',
-                '22': '15rem',
-                '24': '20rem',
-                '26': '25rem',
-                '28': '30rem',
-                '1/4': '25%',
-                '1/2': '50%',
-                '3/4': '75%',
-                'full': '100%',
-                'screen': '100vw',
-                'min': 'min-content',
-                'max': 'max-content',
-            },
-            animation: {
-                'spin-slow': 'spin 2s linear infinite',
-                'spin-slow-reverse': 'spin 2s linear infinite reverse',
-                'wiggle' : 'wiggle 1s ease-in-out infinite',
-            },
+            boxShadow: {
+                'dark': '0 0 1px 1px rgba(255, 255, 255, 0.1)'
+            }
         },
         screens: {
             'phone': '425',
@@ -115,15 +74,18 @@ module.exports = {
     variants: {
         extend: {
             opacity: ['disabled'],
+            scale: ['active'],
             textColor: ['hover', 'active'],
-            backgroundColor: ['active','even','odd'],
+            backgroundColor: ['active','odd','even'],
             fontWeight: ['hover', 'active', 'focus'],
-            borderWidth: ['first', 'last', 'hover','even','odd'],
-            borderRadius: ['first', 'last','even','odd'],
-            padding: ['focus'],
+            borderWidth: ['first', 'last', 'hover'],
+            borderRadius: ['first', 'last'],
+            boxShadow: ['dark'],
+            padding: ['focus', 'hover'],
             zIndex: ['hover'],
-            brightness: ['hover', 'focus'],
+            brightness: ['hover', 'focus']
         },
+        scrollbar: ['dark']
     },
 
     plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('tailwind-scrollbar')],

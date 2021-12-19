@@ -22,16 +22,8 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        /*Departments List*/
-        $departments = Department::query()
-            ->when($request->name, fn($query,$name)=>$query->where('name','like',"%{$name}%"))
-            ->when($request->manager_id, fn($query,$manager_id)=>$query->where('manager_id',$manager_id))
-            ->when($request->is_complaint, fn($query,$is_complaint)=>$query->where('is_complaint',$is_complaint))
-            ->when($request->is_production, fn($query,$is_production)=>$query->where('is_production',$is_production))
-            ->get();
-
         return Inertia::render('Modules/Department/Index', [
-            'tableData' => DepartmentResource::collection($departments),
+            'tableData' => DepartmentResource::collection(Department::tableSearch($request->searchObj)),
             'searchDataManager' => User::relatedData('manager_id','departments')->get(),
         ]);
     }

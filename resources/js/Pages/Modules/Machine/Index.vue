@@ -85,14 +85,12 @@ import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
 import TInputGroup from "@/Components/Form/TInputGroup";
 import TInputText from "@/Components/Form/Inputs/TInputText";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import GridSection from "@/Layouts/GridSection";
 
 export default {
   name: "Index",
   components: {
     GridSection,
-    TInputSelectItem,
     TInputSelect,
     TInputText,
     TInputGroup,

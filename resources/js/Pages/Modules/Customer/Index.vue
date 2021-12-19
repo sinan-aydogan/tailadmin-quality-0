@@ -87,7 +87,6 @@ import TActionButtonsIndex from "@/Components/Button/ActionButtonsIndex";
 import TBadge from "@/Components/Badge/TBadge";
 import TInputGroup from "@/Components/Form/TInputGroup";
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import TInputText from "@/Components/Form/Inputs/TInputText";
 import TTable from "@/Components/Table/TTable";
 import {CustomerConsts} from "@/Mixins/SectionConsts/CustomerConsts";
@@ -101,7 +100,6 @@ export default {
     TBadge,
     TInputGroup,
     TInputSelect,
-    TInputSelectItem,
     TInputText,
     TTable
   },

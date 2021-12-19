@@ -1,159 +1,225 @@
 <template>
-    <div class="pagination-container">
-        <div
-            :disabled="range>activePage"
-            :class="[
-                'pagination-arrow',
-                calculatedArrowStyle,
-                range>=activePage && 'opacity-10'
-                ]"
-            @click="previousPage"
-        >
-            <t-chevron-left/>
+    <div
+        class="pagination-container"
+        :class="[
+            `pagination-${design}-base`,
+            `pagination-${design}-${color}`,
+            {'flex-wrap-reverse' : reverse}
+          ]"
+    >
+        <!--Detail-->
+        <div v-if="detail || jump" class="pagination-detail-container">
+            <!--Text-->
+            <div class="pagination-detail-text">
+                {{ t(detailText, {activePage: modelValue, totalPage: totalPage, totalRecord: total}) }}
+            </div>
         </div>
-        <div
-            v-for="item in total"
-            v-if="item>=start && end>=item"
-            :class="[
-                'pagination-item',
-                activePage === item ? calculatedActivePaginateStyle : calculatedPaginateStyle,
-                ]"
-            @click="activePage = item; $emit('input', item)">
-            {{ item }}
-
+        <!--Jump Button-->
+        <div v-if="jump" class="pagination-detail-jump-container">
+            <input
+                type="text"
+                :maxlength="total.toString().length"
+                v-model="jumpPage"
+                @keypress.enter="selectPage(Number(jumpPage))"
+                class="pagination-detail-jump-input"
+                :style="{width:Math.floor(total.toString().length)-(.25*total.toString().length-.5)+'rem'}"
+            />
+            <span @click="selectPage(Number(jumpPage))" class="pagination-detail-jump-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                  clip-rule="evenodd"/>
+          </svg>
+                </span>
         </div>
+        <!--Filler-->
+        <div class="flex flex-grow"></div>
+        <!--Counter Container-->
         <div
-            :disabled="activePage===total"
-            :class="[
-                'pagination-arrow',
-                calculatedArrowStyle,
-                activePage===total && 'opacity-10'
-                ]"
-            @click="nextPage"
+            class="pagination-counters"
+            :class="`radius-${radius}`"
         >
-            <t-chevron-right/>
+            <!--Previous-->
+            <div
+                :class="range >= modelValue ? 'pagination-passive-arrow' : 'pagination-arrow'"
+                @click="previousPage"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     :class="['h-6 w-6', arrowText ? '-mx-1 tablet:-ml-2 tablet:-mr-1' : '']"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span v-if="arrowText" v-t="previousText" class="pagination-arrow-text"/>
+            </div>
+            <!--Counter-->
+            <template v-for="item in dynamicRange" :key="item">
+                <span
+                    :class="modelValue === item ? 'pagination-active-item' : 'pagination-item'"
+                    @click="selectPage(item)"
+                    v-text="item"
+                />
+            </template>
+            <!--Next-->
+            <div
+                :class="Math.ceil(modelValue / range) === Math.ceil(totalPage / range) ? 'pagination-passive-arrow' : 'pagination-arrow'"
+                @click="nextPage"
+            >
+                <span v-if="arrowText" v-t="nextText" class="pagination-arrow-text"/>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     :class="['h-6 w-6', arrowText ? '-mx-1 tablet:-mr-2 tablet:-ml-1' : '']"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import {paginateStyleMixin} from "@/Mixins/Styles/paginateStyleMixin";
-/*Icons*/
-import TChevronLeft from "@/Components/Icon/TChevronLeftIcon";
-import TChevronRight from "@/Components/Icon/TChevronRightIcon";
+import {computed, defineComponent, ref, toRefs} from "vue";
+import {useI18n} from "vue-i18n";
+import pagination_tr from "@/Lang/tr/pagination_lang";
+import pagination_en from "@/Lang/en/pagination_lang";
 
-export default {
+export default defineComponent({
     name: "TPaginate",
     props: {
-        active: {
+        modelValue: {
             type: Number,
             default: 1
         },
-        value: {
+        design: {
+            type: String,
+            default: "filled"
+        },
+        color: {
+            type: String,
+            default: "gray"
+        },
+        reverse: {
+            type: Boolean,
+            default: false
+        },
+        radius: {
             type: Number,
+            default: 3
+        },
+        detail: {
+            type: Boolean,
+            default: true
+        },
+        jump: {
+            type: Boolean,
+            default: false
         },
         total: {
             type: Number,
+            default: 1
         },
         range: {
             type: Number,
             default: 5
         },
+        arrowText: {
+            type: Boolean,
+            default: true
+        },
 
+        detailText: {
+            type: String,
+            default: "detailText"
+        },
+        nextText: {
+            type: String,
+            default: "next"
+        },
+        previousText: {
+            type: String,
+            default: "previous"
+        }
     },
-    mixins: [paginateStyleMixin],
-    components: {
-        TChevronRight, TChevronLeft
-    },
-    data() {
+    emits: ["update:modelValue"],
+    setup(props, {emit}) {
+        /*Definitions*/
+        const {total, modelValue, range} = toRefs(props);
+        const jumpPage = ref(null);
+        const {t} = useI18n({
+            messages: {
+                en: pagination_en,
+                tr: pagination_tr
+            }
+        });
+
+        /*Calculate Total Page*/
+        const totalPage = computed(() => {
+            return Math.ceil(total.value / range.value)
+        })
+        /*Select, Next and Previous Page Change Action*/
+        const nextPage = () => {
+            if (Math.ceil(totalPage.value / range.value) > Math.ceil(modelValue.value / range.value)) {
+                let newPage = (Math.ceil(modelValue.value / range.value)) * range.value + 1;
+                emit("update:modelValue", newPage);
+            }
+        };
+        const previousPage = () => {
+            if (modelValue.value > range.value) {
+                let newPage = Math.floor(modelValue.value / range.value) * range.value;
+                if (modelValue.value === newPage) {
+                    newPage = newPage - range.value;
+                }
+                emit("update:modelValue", newPage);
+            }
+        };
+        const selectPage = (item) => {
+            let newPage;
+            if (isNaN(item)) {
+                newPage = 1;
+            } else {
+                if (item > totalPage.value) {
+                    newPage = totalPage.value;
+                } else if (1 > item) {
+                    newPage = 1;
+                } else {
+                    newPage = item;
+                }
+            }
+
+            emit("update:modelValue", newPage);
+        };
+        const dynamicRange = computed(() => {
+            let newRange = [];
+            let start;
+            start = (Math.floor(modelValue.value / range.value)) * range.value;
+            /*Fixing zero*/
+            if (start < 0) {
+                start = 1;
+            } else if (modelValue.value % range.value !== 0) {
+                start = start + 1;
+                for (let i = start; (start + range.value) > i; i++) {
+                    if (totalPage.value >= i) {
+                        newRange.push(i);
+                    }
+                }
+            } else if (modelValue.value % range.value === 0) {
+                start = start - (range.value - 1);
+                for (let i = start; (start + range.value) > i; i++) {
+                    if (totalPage.value >= i) {
+                        newRange.push(i);
+                    }
+                }
+            }
+            return newRange;
+        });
+
         return {
-            activePage: this.value ? this.value : this.active,
-        }
-    },
-    methods: {
-        nextPage() {
-            if (this.total > this.activePage) {
-                this.activePage++;
-                this.$emit('input', this.activePage)
-            }
-        },
-        previousPage() {
-            if (this.activePage > 1) {
-                this.activePage--;
-                this.$emit('input', this.activePage)
-            }
-        }
-    },
-    computed: {
-        /*Color Styles*/
-        paginateStyle(){
-            /*Solid*/
-            if (!this.color.includes('-') && this.color !== 'black' && this.color !== 'white') {
-                return 'bg-' + this.color + '-300 text-white';
-            } else if (this.color === 'black') {
-                return 'bg-black text-white';
-            } else if (this.color === 'white') {
-                return 'bg-white border border-gray-300 text-gray-700';
-            }
-            /*Light*/
-            if (this.color.includes('light')) {
-                return 'bg-' + this.color.split('-')[1] + '-50 border border-' + this.color.split('-')[1] + '-500 text-' + this.color.split('-')[1] + '-600';
-            }
-        },
-        activePaginateStyle(){
-            /*Solid*/
-            if (!this.color.includes('-') && this.color !== 'black' && this.color !== 'white') {
-                return 'bg-' + this.color + '-500 text-white';
-            } else if (this.color === 'black') {
-                return 'bg-gray-300 border border-gray-700';
-            } else if (this.color === 'white') {
-                return 'bg-gray-500 text-white';
-            }
-            /*Light*/
-            if (this.color.includes('light')) {
-                return 'bg-' + this.color.split('-')[1] + '-500 border border-' + this.color.split('-')[1] + '-500 text-white';
-            }
-        },
-        arrowStyle(){
-            /*Solid*/
-            if (!this.color.includes('-') && this.color !== 'black' && this.color !== 'white') {
-                return 'bg-' + this.color + '-500';
-            } else if (this.color === 'black') {
-                return 'bg-gray-500'
-            } else if (this.color === 'white') {
-                return 'bg-gray-500';
-            }
-            /*Light*/
-            if (this.color.includes('light')) {
-                return 'bg-' + this.color.split('-')[1] + '-500';
-            }
-        },
-        /*Pagination Functions*/
-        start(){
-            let totalRange = this.total/this.range
-            let activeRange = this.activePage/this.range
-            if(1>=activeRange){
-                return 1
-            }else if(Math.ceil(activeRange)>activeRange){
-                return Math.floor(activeRange)*this.range+1
-            }else if(Math.ceil(activeRange)===activeRange){
-                return (Math.floor(activeRange)-1)*this.range+1
-            }
-        },
-        end(){
-            let totalRange = this.total/this.range
-            let activeRange = this.activePage/this.range
-            if(1>=activeRange){
-                return this.range
-            }else if(Math.ceil(activeRange)>=activeRange){
-                return Math.ceil(activeRange)*this.range
-            }
-
-        }
+            nextPage,
+            previousPage,
+            totalPage,
+            selectPage,
+            dynamicRange,
+            jumpPage,
+            t
+        };
     }
-}
+});
 </script>
-
-<style scoped>
-
-</style>

@@ -14,7 +14,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="inputStyle === 'select'" class="flex flex-col gap-4 justify-center items-start">
+    <!--<div v-if="inputStyle === 'select'" class="flex flex-col gap-4 justify-center items-start">
       <div class="flex flex-wrap gap-4 items-center">
         <t-input-select v-model="selectedRadius" place-holder="Radius">
           <t-input-select-item :disabled="true">
@@ -33,17 +33,18 @@
         Radius Code:
         <t-badge color="white">:radius="{{ selectedRadius }}"</t-badge>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
+import {defineComponent} from "vue";
+
 import TInputSelect from "@/Components/Form/Inputs/TInputSelect";
-import TInputSelectItem from "@/Components/Form/Inputs/TInputSelectItem";
 import TBadge from "@/Components/Badge/TBadge";
-export default {
+export default defineComponent({
   name: "TComponentRadiusSelector",
-  components: {TBadge, TInputSelectItem, TInputSelect},
+  components: {TBadge, TInputSelect},
   props: {
     inputStyle: {
       type: String,
@@ -71,9 +72,5 @@ export default {
       this.$emit('selected-radius',itemKey)
     }
   }
-}
+})
 </script>
-
-<style scoped>
-
-</style>

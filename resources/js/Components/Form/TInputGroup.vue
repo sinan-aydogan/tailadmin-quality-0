@@ -3,7 +3,7 @@
     <!--Label-->
     <label
         :for="labelFor"
-        class="flex flex-row gap-1 items-center font-medium text-sm text-gray-700 whitespace-normal"
+        class="flex flex-row gap-1 items-center font-medium text-sm whitespace-normal dark:text-gray-200"
     >
       <!--Label-->
       <span v-if="label">
@@ -26,16 +26,19 @@
     <slot></slot>
     <!--Error-->
     <div v-show="error">
-      <p class="text-sm text-red-600 mt-2" v-html="error"/>
+      <p class="text-sm text-red-600 mt-2 whitespace-nowrap">
+        {{ error }}
+      </p>
     </div>
   </div>
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import {inputGroupStyleMixin} from "@/Mixins/Styles/inputGroupStyleMixin";
 
-export default {
+export default defineComponent({
   props: ['label', 'subLabel', 'subLabelColor', 'labelFor', 'error'],
   mixins: [inputGroupStyleMixin]
-}
+})
 </script>
