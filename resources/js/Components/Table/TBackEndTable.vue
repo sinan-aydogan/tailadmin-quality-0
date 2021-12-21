@@ -119,12 +119,16 @@
                                     v-model="advancedSearchObj[field.key].value"
                                     v-model:selectValue="advancedSearchObj[field.key].condition"
                                     :options="field.compareOperators"
-                                    :select-position="field.compareOperators?'right':''"
+                                    :options-label-key="field.advancedSearchSelectLabelKey"
+                                    :options-value-key="field.advancedSearchSelectValueKey"
+                                    :select-position="field.compareOperators ? 'right' : ''"
                                 />
                                 <t-input-select
                                     v-if="field.advancedSearchInputType==='select'"
                                     v-model.lazy="advancedSearchObj[field.key].value"
                                     :options="field.advancedSearchSelectInputSource"
+                                    :options-label-key="field.advancedSearchSelectLabelKey"
+                                    :options-value-key="field.advancedSearchSelectValueKey"
                                 />
                             </t-input-group>
                         </div>
@@ -494,6 +498,7 @@ import TInputText from "@/Components/Form/Inputs/TInputText";
 import {useI18n} from "vue-i18n";
 import table_en from "@/Lang/en/table_lang";
 import table_tr from "@/Lang/tr/table_lang";
+import _ from "lodash";
 
 export default defineComponent({
     name: "TBackEndTable",
@@ -532,7 +537,9 @@ export default defineComponent({
                         zebraRow: true,
                         hoverRow: true,
                         radius: 3,
-                        uniqueIdKey: "id"
+                        uniqueIdKey: "id",
+                        searchRoute: '',
+                        contentKey: 'tableData',
                     },
                     pagination: {
                         status: true,
@@ -553,15 +560,11 @@ export default defineComponent({
                     }
                 };
             }
-        },
-        contentKey: {
-            type: String,
-            default: null
         }
     },
     setup(props, {slots}) {
         /*Definitions*/
-        const {header, content, contentKey, features} = toRefs(props);
+        const {header, content, features} = toRefs(props);
         const dataLoading = ref(false);
         const simpleSearchObj = reactive({
             searchText: "",
@@ -641,7 +644,7 @@ export default defineComponent({
                     advancedSearchableFields.keys.push(item);
                 }
             });
-            /*Generate Advaned Search Query*/
+            /*Generate Advanced Search Query*/
             advancedSearchableFields.content.forEach(item => {
                 advancedSearchObj[item.key] = {
                     value: null,
@@ -712,38 +715,38 @@ export default defineComponent({
 
         /*Watch Simple Search*/
         debouncedWatch(() => Object.values(simpleSearchObj), () => {
-                Inertia.reload({
-                    method: "post",
-                    data: {
+                Inertia.post(route(features.value['table'].searchRoute),
+                    {
                         searchObj: {
                             perPage: Number(simpleSearchObj.perPageItem),
                             sortKey: simpleSearchObj.sortKey,
                             sortDirection: simpleSearchObj.sortDirection,
-                            searchText: simpleSearchObj.searchText,
+                            simpleSearchText: simpleSearchObj.searchText,
                             simpleSearchQuery: simpleSearchableFields
                         }
                     },
-                    only: [contentKey.value]
-                });
+                    {
+                        only: [features.value['table'].contentKey]
+                    });
             },
             {debounce: 500}
         );
         /*Watch Advanced Search*/
-        debouncedWatch(() => Object.values(advancedSearchObj), () => {
-                Inertia.reload({
-                    method: "post",
-                    data: {
+        debouncedWatch(() => _.cloneDeep(advancedSearchObj), () => {
+                Inertia.post(route(features.value['table'].searchRoute),
+                    {
                         searchObj: {
                             perPage: Number(simpleSearchObj.perPageItem),
                             sortKey: simpleSearchObj.sortKey,
                             sortDirection: simpleSearchObj.sortDirection,
                             searchText: simpleSearchObj.searchText,
-                            simpleSearchQuery: simpleSearchableFields
+                            advancedSearchQuery: advancedSearchObj
                         }
                     },
-                    only: [contentKey.value]
-                });
-            },
+                    {
+                        only: [features.value['table'].contentKey]
+                    });
+                },
             {debounce: 500}
         );
         /*watch(advancedSearchObj, () => {
@@ -812,7 +815,8 @@ export default defineComponent({
             t
         };
     }
-});
+})
+;
 </script>
 
 <style scoped>

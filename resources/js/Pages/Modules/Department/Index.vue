@@ -1,18 +1,23 @@
 <template>
     <app-layout>
+
         <!--Header-->
         <template #header>{{ t('indexTitle') }}</template>
+
         <template #subHeader>{{ t('indexSubTitle') }}</template>
+
+        <!--Action Buttons-->
         <template #action-buttons>
             <t-action-buttons-index model="department"/>
         </template>
+
         <!--Content-->
         <template #default>
+
             <t-back-end-table
                 :content="tableData"
                 :features="features"
                 :header="header"
-                content-key="tableData"
             >
                 <!--Manager-->
                 <template #manager_name="{props}">
@@ -25,6 +30,7 @@
                         {{ props.manager_name }}
                     </div>
                 </template>
+
                 <!--Customer Complaints-->
                 <template #is_complaint="{props}">
                     <t-badge :color="is_complaint[is_complaint.findIndex( s => s.id === props.is_complaint )].color"
@@ -36,6 +42,7 @@
                         {{ is_complaint[is_complaint.findIndex(s => s.id === props.is_complaint)].name }}
                     </t-badge>
                 </template>
+
                 <!--Production-->
                 <template #is_production="{props}">
                     <t-badge :color="is_production[is_production.findIndex( s => s.id === props.is_production )].color"
@@ -47,8 +54,11 @@
                         {{ is_production[is_production.findIndex(s => s.id === props.is_production)].name }}
                     </t-badge>
                 </template>
+
             </t-back-end-table>
+
         </template>
+
     </app-layout>
 </template>
 
@@ -98,7 +108,7 @@ export default defineComponent({
         }
     },
 
-    setup() {
+    setup(props) {
 
         /*Consts*/
         const {is_complaint, is_production, department_type} = DepartmentConsts();
@@ -127,7 +137,12 @@ export default defineComponent({
                 key: "manager_name",
                 align: "left",
                 status: true,
-                simpleSearchable: true,
+                simpleSearchable: false,
+                advancedSearchable: true,
+                advancedSearchInputType: 'select',
+                advancedSearchSelectInputSource: props.searchDataManager,
+                advancedSearchSelectLabelKey: 'name',
+                advancedSearchSelectValueKey: 'id'
             },
             {
                 label: t('complaintAdmissibility'),
@@ -135,7 +150,11 @@ export default defineComponent({
                 align: "center",
                 status: true,
                 sortable: true,
-                simpleSearchable: true,
+                advancedSearchable: true,
+                advancedSearchInputType: 'select',
+                advancedSearchSelectInputSource: is_complaint.value,
+                advancedSearchSelectLabelKey: 'name',
+                advancedSearchSelectValueKey: 'id'
             },
             {
                 label: t('manufacturability'),
@@ -143,7 +162,11 @@ export default defineComponent({
                 align: "center",
                 status: true,
                 sortable: true,
-                simpleSearchable: true,
+                advancedSearchable: true,
+                advancedSearchInputType: 'select',
+                advancedSearchSelectInputSource: is_production.value,
+                advancedSearchSelectLabelKey: 'name',
+                advancedSearchSelectValueKey: 'id'
             }
         ]);
 
@@ -154,6 +177,8 @@ export default defineComponent({
                 borderRow: true,
                 zebraRow: false,
                 hoverRow: true,
+                contentKey: 'tableData',
+                searchRoute: 'department.index'
             },
             pagination: {
                 status: true,
