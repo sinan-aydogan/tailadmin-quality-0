@@ -15,20 +15,20 @@ export default function () {
 
     /*Complaint Admissibility*/
     const is_complaint = ref([
-        {id: 1, name: t('yes'), color: 'green'},
-        {id: 2, name: t('no'), color: 'red'}
+        {id: 0, name: t('no'), color: 'red'},
+        {id: 1, name: t('yes'), color: 'green'}
     ])
 
     /*Manufacturability*/
     const is_production = ref([
-        {id: 1, name: t('yes'), color: 'green'},
-        {id: 2, name: t('no'), color: 'red'}
+        {id: 0, name: t('no'), color: 'red'},
+        {id: 1, name: t('yes'), color: 'green'}
     ])
 
     /*Department Type*/
     const department_type = ref([
-        {id: 1, name: t('mainDepartment')},
-        {id: 2, name: t('subDepartment')}
+        {id: 0, name: t('subDepartment')},
+        {id: 1, name: t('mainDepartment')}
     ])
 
     return {is_complaint, is_production, department_type}
