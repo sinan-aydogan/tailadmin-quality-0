@@ -138,6 +138,13 @@ export default defineComponent({
                 align: "left",
                 status: true,
                 simpleSearchable: false,
+            },
+            {
+                label: t('manager'),
+                key: "manager_id",
+                align: "left",
+                status: false,
+                simpleSearchable: false,
                 advancedSearchable: true,
                 advancedSearchInputType: 'select',
                 advancedSearchSelectInputSource: props.searchDataManager,
