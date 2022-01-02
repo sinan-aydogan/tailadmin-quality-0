@@ -1,176 +1,60 @@
 require("./bootstrap");
 
-import {createApp, h} from "vue";
-import {createInertiaApp} from "@inertiajs/inertia-vue3";
-import {InertiaProgress} from "@inertiajs/progress";
+import { createApp, h } from "vue";
+import { createInertiaApp } from "@inertiajs/inertia-vue3";
+import { InertiaProgress } from "@inertiajs/progress";
 
-// Fontawesome
+/* Primevue */
+import PrimeVue from "primevue/config";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
+import Tooltip from "primevue/tooltip";
 
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faCss3, faJs, faVuejs} from "@fortawesome/free-brands-svg-icons";
-import {
-    faDotCircle, //Iconless Item
-    faSitemap, // Departments
-    faUserCog, //Staff
-    faUserCircle, //Staff List
-    faCogs, //Machines
-    faSolarPanel, //Machine List
-    faThList, //Types
-    faTools, //Maintance
-    faClipboardList, //Action
-    faRandom, //Order
-    faClipboardCheck, //Plan
-    faBox, //Products
-    faBoxes, //Product List
-    faTags, //Product Variation
-    faMortarPestle, //Product Recipe
-    faSquareFull, //Raw Materials
-    faShapes, //Raw Materials List
-    faCertificate, //Regulations
-    faUserSecret, //Audits
-    faLandmark, //Audit Firms
-    faCalendar, //Audit Calendar
-    faUserShield, //Auditors
-    faCheckSquare, //Standards
-    faFileAlt, //Documents
-    faFolderOpen, //Documents List
-    faBalanceScale, //Measurement Tools
-    faBezierCurve, //Properties
-    faHeartBroken, //Customer Complaints
-    faGavel, //Customer Complaint Decisions
-    faHandsHelping, //Customers
-    faStore,  //Manufacturers
-    faRocket,
-    faWindowRestore,
-    faEdit,
-    faCalendarAlt,
-    faEnvelope,
-    faTasks,
-    faWindowMaximize,
-    faChartBar,
-    faChevronDown,
-    faCode,
-    faAngleDown,
-    faAngleUp,
-    faLayerGroup,
-    faGripHorizontal,
-    faAngleLeft,
-    faClock,
-    faRetweet,
-    faTv,
-    faPlug,
-    faTable,
-    faShoppingBag,
-    faLiraSign,
-    faTrash,
-    faPlusCircle,
-    faAngleDoubleRight,
-    faCheck,
-    faMinusCircle,
-    faInfo,
-    faSave,
-    faCog
-} from '@fortawesome/free-solid-svg-icons'
+/* FontAwesome */
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(
-    faDotCircle,
-    faSitemap,
-    faUserCog,
-    faUserCircle,
-    faCogs,
-    faSolarPanel,
-    faThList,
-    faTools,
-    faClipboardList,
-    faRandom,
-    faClipboardCheck,
-    faBox,
-    faBoxes,
-    faTags,
-    faMortarPestle,
-    faSquareFull,
-    faShapes,
-    faCertificate,
-    faUserSecret,
-    faLandmark,
-    faCalendar,
-    faUserShield,
-    faCheckSquare,
-    faFileAlt,
-    faFolderOpen,
-    faBalanceScale,
-    faBezierCurve,
-    faHeartBroken,
-    faGavel,
-    faHandsHelping,
-    faStore,
-    faRocket,
-    faDotCircle,
-    faWindowRestore,
-    faSave,
-    faEdit,
-    faJs,
-    faCss3,
-    faInfo,
-    faCalendarAlt,
-    faVuejs,
-    faEnvelope,
-    faTasks,
-    faWindowMaximize,
-    faChartBar,
-    faChevronDown,
-    faCode,
-    faAngleDown,
-    faAngleUp,
-    faChartBar,
-    faLayerGroup,
-    faGripHorizontal,
-    faAngleLeft,
-    faClock,
-    faRetweet,
-    faTags,
-    faTv,
-    faPlug,
-    faTable,
-    faShoppingBag,
-    faLiraSign,
-    faTrash,
-    faPlusCircle,
-    faAngleDoubleRight,
-    faCheck,
-    faMinusCircle,
-    faCog
-)
-
-//i18n
-import {createI18n} from "vue-i18n";
-import messages from "@/language";
+/* Multi-language */
+import { createI18n } from "vue-i18n";
+import generalLangBg from "@/Lang/bg/general_lang_bg";
+import generalLangDe from "@/Lang/de/general_lang_de";
+import generalLangEn from "@/Lang/en/general_lang_en";
+import generalLangFr from "@/Lang/fr/general_lang_fr";
+import generalLangRu from "@/Lang/ru/general_lang_ru";
+import generalLangTr from "@/Lang/tr/general_lang_tr";
+import generalLangZh from "@/Lang/zh/general_lang_zh";
 
 const i18n = createI18n({
     legacy: false,
-    globalInjection: true,
     locale: "en",
     fallbackLocale: "en",
-    messages
+    fallbackRoot: "en",
+    messages: {
+        bg: generalLangBg,
+        de: generalLangDe,
+        en: generalLangEn,
+        fr: generalLangFr,
+        ru: generalLangRu,
+        tr: generalLangTr,
+        zh: generalLangZh,
+    },
 });
 
-
-const appName = window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
+const appName =
+    window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => require(`./Pages/${name}.vue`),
-    setup({el, app, props, plugin}) {
-        return createApp({
-            render: () => h(app, props)
-        })
+    setup({ el, app, props, plugin }) {
+        return createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(PrimeVue)
+            .directive("tooltip", Tooltip)
             .use(i18n)
-            .component("font-awesome-icon", FontAwesomeIcon)
-            .mixin({methods: {route}})
+            .component("icon", FontAwesomeIcon)
+            .mixin({ methods: { route } })
             .mount(el);
-    }
+    },
 });
 
-InertiaProgress.init({color: "#4B5563"});
+InertiaProgress.init({ color: "#4B5563" });

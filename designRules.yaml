@@ -1,0 +1,10 @@
+login:
+  wrapper:
+    color: 'bg-gray-100 dark:bg-gray-700'
+  card:
+    text: 'text-gray-600 dark:text-gray-100'
+    color: 'bg-blue-500 dark:bg-gray-800'
+  input:
+  - dark
+  -   - 'text' : 'text-gray-100'
+        'color': 'bg-gray-700'
