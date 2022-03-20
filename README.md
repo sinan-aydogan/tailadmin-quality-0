@@ -25,7 +25,7 @@ Setup Directions
 Admin Login Infos / Demo Account
 ------
 - **Demo:** *[https://laraquality.dev](https://laraquality.dev)*
-- **Email:** *admin@laraquality.com*
+- **Email:** *admin@laraquality.dev*
 - **Password:** *admin*
 
 ##Features :
