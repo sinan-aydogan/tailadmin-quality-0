@@ -2,6 +2,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import specific icons */
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faUsers, faBuilding, faHighlighter, faFolderTree, faCircleChevronRight, faUserShield ,faGear, faSitemap, faCarSide} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers)
+library.add(faUsers, faBuilding, faHighlighter, faFolderTree, faCircleChevronRight, faUserShield, faGear, faSitemap, faCarSide)

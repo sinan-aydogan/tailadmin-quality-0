@@ -7,6 +7,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Menu from "@/Layouts/MainMenu/MenuComponent.vue"
 
 defineProps({
     title: String,
@@ -279,9 +280,14 @@ const logout = () => {
             </header>
 
             <!-- Page Content -->
-            <main>
+            <div class="flex p-6">
+            <aside class="mr-0 lg:mr-12">
+            <Menu/>
+            </aside>
+            <main class="w-full">
                 <slot />
             </main>
+            </div>
         </div>
     </div>
 </template>
