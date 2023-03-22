@@ -17,6 +17,10 @@ import "primeicons/primeicons.css";
 // Components
 import Button from "primevue/button"
 
+/*Fontawesome*/
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import "./Sources/icons"
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -28,6 +32,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
         .use(PrimeVue)
         .component('Button', Button)
+        .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },
     progress: {

@@ -18,6 +18,10 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.3.0",
+        "@fortawesome/free-regular-svg-icons": "^6.3.0",
+        "@fortawesome/free-solid-svg-icons": "^6.3.0",
+        "@fortawesome/vue-fontawesome": "^3.0.3",
         "primeicons": "^6.0.1",
         "primevue": "^3.26.0"
     }
