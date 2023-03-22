@@ -1,76 +1,66 @@
-# TailAdmin Quality
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-Online quality assurance(QA) management system with Laravel, Inertia and Vue (JetStream).
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-<center>
-<img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
-<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-<img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D" />
+## About Laravel
 
-<a href="https://www.buymeacoffee.com/sinanaydogan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=sinanaydogan&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff"></a>
-</center>
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-Setup Directions
-------
-1. ```npm install```
-2. ```composer install```
-3. Change ENV file name from .env.example to .env
-4. Set database infos in the .env
-5. ```php artisan migrate:fresh --seed```
-6. ```php artisan key:generate```
-7. ```php artisan serve```
-8. ```npm run hot```
-9. ```Goto: http://localhost:8000 or your APP_URL (in the .ENV)```
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Admin Login Infos / Demo Account
-------
-- **Demo:** *[https://laraquality.dev](https://laraquality.dev)*
-- **Email:** *admin@laraquality.dev*
-- **Password:** *admin*
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-##Features :
-- ###Departments
-    İşletmeniz içindeki bölümleri online prosesler olarak **LaraQuality** içinde oluşturabilir ve veri bütünlüğünü sağlayacak şekilde şeffaf olarak yönetebilir, bölümlere yöneticiler atabilir, bölümlerde üretilen ürünleri bağlayabilirsiniz.
+## Learning Laravel
 
-- ###Products
-    İşletmenizde müşterinize sunduğunuz tüm ürünleri tek bir yerden yönetebilir, son ürün kalite kontrol parametrelerini tanımlayabilir ve ürünleri üretim standartlarına bağlayabilir ve detaylı filtreler ile listeleyebilirsiniz.
-  
-- ###Raw Materials
-    Depolarınızdaki hammaddelerinizi kataloglayabilir, kalite paramatrelerini belirlebilir ve her ürüne özgü üretim reçetelerini oluştarabilirsiniz. Dilerseniz reçete maliyeti hesabı yapabilir, sanal depolarda stok tutabilir veya ürün içine tüketim yapabilirsiniz.
-  
-- ###Staff
-    Yetkilendirme modülü ile personellerinizi sisteme değişik yetkilerde tanımlayabilir, HRM özelliği olan görev tanımlarını başka yazılımlara gerek kalmadan oluşturabilir, alt üst ilişkilerini tanımlayabilir ve kişileri bölümlere atayabilirsiniz.
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-- ###Document Management
-    Şirket içi kullanılan form, talimat, planlar ve risk analizlerini sistemimiz içinde adım adım tanımlayabilir, kişilere veya yetki gruplarına göre gizliliğini sağlayabilir veya dağıtabilirsiniz. Dökümanları **revizyon** sistemi ile takip ederek her zaman sahada güncel dökümanın var olduğundan emin olabilirsiniz.
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-- ###Customer Complaints
-**Bayi** modülü ile tüm bayilerinizi tek bir alanda takip edebilir, **özelleştirilmiş şikayet türleri** ile bölüme veya ürüne özgü şikayet takibi yapabilir, **müşteri şikayeti maliyet hesabı** ile işletmenize binen yükü analiz edebilir ve fırsata dönüşterebilirsiniz. Takip edilebilir, hesap verilebilir, izlenebilir, şeffaf yapı ile müşteri şikayeti prosesinizi yönetmek çok kolay hale gelecektir. Ekibinizin ilgili her ferdi, şikayetle ilgili gelişmelerden anında haberdar olabilecek ve katkı sağlayacağı araçlar içermektedir.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-> :rocket: Bu sistemin bazı özelliklerine erişim için, ek paketler veya üyelik gerekebilir.
+## Laravel Sponsors
 
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
+### Premium Partners
 
----
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
 
+## Contributing
 
-### Major External Sources
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-- [Tailwind](https://tailwindcss.com/)
-- [Vue](https://vuejs.org/)
-- [Fontawesome](https://fontawesome.com/)
+## Code of Conduct
 
-### Minor External Sources
-Please see package.json
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
----
-### Partners and Sponsors
->If you want to support us, you can send a mail to us via [admin@tailadmin.dev](mailto:admin@tailadmin.dev)
->
----
-License
-------
-The TailAdmin is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-<center>
-<a href="https://www.buymeacoffee.com/sinanaydogan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=sinanaydogan&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff"></a>
-</center>
+## Security Vulnerabilities
+
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
